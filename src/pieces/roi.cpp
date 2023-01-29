@@ -50,8 +50,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
     if (this->getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
         board[x][y].getPiece()->getType() == 'T' && board[x][y].getPiece()->getNumMoves() == 0)
     {
-        printf("CASTLE MVOE?\n");
-
         if (x == 7)
         {
             // check if the tiles between the tower and the king are empty (for white)
@@ -63,22 +61,20 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
                 {
                     // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                    this->updateNumMoves();
                 }
                 else
                 {
                     throw std::invalid_argument("can't move king");
                 }
             }
-            else if (board[4][y].getPiece() == nullptr && board[5][y].getPiece() == nullptr &&
-                     board[6][y].getPiece() == nullptr && this->getColor() == Color::BLACK)
+            else if (board[5][y].getPiece() == nullptr && board[6][y].getPiece() == nullptr &&
+                     this->getColor() == Color::BLACK)
             {
                 // check if the king is not in check
                 if (!this->isCheck(board, 4, y) && !this->isCheck(board, 5, y) && !this->isCheck(board, 6, y))
                 {
                     // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                    this->updateNumMoves();
                 }
                 else
                 {
@@ -98,7 +94,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
                 {
                     // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                    this->updateNumMoves();
                 }
                 else
                 {
@@ -113,7 +108,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
                 {
                     // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                    this->updateNumMoves();
                 }
                 else
                 {
@@ -133,7 +127,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
             {
                 // check if the king is not in check
                 result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                this->updateNumMoves();
             }
             else
             {

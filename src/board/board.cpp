@@ -96,28 +96,18 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     {
         throw std::invalid_argument("can't move king");
     }
-    if (GameWatcher::getInstance().isKingInCheck(this->board, (Color)piece->getColor()))
+    if (GameWatcher::getInstance().isKingInCheck(this->board, (Color)piece->getColor()) &&
+        GameWatcher::getInstance().isKingInCheckAfterMove(this->board, piece, x, y) && valid_move.first)
     {
-        // check if the move of piece can remove the check
-        if (valid_move.first)
-        {
-            // check if the move of piece can remove the check
-            if (GameWatcher::getInstance().isKingInCheckAfterMove(this->board, piece, x, y))
-            {
-                throw std::invalid_argument("king is check !");
-            }
-        }
-        else
-        {
-            throw std::invalid_argument("king is check !");
-        }
+        throw std::invalid_argument("king is check !");
     }
     if (valid_move.first)
     {
         // check if caste move
-        if (piece->getType() == 'R' && piece->getNumMoves() == 1 && valid_move.second != nullptr &&
-            valid_move.second->getType() == 'T')
+        if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
+            valid_move.second != nullptr && valid_move.second->getType() == PieceType::TOWER)
         {
+
             if (x == 0)
             {
                 std::cout << "Caste move to the left" << std::endl;
@@ -126,7 +116,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
                 if (valid_move.second->getColor() == Color::WHITE)
                 {
                     // move tower
-                    this->board[0][y].setPiece(nullptr);
+                    this->board[x][y].setPiece(nullptr);
                     this->board[3][y].setPiece(tower);
                     tower->setX(3);
                     // move king
@@ -137,7 +127,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
                 else if (valid_move.second->getColor() == Color::BLACK)
                 {
                     // move tower
-                    this->board[0][y].setPiece(nullptr);
+                    this->board[x][y].setPiece(nullptr);
                     this->board[2][y].setPiece(tower);
                     tower->setX(2);
                     // move king
@@ -155,7 +145,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
                 if (valid_move.second->getColor() == Color::WHITE)
                 {
                     // move tower
-                    this->board[7][y].setPiece(nullptr);
+                    this->board[x][y].setPiece(nullptr);
                     this->board[5][y].setPiece(tower);
                     tower->setX(5);
                     // move king
@@ -166,12 +156,11 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
                 else if (valid_move.second->getColor() == Color::BLACK)
                 {
                     // move tower
-                    this->board[7][y].setPiece(nullptr);
+                    this->board[x][y].setPiece(nullptr);
                     this->board[4][y].setPiece(tower);
                     tower->setX(4);
                     // move king
                     this->board[5][y].setPiece(piece);
-                    this->board[piece->getX()][piece->getY()].setPiece(nullptr);
                     piece->setX(5);
                 }
                 return eatenPiece;
@@ -181,7 +170,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         {
             throw std::invalid_argument("Can't eat your own piece!");
         }
-        else if (valid_move.second != nullptr && valid_move.second->getType() == 'R')
+        else if (valid_move.second != nullptr && valid_move.second->getType() == PieceType::KING)
         {
             throw std::invalid_argument("Can't eat the King!");
         }
@@ -200,6 +189,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         piece->setX(x);
         piece->setY(y);
         this->board[x][y].setPiece(piece);
+        piece->updateNumMoves();
     }
     else
     {

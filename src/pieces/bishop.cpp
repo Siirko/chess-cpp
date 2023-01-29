@@ -20,41 +20,16 @@ std::pair<bool, std::shared_ptr<Piece>> Bishop::isValidMove(std::array<std::arra
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-    // check left down diagonal
-    if (x - this->getX() == y - this->getY())
+    if (abs(x - this->getX()) == abs(y - this->getY()))
     {
-        for (int i = this->getX() - 1, j = this->getY() - 1; i > x && j > y; i--, j--)
+        int i = this->getX();
+        int j = this->getY();
+        int x_step = (x - i) / abs(x - i);
+        int y_step = (y - j) / abs(y - j);
+        while (i != x && j != y)
         {
-            if (board[i][j].getPiece() != nullptr)
-                return result;
-        }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-    }
-    // check right up diagonal
-    else if (this->getX() - x == this->getY() - y)
-    {
-        for (int i = this->getX() + 1, j = this->getY() + 1; i < x && j < y; i++, j++)
-        {
-            if (board[i][j].getPiece() != nullptr)
-                return result;
-        }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-    }
-    // check left up diagonal
-    else if (x - this->getX() == this->getY() - y)
-    {
-        for (int i = this->getX() - 1, j = this->getY() + 1; i > x && j < y; i--, j++)
-        {
-            if (board[i][j].getPiece() != nullptr)
-                return result;
-        }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-    }
-    // check right down diagonal
-    else if (this->getX() - x == y - this->getY())
-    {
-        for (int i = this->getX() + 1, j = this->getY() - 1; i < x && j > y; i++, j--)
-        {
+            i += x_step;
+            j += y_step;
             if (board[i][j].getPiece() != nullptr)
                 return result;
         }

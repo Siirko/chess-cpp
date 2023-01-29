@@ -115,19 +115,36 @@ bool GameWatcher::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Co
         {
             for (int j = -1; j < 2; j++)
             {
+                bool result;
                 if (color == Color::WHITE)
                 {
-                    if (whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first)
+                    try
                     {
-                        return false;
+                        result =
+                            whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first;
                     }
+                    catch (const std::exception &e)
+                    {
+                        // king can't move
+                        return true;
+                    }
+                    if (result)
+                        return false;
                 }
                 else
                 {
-                    if (blackKing->isValidMove(board, blackKing->getX() + i, blackKing->getY() + j).first)
+                    try
                     {
-                        return false;
+                        result =
+                            whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first;
                     }
+                    catch (const std::exception &e)
+                    {
+                        // king can't move
+                        return true;
+                    }
+                    if (result)
+                        return false;
                 }
             }
         }

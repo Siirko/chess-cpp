@@ -58,7 +58,6 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
                     return result;
             }
             result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-            this->updateNumMoves();
         }
     }
     // castle for black
@@ -96,7 +95,6 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
                     return result;
             }
             result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-            this->updateNumMoves();
         }
     }
     // Check if we can move in the same column (up or down)
@@ -121,7 +119,6 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
             }
         }
         result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-        this->updateNumMoves();
     }
     // Check if we can move in the same row (right or left)
     else if (x != this->getX() && y == this->getY())
@@ -145,7 +142,6 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
             }
         }
         result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-        this->updateNumMoves();
     }
     return result;
 }
