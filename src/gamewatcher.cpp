@@ -61,10 +61,77 @@ bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color 
     return false;
 }
 
+bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color,
+                                std::shared_ptr<Roi> king)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (board[i][j].getPiece() != nullptr)
+            {
+                if (board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first)
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+bool GameWatcher::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board,
+                                         std::shared_ptr<Piece> piece, int x, int y)
+{
+    if (piece->isValidMove(board, x, y).first)
+    {
+        // fake board
+        std::array<std::array<Tile, 8>, 8> fakeBoard = board;
+        fakeBoard[x][y].setPiece(piece);
+        fakeBoard[piece->getX()][piece->getY()].setPiece(nullptr);
+        if (piece->getType() == PieceType::KING)
+        {
+            // make a copy
+            std::shared_ptr<Roi> king = std::make_shared<Roi>(*std::dynamic_pointer_cast<Roi>(piece));
+            king->setX(x);
+            king->setY(y);
+            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE, king)
+                                                     : isKingInCheck(fakeBoard, Color::BLACK, king);
+        }
+        else
+            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE)
+                                                     : isKingInCheck(fakeBoard, Color::BLACK);
+    }
+
+    return false;
+}
+
 bool GameWatcher::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color)
 {
     if (isKingInCheck(board, color))
     {
+        // check if king can move to a safe tile
+        for (int i = -1; i < 2; i++)
+        {
+            for (int j = -1; j < 2; j++)
+            {
+                if (color == Color::WHITE)
+                {
+                    if (whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first)
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    if (blackKing->isValidMove(board, blackKing->getX() + i, blackKing->getY() + j).first)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -104,36 +171,6 @@ bool GameWatcher::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Co
 {
     if (!isKingInCheck(board, color))
     {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (board[i][j].getPiece() != nullptr)
-                {
-                    switch (color)
-                    {
-                    case Color::WHITE:
-                        if (board[i][j].getPiece()->getColor() == Color::WHITE)
-                        {
-                            if (board[i][j].getPiece()->isValidMove(board, i, j).first)
-                            {
-                                return false;
-                            }
-                        }
-                        break;
-                    case Color::BLACK:
-                        if (board[i][j].getPiece()->getColor() == Color::BLACK)
-                        {
-                            if (board[i][j].getPiece()->isValidMove(board, i, j).first)
-                            {
-                                return false;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        }
         return true;
     }
     return false;

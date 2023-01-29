@@ -74,7 +74,7 @@ void Game::run()
         std::shared_ptr<Piece> piece = this->choosePiece(x, y);
         if (piece != nullptr && piece->getColor() == this->turn)
         {
-            if (this->play_piece_at(piece, x2, y2) && this->check == false)
+            if (this->play_piece_at(piece, x2, y2))
             {
                 this->turn = (this->turn + 1) % 2;
                 this->num_turns++;
@@ -109,7 +109,7 @@ bool Game::play_piece_at(std::shared_ptr<Piece> piece, int x, int y)
         std::shared_ptr<Piece> eatenPiece = this->board.movePiece(piece, x, y);
         if (eatenPiece != nullptr && eatenPiece->getType() != 'R')
         {
-            if (eatenPiece->getColor() == 0)
+            if (eatenPiece->getColor() == Color::WHITE)
             {
                 this->black_eaten_pieces.push_back(eatenPiece);
             }

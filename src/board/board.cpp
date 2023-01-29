@@ -98,7 +98,19 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     }
     if (GameWatcher::getInstance().isKingInCheck(this->board, (Color)piece->getColor()))
     {
-        throw std::invalid_argument("king is check !");
+        // check if the move of piece can remove the check
+        if (valid_move.first)
+        {
+            // check if the move of piece can remove the check
+            if (GameWatcher::getInstance().isKingInCheckAfterMove(this->board, piece, x, y))
+            {
+                throw std::invalid_argument("king is check !");
+            }
+        }
+        else
+        {
+            throw std::invalid_argument("king is check !");
+        }
     }
     if (valid_move.first)
     {

@@ -26,6 +26,9 @@ class GameWatcher
     void setWhiteKing(std::shared_ptr<Roi> &&king);
     void setBlackKing(std::shared_ptr<Roi> &&king);
     bool isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color);
+    bool isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color, std::shared_ptr<Roi> king);
+    bool isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board, std::shared_ptr<Piece> piece, int x,
+                                int y);
     bool isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color);
     bool isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color);
 };
