@@ -48,32 +48,16 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
 
     // special rule, castle move
     if (this->getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
-        board[x][y].getPiece()->getType() == 'T' && board[x][y].getPiece()->getNumMoves() == 0)
+        board[x][y].getPiece()->getType() == PieceType::TOWER && board[x][y].getPiece()->getNumMoves() == 0)
     {
         if (x == 7)
         {
             // check if the tiles between the tower and the king are empty (for white)
-            if (board[5][y].getPiece() == nullptr && board[6][y].getPiece() == nullptr &&
-                this->getColor() == Color::WHITE)
+            if (board[5][y].getPiece() == nullptr && board[6][y].getPiece() == nullptr)
             {
                 // check if the king is not in check
                 if (!this->isCheck(board, 5, y) && !this->isCheck(board, 6, y))
                 {
-                    // check if the king is not in check
-                    result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                }
-                else
-                {
-                    throw std::invalid_argument("can't move king");
-                }
-            }
-            else if (board[5][y].getPiece() == nullptr && board[6][y].getPiece() == nullptr &&
-                     this->getColor() == Color::BLACK)
-            {
-                // check if the king is not in check
-                if (!this->isCheck(board, 4, y) && !this->isCheck(board, 5, y) && !this->isCheck(board, 6, y))
-                {
-                    // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
                 }
                 else
@@ -87,24 +71,10 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
         {
             // check if the tiles between the tower and the king are empty (for white)
             if (board[1][y].getPiece() == nullptr && board[2][y].getPiece() == nullptr &&
-                board[3][y].getPiece() == nullptr && this->getColor() == Color::WHITE)
+                board[3][y].getPiece() == nullptr)
             {
                 // check if the king is not in check
                 if (!this->isCheck(board, 1, y) && !this->isCheck(board, 2, y) && !this->isCheck(board, 3, y))
-                {
-                    // check if the king is not in check
-                    result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                }
-                else
-                {
-                    throw std::invalid_argument("can't move king");
-                }
-            }
-            else if (board[1][y].getPiece() == nullptr && board[2][y].getPiece() == nullptr &&
-                     this->getColor() == Color::BLACK)
-            {
-                // check if the king is not in check
-                if (!this->isCheck(board, 1, y) && !this->isCheck(board, 2, y))
                 {
                     // check if the king is not in check
                     result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());

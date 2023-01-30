@@ -126,7 +126,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
             valid_move.second != nullptr && valid_move.second->getType() == PieceType::TOWER)
         {
-            this->doCastling(piece, (Color)valid_move.second->getColor(), x, y);
+            this->doCastling(piece, (Color)piece->getColor(), x, y);
             return eatenPiece;
         }
         else if (valid_move.second != nullptr && valid_move.second->getColor() == piece->getColor())

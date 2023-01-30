@@ -20,20 +20,26 @@ std::pair<bool, std::shared_ptr<Piece>> Bishop::isValidMove(std::array<std::arra
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
+
     if (abs(x - this->getX()) == abs(y - this->getY()))
     {
-        int i = this->getX();
-        int j = this->getY();
-        int x_step = (x - i) / abs(x - i);
-        int y_step = (y - j) / abs(y - j);
+        // Check if the path is clear
+        int xDir = (x - this->getX()) / abs(x - this->getX());
+        int yDir = (y - this->getY()) / abs(y - this->getY());
+        int i = this->getX() + xDir;
+        int j = this->getY() + yDir;
         while (i != x && j != y)
         {
-            i += x_step;
-            j += y_step;
             if (board[i][j].getPiece() != nullptr)
                 return result;
+            i += xDir;
+            j += yDir;
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        // Check if the move is valid
+        if (board[x][y].getPiece() == nullptr || board[x][y].getPiece()->getColor() != this->getColor())
+        {
+            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        }
     }
     return result;
 }
