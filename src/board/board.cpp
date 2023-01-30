@@ -82,6 +82,25 @@ void Board::setPiece(std::shared_ptr<Piece> piece)
     this->board[piece->getX()][piece->getY()].setPiece(piece);
 }
 
+void Board::updatePiece(std::shared_ptr<Piece> piece, int x, int y)
+{
+    this->board[piece->getX()][piece->getY()].setPiece(nullptr);
+    this->board[x][y].setPiece(piece);
+    piece->setX(x);
+    piece->setY(y);
+    piece->updateNumMoves();
+}
+
+void Board::doCastling(std::shared_ptr<Piece> piece, Color color, int x, int y)
+{
+    int towerX = x;
+    int n_pos_towerX = x == 0 ? 3 : 5;
+    int n_pos_kingX = x == 0 ? 2 : 6;
+    std::shared_ptr<Piece> tower = this->board[towerX][y].getPiece();
+    this->updatePiece(tower, n_pos_towerX, y);
+    this->updatePiece(piece, n_pos_kingX, y);
+}
+
 std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int y)
 {
     std::shared_ptr<Piece> eatenPiece = nullptr;
@@ -107,64 +126,8 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
             valid_move.second != nullptr && valid_move.second->getType() == PieceType::TOWER)
         {
-
-            if (x == 0)
-            {
-                std::cout << "Caste move to the left" << std::endl;
-                // get tower
-                std::shared_ptr<Piece> tower = this->board[0][y].getPiece();
-                if (valid_move.second->getColor() == Color::WHITE)
-                {
-                    // move tower
-                    this->board[x][y].setPiece(nullptr);
-                    this->board[3][y].setPiece(tower);
-                    tower->setX(3);
-                    // move king
-                    this->board[2][y].setPiece(piece);
-                    this->board[piece->getX()][piece->getY()].setPiece(nullptr);
-                    piece->setX(2);
-                }
-                else if (valid_move.second->getColor() == Color::BLACK)
-                {
-                    // move tower
-                    this->board[x][y].setPiece(nullptr);
-                    this->board[2][y].setPiece(tower);
-                    tower->setX(2);
-                    // move king
-                    this->board[1][y].setPiece(piece);
-                    this->board[piece->getX()][piece->getY()].setPiece(nullptr);
-                    piece->setX(1);
-                }
-                return eatenPiece;
-            }
-            else if (x == 7)
-            {
-                std::cout << "Caste move to the right" << std::endl;
-                // get tower
-                std::shared_ptr<Piece> tower = this->board[7][y].getPiece();
-                if (valid_move.second->getColor() == Color::WHITE)
-                {
-                    // move tower
-                    this->board[x][y].setPiece(nullptr);
-                    this->board[5][y].setPiece(tower);
-                    tower->setX(5);
-                    // move king
-                    this->board[6][y].setPiece(piece);
-                    this->board[piece->getX()][piece->getY()].setPiece(nullptr);
-                    piece->setX(6);
-                }
-                else if (valid_move.second->getColor() == Color::BLACK)
-                {
-                    // move tower
-                    this->board[x][y].setPiece(nullptr);
-                    this->board[4][y].setPiece(tower);
-                    tower->setX(4);
-                    // move king
-                    this->board[5][y].setPiece(piece);
-                    piece->setX(5);
-                }
-                return eatenPiece;
-            }
+            this->doCastling(piece, (Color)valid_move.second->getColor(), x, y);
+            return eatenPiece;
         }
         else if (valid_move.second != nullptr && valid_move.second->getColor() == piece->getColor())
         {

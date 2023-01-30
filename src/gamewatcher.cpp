@@ -7,8 +7,6 @@
 #include <memory>
 #include <vector>
 
-// singleton class
-
 void GameWatcher::setWhiteKing(std::shared_ptr<Roi> &&king)
 {
     // copy reference to put in a unique_ptr in whiteKing
