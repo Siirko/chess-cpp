@@ -3,6 +3,7 @@
 #include "../../includes/pieces/piece.hpp"
 #include <array>
 #include <iostream>
+#include <set>
 #include <string>
 
 Roi::Roi(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
@@ -50,41 +51,15 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
     if (this->getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
         board[x][y].getPiece()->getType() == PieceType::TOWER && board[x][y].getPiece()->getNumMoves() == 0)
     {
-        if (x == 7)
+        std::set<int> coord_to_check = x == 7 ? std::set<int>{5, 6} : std::set<int>{1, 2, 3};
+        for (auto coord : coord_to_check)
         {
-            // check if the tiles between the tower and the king are empty (for white)
-            if (board[5][y].getPiece() == nullptr && board[6][y].getPiece() == nullptr)
-            {
-                // check if the king is not in check
-                if (!this->isCheck(board, 5, y) && !this->isCheck(board, 6, y))
-                {
-                    result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                }
-                else
-                {
-                    throw std::invalid_argument("can't move king");
-                }
-            }
+            if (board[coord][y].getPiece() != nullptr)
+                throw std::invalid_argument("can't move king");
+            if (this->isCheck(board, coord, y))
+                throw std::invalid_argument("can't move king");
         }
-        // check if the tower is on the left side
-        else if (x == 0)
-        {
-            // check if the tiles between the tower and the king are empty (for white)
-            if (board[1][y].getPiece() == nullptr && board[2][y].getPiece() == nullptr &&
-                board[3][y].getPiece() == nullptr)
-            {
-                // check if the king is not in check
-                if (!this->isCheck(board, 1, y) && !this->isCheck(board, 2, y) && !this->isCheck(board, 3, y))
-                {
-                    // check if the king is not in check
-                    result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-                }
-                else
-                {
-                    throw std::invalid_argument("can't move king");
-                }
-            }
-        }
+        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
     }
     // Check if the move is one tile away
     if (abs(x - this->getX()) <= 1 && abs(y - this->getY()) <= 1)
