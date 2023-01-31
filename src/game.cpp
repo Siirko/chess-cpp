@@ -25,8 +25,27 @@ void Game::init()
     this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->forythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-    GameRuler::getInstance().setWhiteKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 0)));
-    GameRuler::getInstance().setBlackKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 7)));
+    GameRuler::getInstance().setGame(this);
+}
+
+std::shared_ptr<Roi> Game::getWhiteKing() const
+{
+    for (auto piece : this->alive_pieces)
+    {
+        if (piece->getColor() == Color::WHITE && piece->getType() == PieceType::KING)
+            return std::dynamic_pointer_cast<Roi>(piece);
+    }
+    throw std::runtime_error("No white king found");
+}
+
+std::shared_ptr<Roi> Game::getBlackKing() const
+{
+    for (auto piece : this->alive_pieces)
+    {
+        if (piece->getColor() == Color::BLACK && piece->getType() == PieceType::KING)
+            return std::dynamic_pointer_cast<Roi>(piece);
+    }
+    throw std::runtime_error("No black king found");
 }
 
 void Game::printInfo()
@@ -64,8 +83,8 @@ void Game::run()
                     GameRuler::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
                 this->checkMate =
                     GameRuler::getInstance().isKingInCheckMate(this->board.getBoard(), (Color)this->turn);
-                this->staleMate = GameRuler::getInstance().isKingInStaleMate(
-                    this->board.getBoard(), this->alive_pieces, (Color)this->turn);
+                this->staleMate =
+                    GameRuler::getInstance().isKingInStaleMate(this->board.getBoard(), (Color)this->turn);
                 if (this->checkMate)
                     break;
                 if (this->staleMate)
@@ -186,6 +205,8 @@ std::shared_ptr<Piece> Game::choosePiece(int x, int y)
     auto piece = this->board.getTile(x, y).getPiece();
     return piece != nullptr ? piece : nullptr;
 }
+
+std::vector<std::shared_ptr<Piece>> Game::getAlivePieces() const { return this->alive_pieces; }
 
 void Game::addAlivePiece(std::shared_ptr<Piece> piece) { this->alive_pieces.push_back(piece); }
 

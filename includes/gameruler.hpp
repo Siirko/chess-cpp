@@ -14,8 +14,9 @@ class GameRuler
     GameRuler() = default;
     GameRuler(const GameRuler &) = delete;
     GameRuler &operator=(const GameRuler &) = delete;
-    std::shared_ptr<Roi> whiteKing;
-    std::shared_ptr<Roi> blackKing;
+    const Game *game = nullptr;
+    std::shared_ptr<Roi> whiteKing = nullptr;
+    std::shared_ptr<Roi> blackKing = nullptr;
 
   public:
     static GameRuler &getInstance()
@@ -23,13 +24,11 @@ class GameRuler
         static GameRuler instance;
         return instance;
     }
-    void setWhiteKing(std::shared_ptr<Roi> &&king);
-    void setBlackKing(std::shared_ptr<Roi> &&king);
+    void setGame(const Game *game);
     bool isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color);
     bool isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color, std::shared_ptr<Roi> king);
     bool isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board, std::shared_ptr<Piece> piece,
                                 bool canMove, int x, int y);
     bool isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color);
-    bool isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board,
-                           std::vector<std::shared_ptr<Piece>> alive_pieces, Color color);
+    bool isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color);
 };

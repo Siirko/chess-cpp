@@ -7,15 +7,11 @@
 #include <memory>
 #include <vector>
 
-void GameRuler::setWhiteKing(std::shared_ptr<Roi> &&king)
+void GameRuler::setGame(const Game *game)
 {
-    // copy reference to put in a unique_ptr in whiteKing
-    whiteKing = std::move(king);
-}
-void GameRuler::setBlackKing(std::shared_ptr<Roi> &&king)
-{
-    // copy reference to put in a unique_ptr in blackKing
-    blackKing = std::move(king);
+    this->game = game;
+    whiteKing = game->getWhiteKing();
+    blackKing = game->getBlackKing();
 }
 
 bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color)
@@ -62,52 +58,12 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
 bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color,
                               std::shared_ptr<Roi> king)
 {
-    for (int i = 0; i < 8; i++)
+    for (auto piece : this->game->getAlivePieces())
     {
-        for (int j = 0; j < 8; j++)
+        if (piece->getColor() == color)
         {
-            if (board[i][j].getPiece() != nullptr)
-            {
-                switch (color)
-                {
-                case Color::WHITE:
-                    if (board[i][j].getPiece()->getColor() == Color::BLACK)
-                    {
-                        bool result;
-                        try
-                        {
-                            result =
-                                board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first;
-                        }
-                        catch (const std::exception &e)
-                        {
-                            // king can't move
-                            return true;
-                        }
-                        if (result)
-                            return true;
-                    }
-                    break;
-                case Color::BLACK:
-                    if (board[i][j].getPiece()->getColor() == Color::WHITE)
-                    {
-                        bool result;
-                        try
-                        {
-                            result =
-                                board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first;
-                        }
-                        catch (const std::exception &e)
-                        {
-                            // king can't move
-                            return true;
-                        }
-                        if (result)
-                            return true;
-                    }
-                    break;
-                }
-            }
+            if (piece->isValidMove(board, king->getX(), king->getY()).first)
+                return true;
         }
     }
     return false;
@@ -143,73 +99,17 @@ bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Colo
 {
     if (isKingInCheck(board, color))
     {
-        // check if king can move to a safe tile
-        for (int i = -1; i < 2; i++)
+        for (auto piece : this->game->getAlivePieces())
         {
-            for (int j = -1; j < 2; j++)
+            try
             {
-                bool result;
-                if (color == Color::WHITE)
-                {
-                    try
-                    {
-                        result =
-                            whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first;
-                    }
-                    catch (const std::exception &e)
-                    {
-                        // king can't move
-                        return true;
-                    }
-                    if (result)
-                        return false;
-                }
-                else
-                {
-                    try
-                    {
-                        result =
-                            whiteKing->isValidMove(board, whiteKing->getX() + i, whiteKing->getY() + j).first;
-                    }
-                    catch (const std::exception &e)
-                    {
-                        // king can't move
-                        return true;
-                    }
-                    if (result)
-                        return false;
-                }
+                if (piece->getColor() == color && piece->canMove(board))
+                    return false;
             }
-        }
-
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
+            catch (const std::exception &e)
             {
-                if (board[i][j].getPiece() != nullptr)
-                {
-                    switch (color)
-                    {
-                    case Color::WHITE:
-                        if (board[i][j].getPiece()->getColor() == Color::WHITE)
-                        {
-                            if (board[i][j].getPiece()->isValidMove(board, i, j).first)
-                            {
-                                return false;
-                            }
-                        }
-                        break;
-                    case Color::BLACK:
-                        if (board[i][j].getPiece()->getColor() == Color::BLACK)
-                        {
-                            if (board[i][j].getPiece()->isValidMove(board, i, j).first)
-                            {
-                                return false;
-                            }
-                        }
-                        break;
-                    }
-                }
+                // piece can't move
+                continue;
             }
         }
         return true;
@@ -217,13 +117,12 @@ bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Colo
     return false;
 }
 
-bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board,
-                                  std::vector<std::shared_ptr<Piece>> alive_pieces, Color color)
+bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color)
 {
     bool inCheck = isKingInCheck(board, color);
     if (!inCheck)
     {
-        for (auto piece : alive_pieces)
+        for (auto piece : this->game->getAlivePieces())
         {
             try
             {

@@ -1,6 +1,7 @@
 #pragma once
 #include "board/board.hpp"
 #include "pieces/piece.hpp"
+#include "pieces/roi.hpp"
 #include <array>
 #include <memory>
 #include <vector>
@@ -25,7 +26,10 @@ class Game
     Game();
     ~Game();
     void run();
+    std::shared_ptr<Roi> getWhiteKing() const;
+    std::shared_ptr<Roi> getBlackKing() const;
     void printInfo();
+    std::vector<std::shared_ptr<Piece>> getAlivePieces() const;
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
     std::shared_ptr<Piece> choosePiece(int x, int y);
