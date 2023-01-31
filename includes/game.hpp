@@ -27,5 +27,5 @@ class Game
     std::shared_ptr<Piece> choosePiece(int x, int y);
     bool isCheck();
     bool isCheckMate();
-    bool play_piece_at(std::shared_ptr<Piece> piece, int x, int y);
+    bool movePieceAt(std::shared_ptr<Piece> piece, int x, int y);
 };
