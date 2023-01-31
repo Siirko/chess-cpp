@@ -1,5 +1,6 @@
 #include "../includes/game.hpp"
-#include "../includes/gamewatcher.hpp"
+#include "../includes/gameruler.hpp"
+#include "../includes/parser.hpp"
 #include "../includes/pieces/bishop.hpp"
 #include "../includes/pieces/knight.hpp"
 #include "../includes/pieces/pawn.hpp"
@@ -24,22 +25,6 @@ void Game::init()
     this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->forythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-}
-
-std::string getInput()
-{
-    std::string input;
-    std::cout << "Enter your move: ";
-    std::cin >> input;
-    if (input == "/exit")
-        return input;
-    std::regex pattern("[a-h][1-8][a-h][1-8]");
-    if (!std::regex_match(input, pattern))
-    {
-        std::cout << "Invalid input" << std::endl;
-        return "";
-    }
-    return input;
 }
 
 void Game::printInfo()
@@ -67,23 +52,20 @@ void Game::run()
     {
         if (input.empty())
             continue;
-        int x = input[0] - 'a';
-        int y = input[1] - '1';
-        int x2 = input[2] - 'a';
-        int y2 = input[3] - '1';
-        std::shared_ptr<Piece> piece = this->choosePiece(x, y);
+        Parser::UpdateCoords coords = Parser::parseInput(input);
+        std::shared_ptr<Piece> piece = this->choosePiece(coords.from.x, coords.from.y);
         if (piece != nullptr && piece->getColor() == this->turn)
         {
-            if (this->movePieceAt(piece, x2, y2))
+            if (this->movePieceAt(piece, coords.to.x, coords.to.y))
             {
                 this->turn = (this->turn + 1) % 2;
                 this->num_turns++;
                 this->board.printBoard();
                 this->printInfo();
                 this->check =
-                    GameWatcher::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
+                    GameRuler::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
                 this->checkMate =
-                    GameWatcher::getInstance().isKingInCheckMate(this->board.getBoard(), (Color)this->turn);
+                    GameRuler::getInstance().isKingInCheckMate(this->board.getBoard(), (Color)this->turn);
                 if (this->checkMate)
                     break;
             }
@@ -92,7 +74,7 @@ void Game::run()
         {
             std::cout << "Invalid move" << std::endl;
         }
-    } while ((input = getInput()) != "/exit" && this->checkMate != true);
+    } while ((input = Parser::getInput()) != "/exit" && this->checkMate != true);
     if (this->checkMate)
     {
         std::string color = this->turn == Color::BLACK ? "WHITE" : "BLACK";
@@ -189,8 +171,8 @@ void Game::forythGeneration(std::string fen)
             }
         }
     }
-    GameWatcher::getInstance().setWhiteKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 0)));
-    GameWatcher::getInstance().setBlackKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 7)));
+    GameRuler::getInstance().setWhiteKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 0)));
+    GameRuler::getInstance().setBlackKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 7)));
 }
 
 std::shared_ptr<Piece> Game::choosePiece(int x, int y)

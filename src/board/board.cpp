@@ -1,5 +1,5 @@
 #include "../../includes/board/board.hpp"
-#include "../../includes/gamewatcher.hpp"
+#include "../../includes/gameruler.hpp"
 #include <array>
 #include <iostream>
 #include <memory>
@@ -115,8 +115,8 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     {
         throw std::invalid_argument("can't move king");
     }
-    if (GameWatcher::getInstance().isKingInCheck(this->board, (Color)piece->getColor()) &&
-        GameWatcher::getInstance().isKingInCheckAfterMove(this->board, piece, x, y) && valid_move.first)
+    if (GameRuler::getInstance().isKingInCheck(this->board, (Color)piece->getColor()) &&
+        GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, x, y) && valid_move.first)
     {
         throw std::invalid_argument("king is check !");
     }

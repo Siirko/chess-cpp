@@ -8,19 +8,19 @@
 #include <vector>
 
 // singleton class that holds kings references and check if they are in check
-class GameWatcher
+class GameRuler
 {
   private:
-    GameWatcher() = default;
-    GameWatcher(const GameWatcher &) = delete;
-    GameWatcher &operator=(const GameWatcher &) = delete;
+    GameRuler() = default;
+    GameRuler(const GameRuler &) = delete;
+    GameRuler &operator=(const GameRuler &) = delete;
     std::shared_ptr<Roi> whiteKing;
     std::shared_ptr<Roi> blackKing;
 
   public:
-    static GameWatcher &getInstance()
+    static GameRuler &getInstance()
     {
-        static GameWatcher instance;
+        static GameRuler instance;
         return instance;
     }
     void setWhiteKing(std::shared_ptr<Roi> &&king);

@@ -1,4 +1,4 @@
-#include "../includes/gamewatcher.hpp"
+#include "../includes/gameruler.hpp"
 #include "../includes/board/board.hpp"
 #include "../includes/pieces/piece.hpp"
 #include "../includes/pieces/roi.hpp"
@@ -7,18 +7,18 @@
 #include <memory>
 #include <vector>
 
-void GameWatcher::setWhiteKing(std::shared_ptr<Roi> &&king)
+void GameRuler::setWhiteKing(std::shared_ptr<Roi> &&king)
 {
     // copy reference to put in a unique_ptr in whiteKing
     whiteKing = std::move(king);
 }
-void GameWatcher::setBlackKing(std::shared_ptr<Roi> &&king)
+void GameRuler::setBlackKing(std::shared_ptr<Roi> &&king)
 {
     // copy reference to put in a unique_ptr in blackKing
     blackKing = std::move(king);
 }
 
-bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -59,8 +59,8 @@ bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color 
     return false;
 }
 
-bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color,
-                                std::shared_ptr<Roi> king)
+bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color,
+                              std::shared_ptr<Roi> king)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -78,8 +78,8 @@ bool GameWatcher::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color 
     return false;
 }
 
-bool GameWatcher::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board,
-                                         std::shared_ptr<Piece> piece, int x, int y)
+bool GameRuler::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board, std::shared_ptr<Piece> piece,
+                                       int x, int y)
 {
     if (piece->isValidMove(board, x, y).first)
     {
@@ -104,7 +104,7 @@ bool GameWatcher::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> boar
     return false;
 }
 
-bool GameWatcher::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color)
 {
     if (isKingInCheck(board, color))
     {
@@ -182,7 +182,7 @@ bool GameWatcher::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Co
     return false;
 }
 
-bool GameWatcher::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color)
 {
     if (!isKingInCheck(board, color))
     {
