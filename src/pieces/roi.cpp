@@ -79,5 +79,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
             }
         }
     }
+    result.first = this->beforeCheckMove(board, result, x, y);
     return result;
 }

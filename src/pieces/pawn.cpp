@@ -1,5 +1,6 @@
 #include "../../includes/pieces/pawn.hpp"
 #include "../../includes/board/tile.hpp"
+#include "../../includes/gameruler.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include <array>
 #include <iostream>
@@ -19,11 +20,12 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
+    // TO DEBUG!!!!!!!!!!!! Piece can move 2 tiles if there is a piece in front of it
     if (this->getColor() == Color::WHITE)
     {
         // Check if we can move 2 tiles
         if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() + 2 &&
-            board[x][y].getPiece() == nullptr)
+            board[x][y].getPiece() == nullptr && board[x][y - 1].getPiece() == nullptr)
         {
             result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
         }
@@ -42,7 +44,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
         else if (x == this->getX() + 1 && y == this->getY() + 1 && board[x][y].getPiece() == nullptr &&
                  board[this->getX() + 1][this->getY()].getPiece() != nullptr &&
                  board[this->getX() + 1][this->getY()].getPiece()->getColor() == Color::BLACK &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getType() == 'P')
+                 board[this->getX() + 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
         {
             std::shared_ptr<Pawn> pawn =
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
@@ -55,7 +57,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
         else if (x == this->getX() - 1 && y == this->getY() + 1 && board[x][y].getPiece() == nullptr &&
                  board[this->getX() - 1][this->getY()].getPiece() != nullptr &&
                  board[this->getX() - 1][this->getY()].getPiece()->getColor() == Color::BLACK &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getType() == 'P')
+                 board[this->getX() - 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
         {
             std::shared_ptr<Pawn> pawn =
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
@@ -70,7 +72,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
     {
         // Check if we can move 2 tiles
         if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() - 2 &&
-            board[x][y].getPiece() == nullptr)
+            board[x][y].getPiece() == nullptr && board[x][y + 1].getPiece() == nullptr)
         {
             result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
         }
@@ -89,7 +91,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
         else if (x == this->getX() + 1 && y == this->getY() - 1 && board[x][y].getPiece() == nullptr &&
                  board[this->getX() + 1][this->getY()].getPiece() != nullptr &&
                  board[this->getX() + 1][this->getY()].getPiece()->getColor() == Color::WHITE &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getType() == 'P')
+                 board[this->getX() + 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
         {
             std::shared_ptr<Pawn> pawn =
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
@@ -102,7 +104,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
         else if (x == this->getX() - 1 && y == this->getY() - 1 && board[x][y].getPiece() == nullptr &&
                  board[this->getX() - 1][this->getY()].getPiece() != nullptr &&
                  board[this->getX() - 1][this->getY()].getPiece()->getColor() == Color::WHITE &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getType() == 'P')
+                 board[this->getX() - 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
         {
             std::shared_ptr<Pawn> pawn =
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
@@ -112,5 +114,6 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
             }
         }
     }
+    result.first = this->beforeCheckMove(board, result, x, y);
     return result;
 }

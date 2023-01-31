@@ -1,4 +1,5 @@
 #include "../../includes/pieces/piece.hpp"
+#include "../../includes/gameruler.hpp"
 #include <iostream>
 #include <string>
 
@@ -33,6 +34,33 @@ char Piece::getType()
 int Piece::getNumMoves() const { return this->num_moves; }
 
 void Piece::updateNumMoves() { this->num_moves++; }
+
+bool Piece::beforeCheckMove(std::array<std::array<Tile, 8>, 8> board,
+                            std::pair<bool, std::shared_ptr<Piece>> result, int x, int y)
+{
+    std::shared_ptr<Piece> tt = this->getptr();
+    if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.first, x, y))
+    {
+        result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    }
+    if (result.second != nullptr && result.second->getColor() == this->getColor() &&
+        this->getType() != PieceType::KING)
+        result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    return result.first;
+}
+
+bool Piece::canMove(std::array<std::array<Tile, 8>, 8> board)
+{
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (this->isValidMove(board, i, j).first)
+                return true;
+        }
+    }
+    return false;
+}
 
 std::ostream &operator<<(std::ostream &os, const Piece &piece)
 {

@@ -14,7 +14,7 @@
 // TODO:: Refactor the big shit i've made, do Steelmate, refactor Board display
 // game too
 
-Game::Game() : board{}, turn{1}, num_turns{0}, check{false}, checkMate{false} { init(); }
+Game::Game() : board{}, turn{1}, num_turns{0}, check{false}, checkMate{false}, staleMate{false} { init(); }
 
 Game::~Game() { std::cout << "Game destructor" << std::endl; }
 
@@ -25,6 +25,8 @@ void Game::init()
     this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->forythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    GameRuler::getInstance().setWhiteKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 0)));
+    GameRuler::getInstance().setBlackKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 7)));
 }
 
 void Game::printInfo()
@@ -33,13 +35,9 @@ void Game::printInfo()
     std::cout << "Black eaten pieces: " << this->black_eaten_pieces.size() << std::endl;
     std::cout << "Turn: ";
     if (this->turn == 0)
-    {
         std::cout << "BLACK" << std::endl;
-    }
     else
-    {
         std::cout << "WHITE" << std::endl;
-    }
 }
 
 void Game::run()
@@ -66,7 +64,11 @@ void Game::run()
                     GameRuler::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
                 this->checkMate =
                     GameRuler::getInstance().isKingInCheckMate(this->board.getBoard(), (Color)this->turn);
+                this->staleMate = GameRuler::getInstance().isKingInStaleMate(
+                    this->board.getBoard(), this->alive_pieces, (Color)this->turn);
                 if (this->checkMate)
+                    break;
+                if (this->staleMate)
                     break;
             }
         }
@@ -79,6 +81,10 @@ void Game::run()
     {
         std::string color = this->turn == Color::BLACK ? "WHITE" : "BLACK";
         std::cout << "Checkmate, " << color << " Won !" << std::endl;
+    }
+    else if (this->staleMate)
+    {
+        std::cout << "Stalemate, Draw !" << std::endl;
     }
     std::cout << "end" << std::endl;
 }
@@ -95,6 +101,7 @@ bool Game::movePieceAt(std::shared_ptr<Piece> piece, int x, int y)
                 this->black_eaten_pieces.push_back(eatenPiece);
             else
                 this->white_eaten_pieces.push_back(eatenPiece);
+            this->removeAlivePiece(eatenPiece);
         }
     }
     catch (const std::exception &e)
@@ -167,16 +174,23 @@ void Game::forythGeneration(std::string fen)
             if (piece != nullptr)
             {
                 this->board.setPiece(piece);
+                this->addAlivePiece(piece);
                 x++;
             }
         }
     }
-    GameRuler::getInstance().setWhiteKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 0)));
-    GameRuler::getInstance().setBlackKing(std::dynamic_pointer_cast<Roi>(this->choosePiece(4, 7)));
 }
 
 std::shared_ptr<Piece> Game::choosePiece(int x, int y)
 {
     auto piece = this->board.getTile(x, y).getPiece();
     return piece != nullptr ? piece : nullptr;
+}
+
+void Game::addAlivePiece(std::shared_ptr<Piece> piece) { this->alive_pieces.push_back(piece); }
+
+void Game::removeAlivePiece(std::shared_ptr<Piece> piece)
+{
+    this->alive_pieces.erase(std::remove(this->alive_pieces.begin(), this->alive_pieces.end(), piece),
+                             this->alive_pieces.end());
 }

@@ -70,5 +70,6 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
         }
         result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
     }
+    result.first = this->beforeCheckMove(board, result, x, y);
     return result;
 }

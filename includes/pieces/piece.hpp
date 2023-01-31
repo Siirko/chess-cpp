@@ -20,7 +20,7 @@ enum PieceType
 };
 
 class Tile;
-class Piece
+class Piece : public std::enable_shared_from_this<Piece>
 {
   private:
     int x;
@@ -43,8 +43,12 @@ class Piece
     char getType();
     int getNumMoves() const;
     void updateNumMoves();
+    bool beforeCheckMove(std::array<std::array<Tile, 8>, 8> board,
+                         std::pair<bool, std::shared_ptr<Piece>> result, int x, int y);
     // Abstract method
     virtual std::pair<bool, std::shared_ptr<Piece>> isValidMove(std::array<std::array<Tile, 8>, 8> board,
                                                                 int x, int y) = 0;
+    bool canMove(std::array<std::array<Tile, 8>, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
+    std::shared_ptr<Piece> getptr() { return shared_from_this(); }
 };

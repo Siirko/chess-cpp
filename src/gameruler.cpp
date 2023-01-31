@@ -68,9 +68,44 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
         {
             if (board[i][j].getPiece() != nullptr)
             {
-                if (board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first)
+                switch (color)
                 {
-                    return true;
+                case Color::WHITE:
+                    if (board[i][j].getPiece()->getColor() == Color::BLACK)
+                    {
+                        bool result;
+                        try
+                        {
+                            result =
+                                board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first;
+                        }
+                        catch (const std::exception &e)
+                        {
+                            // king can't move
+                            return true;
+                        }
+                        if (result)
+                            return true;
+                    }
+                    break;
+                case Color::BLACK:
+                    if (board[i][j].getPiece()->getColor() == Color::WHITE)
+                    {
+                        bool result;
+                        try
+                        {
+                            result =
+                                board[i][j].getPiece()->isValidMove(board, king->getX(), king->getY()).first;
+                        }
+                        catch (const std::exception &e)
+                        {
+                            // king can't move
+                            return true;
+                        }
+                        if (result)
+                            return true;
+                    }
+                    break;
                 }
             }
         }
@@ -79,9 +114,9 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
 }
 
 bool GameRuler::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board, std::shared_ptr<Piece> piece,
-                                       int x, int y)
+                                       bool canMove, int x, int y)
 {
-    if (piece->isValidMove(board, x, y).first)
+    if (canMove)
     {
         // fake board
         std::array<std::array<Tile, 8>, 8> fakeBoard = board;
@@ -182,11 +217,25 @@ bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Colo
     return false;
 }
 
-bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board,
+                                  std::vector<std::shared_ptr<Piece>> alive_pieces, Color color)
 {
-    if (!isKingInCheck(board, color))
+    bool inCheck = isKingInCheck(board, color);
+    if (!inCheck)
     {
-        return true;
+        for (auto piece : alive_pieces)
+        {
+            try
+            {
+                if (piece->getColor() == color && piece->canMove(board))
+                    return false;
+            }
+            catch (const std::exception &e)
+            {
+                // piece can't move
+                continue;
+            }
+        }
     }
-    return false;
+    return inCheck ? false : true;
 }

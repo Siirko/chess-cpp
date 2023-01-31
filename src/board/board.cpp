@@ -116,9 +116,15 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         throw std::invalid_argument("can't move king");
     }
     if (GameRuler::getInstance().isKingInCheck(this->board, (Color)piece->getColor()) &&
-        GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, x, y) && valid_move.first)
+        GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, valid_move.first, x, y) &&
+        valid_move.first)
     {
         throw std::invalid_argument("king is check !");
+    }
+    if (GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, valid_move.first, x, y) &&
+        valid_move.first)
+    {
+        throw std::invalid_argument("king will be in check !");
     }
     if (valid_move.first)
     {

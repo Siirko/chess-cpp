@@ -41,5 +41,6 @@ std::pair<bool, std::shared_ptr<Piece>> Bishop::isValidMove(std::array<std::arra
             result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
         }
     }
+    result.first = this->beforeCheckMove(board, result, x, y);
     return result;
 }
