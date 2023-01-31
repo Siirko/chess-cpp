@@ -1,9 +1,11 @@
 #include "../../includes/pieces/tower.hpp"
 #include "../../includes/board/tile.hpp"
 #include "../../includes/pieces/piece.hpp"
+#include "../../includes/pieces/roi.hpp"
 #include <array>
 #include <cstdlib>
 #include <iostream>
+#include <set>
 #include <string>
 
 Tower::Tower(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
@@ -21,82 +23,7 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-    int max_size = (int)board.max_size();
-    // Check if the move is a castling move (for white)
-    if (this->getNumMoves() == 0 && (this->getX() == 0 || this->getX() == max_size) && this->getY() == 0 &&
-        board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getType() == 'R')
-    {
-        // Check if the king has moved
-        std::shared_ptr<Piece> king = board[x][y].getPiece();
-        if (king->getNumMoves() == 0)
-        {
-            // Check if there is a piece in the way
-            if (this->getX() == 0)
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    if (board[i][0].getPiece() != nullptr)
-                        return result;
-                }
-                std::cout << "king eee" << std::endl;
-                // Check if the king can move to the tower's position
-                std::pair<bool, std::shared_ptr<Piece>> king_result = king->isValidMove(board, 2, 0);
-                if (king_result.first == false)
-                    return result;
-                std::cout << "rook ?" << std::endl;
-            }
-            else
-            {
-                for (int i = 5; i < 7; i++)
-                {
-                    if (board[i][0].getPiece() != nullptr)
-                        return result;
-                }
-                // Check if the king can move to the tower's position (initial position to 6)
-                std::pair<bool, std::shared_ptr<Piece>> king_result = king->isValidMove(board, 6, 0);
-                if (!king_result.first)
-                    return result;
-            }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-        }
-    }
-    // castle for black
-    else if (this->getNumMoves() == 0 && (this->getX() == 0 || this->getX() == max_size) &&
-             this->getY() == max_size && board[x][y].getPiece() != nullptr &&
-             board[x][y].getPiece()->getType() == 'R')
-    {
-        // Check if the king has moved
-        std::shared_ptr<Piece> king = board[x][y].getPiece();
-        if (king->getNumMoves() == 0)
-        {
-            // Check if there is a piece in the way
-            if (this->getX() == 0)
-            {
-                for (int i = 1; i < 4; i++)
-                {
-                    if (board[i][max_size].getPiece() != nullptr)
-                        return result;
-                }
-                // Check if the king can move to the tower's position
-                std::pair<bool, std::shared_ptr<Piece>> king_result = king->isValidMove(board, 2, max_size);
-                if (king_result.first == false)
-                    return result;
-            }
-            else
-            {
-                for (int i = 5; i < 7; i++)
-                {
-                    if (board[i][max_size].getPiece() != nullptr)
-                        return result;
-                }
-                // Check if the king can move to the tower's position (initial position to 6)
-                std::pair<bool, std::shared_ptr<Piece>> king_result = king->isValidMove(board, 6, max_size);
-                if (!king_result.first)
-                    return result;
-            }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
-        }
-    }
+
     // Check if we can move in the same column (up or down)
     if (x == this->getX() && y != this->getY())
     {
