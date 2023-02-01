@@ -10,10 +10,9 @@ Bishop::Bishop(int x, int y, int color) : Piece(x, y, color), value{3} { this->s
 
 Bishop::~Bishop() {}
 
-std::pair<bool, std::shared_ptr<Piece>> Bishop::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x,
-                                                            int y)
+Piece::PieceMove Bishop::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
 {
-    std::pair<bool, std::shared_ptr<Piece>> result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    PieceMove result = {false, nullptr};
     // Check if the move is out of the board
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
@@ -38,9 +37,9 @@ std::pair<bool, std::shared_ptr<Piece>> Bishop::isValidMove(std::array<std::arra
         // Check if the move is valid
         if (board[x][y].getPiece() == nullptr || board[x][y].getPiece()->getColor() != this->getColor())
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
     }
-    result.first = this->beforeCheckMove(board, result, x, y);
+    result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

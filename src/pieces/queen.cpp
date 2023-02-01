@@ -9,10 +9,9 @@ Queen::Queen(int x, int y, int color) : Piece(x, y, color), value{9} { this->set
 
 Queen::~Queen() {}
 
-std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x,
-                                                           int y)
+Piece::PieceMove Queen::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
 {
-    std::pair<bool, std::shared_ptr<Piece>> result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    PieceMove result = {false, nullptr};
     // Check if the move is out of the board
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
@@ -27,7 +26,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
             if (board[i][j].getPiece() != nullptr)
                 return result;
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // check right up diagonal
     else if (this->getX() - x == this->getY() - y)
@@ -37,7 +36,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
             if (board[i][j].getPiece() != nullptr)
                 return result;
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // check left up diagonal
     else if (x - this->getX() == this->getY() - y)
@@ -47,7 +46,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
             if (board[i][j].getPiece() != nullptr)
                 return result;
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // check right down diagonal
     else if (this->getX() - x == y - this->getY())
@@ -57,7 +56,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
             if (board[i][j].getPiece() != nullptr)
                 return result;
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // Check if the move is horizontal
     else if (x == this->getX())
@@ -71,7 +70,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
                 if (board[x][i].getPiece() != nullptr)
                     return result;
             }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if is going down
         else
@@ -82,7 +81,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
                 if (board[x][i].getPiece() != nullptr)
                     return result;
             }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
     }
     // Check if the move is vertical
@@ -97,7 +96,7 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
                 if (board[i][y].getPiece() != nullptr)
                     return result;
             }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if is going left
         else
@@ -108,10 +107,10 @@ std::pair<bool, std::shared_ptr<Piece>> Queen::isValidMove(std::array<std::array
                 if (board[i][y].getPiece() != nullptr)
                     return result;
             }
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
-    result.first = this->beforeCheckMove(board, result, x, y);
+    result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

@@ -104,12 +104,12 @@ void Board::doCastling(std::shared_ptr<Piece> piece, Color color, int x, int y)
 std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int y)
 {
     std::shared_ptr<Piece> eatenPiece = nullptr;
-    std::pair<bool, std::shared_ptr<Piece>> valid_move;
+    Piece::PieceMove future_move;
     // First element is a bool that tells if the move is valid, the second element
     // is the piece that is eaten, null if no piece has been eaten
     try
     {
-        valid_move = piece->isValidMove(this->board, x, y);
+        future_move = piece->isValidMove(this->board, x, y);
     }
     catch (const std::exception &e)
     {
@@ -128,29 +128,30 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         throw std::invalid_argument("king will be in check !");
     }
     */
-    if (valid_move.first)
+    if (future_move.valid_move)
     {
         // check if caste move
         if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
-            valid_move.second != nullptr && valid_move.second->getType() == PieceType::TOWER)
+            future_move.eaten_piece != nullptr && future_move.eaten_piece->getType() == PieceType::TOWER)
         {
             this->doCastling(piece, (Color)piece->getColor(), x, y);
             return eatenPiece;
         }
-        else if (valid_move.second != nullptr && valid_move.second->getColor() == piece->getColor())
+        else if (future_move.eaten_piece != nullptr &&
+                 future_move.eaten_piece->getColor() == piece->getColor())
         {
             throw std::invalid_argument("Can't eat your own piece!");
         }
-        else if (valid_move.second != nullptr && valid_move.second->getType() == PieceType::KING)
+        else if (future_move.eaten_piece != nullptr && future_move.eaten_piece->getType() == PieceType::KING)
         {
             throw std::invalid_argument("Can't eat the King!");
         }
-        else if (valid_move.second != nullptr)
+        else if (future_move.eaten_piece != nullptr)
         {
-            eatenPiece = valid_move.second;
+            eatenPiece = future_move.eaten_piece;
             std::cout << "Eaten piece: " << eatenPiece->getType() << std::endl;
             this->board[piece->getX()][piece->getY()].setPiece(nullptr);
-            this->board[valid_move.second->getX()][valid_move.second->getY()].setPiece(nullptr);
+            this->board[future_move.eaten_piece->getX()][future_move.eaten_piece->getY()].setPiece(nullptr);
         }
         else
         {

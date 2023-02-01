@@ -35,18 +35,17 @@ int Piece::getNumMoves() const { return this->num_moves; }
 
 void Piece::updateNumMoves() { this->num_moves++; }
 
-bool Piece::beforeCheckMove(std::array<std::array<Tile, 8>, 8> board,
-                            std::pair<bool, std::shared_ptr<Piece>> result, int x, int y)
+bool Piece::beforeCheckMove(std::array<std::array<Tile, 8>, 8> board, PieceMove result, int x, int y)
 {
     std::shared_ptr<Piece> tt = this->getptr();
-    if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.first, x, y))
+    if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.valid_move, x, y))
     {
-        result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+        result = {false, nullptr};
     }
-    if (result.second != nullptr && result.second->getColor() == this->getColor() &&
+    if (result.eaten_piece != nullptr && result.eaten_piece->getColor() == this->getColor() &&
         this->getType() != PieceType::KING)
-        result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
-    return result.first;
+        result = {false, nullptr};
+    return result.valid_move;
 }
 
 bool Piece::canMove(std::array<std::array<Tile, 8>, 8> board)
@@ -55,7 +54,7 @@ bool Piece::canMove(std::array<std::array<Tile, 8>, 8> board)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->isValidMove(board, i, j).first)
+            if (this->isValidMove(board, i, j).valid_move)
                 return true;
         }
     }

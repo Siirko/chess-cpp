@@ -13,10 +13,9 @@ Tower::Tower(int x, int y, int color) : Piece(x, y, color), value{5} { this->set
 Tower::~Tower() {}
 
 // TODO: need to decide who check if king is in check (board or the piece itself)
-std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x,
-                                                           int y)
+Piece::PieceMove Tower::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
 {
-    std::pair<bool, std::shared_ptr<Piece>> result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    PieceMove result = {false, nullptr};
     // Check if the move is out of the board
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
@@ -45,7 +44,7 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
                     return result;
             }
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // Check if we can move in the same row (right or left)
     else if (x != this->getX() && y == this->getY())
@@ -68,8 +67,8 @@ std::pair<bool, std::shared_ptr<Piece>> Tower::isValidMove(std::array<std::array
                     return result;
             }
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
-    result.first = this->beforeCheckMove(board, result, x, y);
+    result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

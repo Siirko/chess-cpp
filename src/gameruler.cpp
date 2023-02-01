@@ -30,7 +30,7 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
                         if (board[i][j]
                                 .getPiece()
                                 ->isValidMove(board, whiteKing->getX(), whiteKing->getY())
-                                .first)
+                                .valid_move)
                         {
                             return true;
                         }
@@ -42,7 +42,7 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
                         if (board[i][j]
                                 .getPiece()
                                 ->isValidMove(board, blackKing->getX(), blackKing->getY())
-                                .first)
+                                .valid_move)
                         {
                             return true;
                         }
@@ -62,7 +62,7 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
     {
         if (piece->getColor() == color)
         {
-            if (piece->isValidMove(board, king->getX(), king->getY()).first)
+            if (piece->isValidMove(board, king->getX(), king->getY()).valid_move)
                 return true;
         }
     }

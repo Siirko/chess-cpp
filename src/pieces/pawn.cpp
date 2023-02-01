@@ -10,35 +10,33 @@ Pawn::Pawn(int x, int y, int color) : Piece(x, y, color), value{1} { this->setFi
 
 Pawn::~Pawn() {}
 
-std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x,
-                                                          int y)
+Piece::PieceMove Pawn::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
 {
-    std::pair<bool, std::shared_ptr<Piece>> result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    PieceMove result = {false, nullptr};
     // Check if the move is out of the board
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-    // TO DEBUG!!!!!!!!!!!! Piece can move 2 tiles if there is a piece in front of it
     if (this->getColor() == Color::WHITE)
     {
         // Check if we can move 2 tiles
         if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() + 2 &&
             board[x][y].getPiece() == nullptr && board[x][y - 1].getPiece() == nullptr)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if we can move 1 tile
         else if (x == this->getX() && y == this->getY() + 1 && board[x][y].getPiece() == nullptr)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if the pawn can eat a piece
         else if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + 1 &&
                  board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() == Color::BLACK)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if the pawn can do "en passant" right
         else if (x == this->getX() + 1 && y == this->getY() + 1 && board[x][y].getPiece() == nullptr &&
@@ -50,7 +48,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
             if (pawn->getNumMoves() == 1)
             {
-                result = std::pair<bool, std::shared_ptr<Piece>>(true, pawn);
+                result = {true, pawn};
             }
         }
         // left
@@ -63,7 +61,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
             if (pawn->getNumMoves() == 1)
             {
-                result = std::pair<bool, std::shared_ptr<Piece>>(true, pawn);
+                result = {true, pawn};
             }
         }
     }
@@ -74,18 +72,18 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
         if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() - 2 &&
             board[x][y].getPiece() == nullptr && board[x][y + 1].getPiece() == nullptr)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if we can move 1 tile
         else if (x == this->getX() && y == this->getY() - 1 && board[x][y].getPiece() == nullptr)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if the pawn can eat a piece
         else if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() - 1 &&
                  board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() == Color::WHITE)
         {
-            result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+            result = {true, board[x][y].getPiece()};
         }
         // Check if the pawn can do "en passant" right
         else if (x == this->getX() + 1 && y == this->getY() - 1 && board[x][y].getPiece() == nullptr &&
@@ -97,7 +95,7 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
             if (pawn->getNumMoves() == 1)
             {
-                result = std::pair<bool, std::shared_ptr<Piece>>(true, pawn);
+                result = {true, pawn};
             }
         }
         // left
@@ -110,10 +108,10 @@ std::pair<bool, std::shared_ptr<Piece>> Pawn::isValidMove(std::array<std::array<
                 std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
             if (pawn->getNumMoves() == 1)
             {
-                result = std::pair<bool, std::shared_ptr<Piece>>(true, pawn);
+                result = {true, pawn};
             }
         }
     }
-    result.first = this->beforeCheckMove(board, result, x, y);
+    result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

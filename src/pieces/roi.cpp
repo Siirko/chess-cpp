@@ -21,10 +21,9 @@ bool Roi::isCheck(std::array<std::array<Tile, 8>, 8> board, int x, int y)
         {
             if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getColor() != this->getColor())
             {
-                std::pair<bool, std::shared_ptr<Piece>> result =
-                    board[i][j].getPiece()->isValidMove(board, x, y);
+                PieceMove result = board[i][j].getPiece()->isValidMove(board, x, y);
                 // std::cout << board[i][j].getPiece()->getType() << ", " << *(result.second) << std::endl;
-                if (result.first)
+                if (result.valid_move)
                 {
                     board[x][y].setPiece(tmp);
                     return true;
@@ -36,10 +35,9 @@ bool Roi::isCheck(std::array<std::array<Tile, 8>, 8> board, int x, int y)
     return false;
 }
 
-std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x,
-                                                         int y)
+Piece::PieceMove Roi::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
 {
-    std::pair<bool, std::shared_ptr<Piece>> result = std::pair<bool, std::shared_ptr<Piece>>(false, nullptr);
+    PieceMove result = {false, nullptr};
     // Check if the move is out of the board
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
@@ -59,7 +57,7 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
             if (this->isCheck(board, coord, y))
                 throw std::invalid_argument("can't move king");
         }
-        result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+        result = {true, board[x][y].getPiece()};
     }
     // Check if the move is one tile away
     if (abs(x - this->getX()) <= 1 && abs(y - this->getY()) <= 1)
@@ -71,7 +69,7 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
             if (!this->isCheck(board, x, y))
             {
                 // check if the king is not in check
-                result = std::pair<bool, std::shared_ptr<Piece>>(true, board[x][y].getPiece());
+                result = {true, board[x][y].getPiece()};
             }
             else
             {
@@ -79,6 +77,6 @@ std::pair<bool, std::shared_ptr<Piece>> Roi::isValidMove(std::array<std::array<T
             }
         }
     }
-    result.first = this->beforeCheckMove(board, result, x, y);
+    result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

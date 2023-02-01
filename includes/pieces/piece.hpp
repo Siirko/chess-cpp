@@ -30,6 +30,11 @@ class Piece : public std::enable_shared_from_this<Piece>
     int num_moves = 0;
 
   public:
+    struct PieceMove
+    {
+        bool valid_move;
+        std::shared_ptr<Piece> eaten_piece;
+    };
     Piece(int x, int y, int color);
     virtual ~Piece();
     void setX(int x);
@@ -43,11 +48,9 @@ class Piece : public std::enable_shared_from_this<Piece>
     char getType();
     int getNumMoves() const;
     void updateNumMoves();
-    bool beforeCheckMove(std::array<std::array<Tile, 8>, 8> board,
-                         std::pair<bool, std::shared_ptr<Piece>> result, int x, int y);
+    bool beforeCheckMove(std::array<std::array<Tile, 8>, 8> board, PieceMove result, int x, int y);
     // Abstract method
-    virtual std::pair<bool, std::shared_ptr<Piece>> isValidMove(std::array<std::array<Tile, 8>, 8> board,
-                                                                int x, int y) = 0;
+    virtual PieceMove isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y) = 0;
     bool canMove(std::array<std::array<Tile, 8>, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
     std::shared_ptr<Piece> getptr() { return shared_from_this(); }
