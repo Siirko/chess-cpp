@@ -1,6 +1,7 @@
 #include "../includes/game.hpp"
 #include "../includes/gameruler.hpp"
 #include "../includes/parser.hpp"
+#include "../includes/piecehandler.hpp"
 #include "../includes/pieces/bishop.hpp"
 #include "../includes/pieces/knight.hpp"
 #include "../includes/pieces/pawn.hpp"
@@ -24,7 +25,8 @@ void Game::init()
     this->board = Board();
     this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
-    this->forsythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    this->piece_handler = PieceHandler();
+    this->piece_handler.forsythGeneration(*this, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
 }
 
@@ -70,10 +72,10 @@ void Game::run()
         if (input.empty())
             continue;
         Parser::UpdateCoords coords = Parser::parseInput(input);
-        std::shared_ptr<Piece> piece = this->choosePiece(coords.from.x, coords.from.y);
+        std::shared_ptr<Piece> piece = this->piece_handler.getPieceAt(*this, coords.from.x, coords.from.y);
         if (piece != nullptr && piece->getColor() == this->turn)
         {
-            if (this->movePieceAt(piece, coords.to.x, coords.to.y))
+            if (this->piece_handler.movePieceAt(*this, piece, coords.to.x, coords.to.y))
             {
                 this->turn = (this->turn + 1) % 2;
                 this->num_turns++;
@@ -109,104 +111,6 @@ void Game::run()
         std::cout << "Stalemate, Draw !" << std::endl;
 }
 
-bool Game::movePieceAt(std::shared_ptr<Piece> piece, int x, int y)
-{
-    bool valid = true;
-    try
-    {
-        std::shared_ptr<Piece> eatenPiece = this->board.movePiece(piece, x, y);
-        if (eatenPiece != nullptr && eatenPiece->getType() != PieceType::KING)
-        {
-            if (eatenPiece->getColor() == Color::WHITE)
-                this->black_eaten_pieces.push_back(eatenPiece);
-            else
-                this->white_eaten_pieces.push_back(eatenPiece);
-            this->removeAlivePiece(eatenPiece);
-        }
-    }
-    catch (const std::exception &e)
-    {
-        std::cout << "ERROR: " << e.what() << std::endl;
-        valid = false;
-    }
-    return valid;
-}
-
-void Game::forsythGeneration(std::string fen)
-{
-    int x = 0;
-    int y = 0;
-    for (size_t i = 0; i < fen.length(); i++)
-    {
-        if (fen[i] == '/')
-        {
-            x = 0;
-            y++;
-        }
-        else if (fen[i] >= '1' && fen[i] <= '8')
-        {
-            x += fen[i] - '0';
-        }
-        else
-        {
-            std::shared_ptr<Piece> piece = nullptr;
-            switch (fen[i])
-            {
-            case 'p':
-                piece = std::make_shared<Pawn>(x, y, Color::WHITE);
-                break;
-            case 'P':
-                piece = std::make_shared<Pawn>(x, y, Color::BLACK);
-                break;
-            case 'r':
-                piece = std::make_shared<Tower>(x, y, Color::WHITE);
-                break;
-            case 'R':
-                piece = std::make_shared<Tower>(x, y, Color::BLACK);
-                break;
-            case 'n':
-                piece = std::make_shared<Knight>(x, y, Color::WHITE);
-                break;
-            case 'N':
-                piece = std::make_shared<Knight>(x, y, Color::BLACK);
-                break;
-            case 'b':
-                piece = std::make_shared<Bishop>(x, y, Color::WHITE);
-                break;
-            case 'B':
-                piece = std::make_shared<Bishop>(x, y, Color::BLACK);
-                break;
-            case 'q':
-                piece = std::make_shared<Queen>(x, y, Color::WHITE);
-                break;
-            case 'Q':
-                piece = std::make_shared<Queen>(x, y, Color::BLACK);
-                break;
-            case 'k':
-                piece = std::make_shared<Roi>(x, y, Color::WHITE);
-                break;
-            case 'K':
-                piece = std::make_shared<Roi>(x, y, Color::BLACK);
-                break;
-            default:
-                break;
-            }
-            if (piece != nullptr)
-            {
-                this->board.setPiece(piece);
-                this->addAlivePiece(piece);
-                x++;
-            }
-        }
-    }
-}
-
-std::shared_ptr<Piece> Game::choosePiece(int x, int y)
-{
-    auto piece = this->board.getTile(x, y).getPiece();
-    return piece != nullptr ? piece : nullptr;
-}
-
 std::vector<std::shared_ptr<Piece>> Game::getAlivePieces() const { return this->alive_pieces; }
 
 void Game::addAlivePiece(std::shared_ptr<Piece> piece) { this->alive_pieces.push_back(piece); }
@@ -216,3 +120,9 @@ void Game::removeAlivePiece(std::shared_ptr<Piece> piece)
     this->alive_pieces.erase(std::remove(this->alive_pieces.begin(), this->alive_pieces.end(), piece),
                              this->alive_pieces.end());
 }
+
+Board &Game::getBoard() { return this->board; }
+
+std::vector<std::shared_ptr<Piece>> &Game::getWhiteEatenPieces() { return this->white_eaten_pieces; }
+
+std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->black_eaten_pieces; }

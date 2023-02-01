@@ -1,15 +1,18 @@
 #pragma once
 #include "board/board.hpp"
+#include "piecehandler.hpp"
 #include "pieces/piece.hpp"
 #include "pieces/roi.hpp"
 #include <array>
 #include <memory>
 #include <vector>
 
+class PieceHandler;
 class Game
 {
   private:
     Board board;
+    PieceHandler piece_handler;
     // 0 black, 1 white
     int turn;
     int num_turns;
@@ -20,7 +23,6 @@ class Game
     std::vector<std::shared_ptr<Piece>> white_eaten_pieces;
     std::vector<std::shared_ptr<Piece>> alive_pieces;
     void init();
-    void forsythGeneration(std::string fen);
 
   public:
     Game();
@@ -28,12 +30,11 @@ class Game
     void run();
     std::shared_ptr<Roi> getWhiteKing() const;
     std::shared_ptr<Roi> getBlackKing() const;
-    void printInfo();
     std::vector<std::shared_ptr<Piece>> getAlivePieces() const;
+    std::vector<std::shared_ptr<Piece>> &getBlackEatenPieces();
+    std::vector<std::shared_ptr<Piece>> &getWhiteEatenPieces();
+    Board &getBoard();
+    void printInfo();
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
-    std::shared_ptr<Piece> choosePiece(int x, int y);
-    bool isCheck();
-    bool isCheckMate();
-    bool movePieceAt(std::shared_ptr<Piece> piece, int x, int y);
 };
