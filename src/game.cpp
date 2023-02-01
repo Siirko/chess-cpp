@@ -24,7 +24,7 @@ void Game::init()
     this->board = Board();
     this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
     this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
-    this->forythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+    this->forsythGeneration("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
 }
 
@@ -91,9 +91,13 @@ void Game::run()
                     break;
             }
         }
-        else
+        else if (piece == nullptr)
         {
-            std::cout << "Invalid move" << std::endl;
+            std::cout << "No piece at this position" << std::endl;
+        }
+        else if (piece->getColor() != this->turn)
+        {
+            std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
         }
     } while ((input = Parser::getInput()) != "/exit" && this->checkMate != true);
     if (this->checkMate)
@@ -102,10 +106,7 @@ void Game::run()
         std::cout << "Checkmate, " << color << " Won !" << std::endl;
     }
     else if (this->staleMate)
-    {
         std::cout << "Stalemate, Draw !" << std::endl;
-    }
-    std::cout << "end" << std::endl;
 }
 
 bool Game::movePieceAt(std::shared_ptr<Piece> piece, int x, int y)
@@ -131,7 +132,7 @@ bool Game::movePieceAt(std::shared_ptr<Piece> piece, int x, int y)
     return valid;
 }
 
-void Game::forythGeneration(std::string fen)
+void Game::forsythGeneration(std::string fen)
 {
     int x = 0;
     int y = 0;

@@ -11,6 +11,10 @@ std::string Parser::getInput()
     if (input == "/exit")
         return input;
     std::regex pattern("[a-h][1-8][a-h][1-8]");
+    /*
+    std::regex little_rook_pattern("(O|o|0)-(O|o|0)");
+    std::regex big_rook_pattern("(O|o|0)-(O|o|0)-(O|o|0)");
+    */
     if (!std::regex_match(input, pattern))
     {
         std::cout << "Invalid input" << std::endl;

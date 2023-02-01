@@ -20,7 +20,7 @@ class Game
     std::vector<std::shared_ptr<Piece>> white_eaten_pieces;
     std::vector<std::shared_ptr<Piece>> alive_pieces;
     void init();
-    void forythGeneration(std::string fen);
+    void forsythGeneration(std::string fen);
 
   public:
     Game();
