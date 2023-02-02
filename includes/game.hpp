@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 
-class PieceHandler;
 class Game
 {
   private:

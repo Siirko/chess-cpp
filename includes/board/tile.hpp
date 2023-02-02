@@ -1,5 +1,4 @@
 #pragma once
-#include "../pieces/piece.hpp"
 #include <climits>
 #include <memory>
 

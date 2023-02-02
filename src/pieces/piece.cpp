@@ -1,4 +1,5 @@
 #include "../../includes/pieces/piece.hpp"
+#include "../../includes/board/tile.hpp"
 #include "../../includes/gameruler.hpp"
 #include <iostream>
 #include <string>

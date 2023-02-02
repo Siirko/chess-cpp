@@ -1,5 +1,4 @@
 #pragma once
-#include "../board/tile.hpp"
 #include <array>
 #include <memory>
 

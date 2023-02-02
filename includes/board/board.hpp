@@ -1,8 +1,8 @@
 #pragma once
-#include "tile.hpp"
+#include "../board/tile.hpp"
+#include "../pieces/piece.hpp"
 #include <array>
 #include <memory>
-
 class Board
 {
   private:
