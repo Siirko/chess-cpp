@@ -13,7 +13,7 @@ Tower::Tower(int x, int y, int color) : Piece(x, y, color), value{5} { this->set
 Tower::~Tower() {}
 
 // TODO: need to decide who check if king is in check (board or the piece itself)
-Piece::PieceMove Tower::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+Piece::PieceMove Tower::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board

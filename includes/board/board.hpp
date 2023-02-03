@@ -1,12 +1,13 @@
 #pragma once
 #include "../board/tile.hpp"
 #include "../pieces/piece.hpp"
+#include "../utilities.hpp"
 #include <array>
 #include <memory>
 class Board
 {
   private:
-    std::array<std::array<Tile, 8>, 8> board;
+    array2d<Tile, 8, 8> board;
     void initBoard();
 
   public:

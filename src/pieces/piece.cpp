@@ -36,7 +36,7 @@ int Piece::getNumMoves() const { return this->num_moves; }
 
 void Piece::updateNumMoves() { this->num_moves++; }
 
-bool Piece::beforeCheckMove(std::array<std::array<Tile, 8>, 8> board, PieceMove result, int x, int y)
+bool Piece::beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y)
 {
     std::shared_ptr<Piece> tt = this->getptr();
     if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.valid_move, x, y))
@@ -49,7 +49,7 @@ bool Piece::beforeCheckMove(std::array<std::array<Tile, 8>, 8> board, PieceMove 
     return result.valid_move;
 }
 
-bool Piece::canMove(std::array<std::array<Tile, 8>, 8> board)
+bool Piece::canMove(array2d<Tile, 8, 8> board)
 {
     for (int i = 0; i < 8; i++)
     {

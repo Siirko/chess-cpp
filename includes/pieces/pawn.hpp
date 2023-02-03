@@ -10,6 +10,5 @@ class Pawn : public Piece
   public:
     Pawn(int x, int y, int color);
     ~Pawn();
-    virtual PieceMove isValidMove(std::array<std::array<Tile, 8>, 8> board,
-                                                                int x, int y) override;
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) override;
 };

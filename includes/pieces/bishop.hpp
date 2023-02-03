@@ -10,5 +10,5 @@ class Bishop : public Piece
   public:
     Bishop(int x, int y, int color);
     ~Bishop();
-    virtual PieceMove isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y) override;
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) override;
 };

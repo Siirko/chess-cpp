@@ -10,7 +10,7 @@ Knight::Knight(int x, int y, int color) : Piece(x, y, color), value{3} { this->s
 
 Knight::~Knight() {}
 
-Piece::PieceMove Knight::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board

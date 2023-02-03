@@ -75,7 +75,7 @@ void Board::printBoard()
 
 Tile Board::getTile(int x, int y) const { return this->board[x][y]; }
 
-std::array<std::array<Tile, 8>, 8> Board::getBoard() const { return this->board; }
+array2d<Tile, 8, 8> Board::getBoard() const { return this->board; }
 
 void Board::setPiece(std::shared_ptr<Piece> piece)
 {

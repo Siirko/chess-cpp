@@ -10,7 +10,7 @@ Bishop::Bishop(int x, int y, int color) : Piece(x, y, color), value{3} { this->s
 
 Bishop::~Bishop() {}
 
-Piece::PieceMove Bishop::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+Piece::PieceMove Bishop::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board

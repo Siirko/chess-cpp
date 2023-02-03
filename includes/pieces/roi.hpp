@@ -10,7 +10,6 @@ class Roi : public Piece
   public:
     Roi(int x, int y, int color);
     ~Roi();
-    bool isCheck(std::array<std::array<Tile, 8>, 8> board, int x, int y);
-    virtual PieceMove isValidMove(std::array<std::array<Tile, 8>, 8> board,
-                                                                int x, int y) override;
+    bool isCheck(array2d<Tile, 8, 8> board, int x, int y);
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) override;
 };

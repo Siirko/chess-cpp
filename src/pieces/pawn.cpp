@@ -10,7 +10,7 @@ Pawn::Pawn(int x, int y, int color) : Piece(x, y, color), value{1} { this->setFi
 
 Pawn::~Pawn() {}
 
-Piece::PieceMove Pawn::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board

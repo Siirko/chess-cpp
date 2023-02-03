@@ -3,6 +3,8 @@
 #include <stdexcept>
 #include <string>
 
+template <class T, unsigned I, unsigned J> using array2d = std::array<std::array<T, J>, I>;
+
 template <typename... Args> std::string string_format(const std::string &format, Args... args)
 {
     int size_s = std::snprintf(nullptr, 0, format.c_str(), args...) + 1; // Extra space for '\0'

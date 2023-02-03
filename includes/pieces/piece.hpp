@@ -1,4 +1,5 @@
 #pragma once
+#include "../utilities.hpp"
 #include <array>
 #include <memory>
 
@@ -47,10 +48,10 @@ class Piece : public std::enable_shared_from_this<Piece>
     char getType();
     int getNumMoves() const;
     void updateNumMoves();
-    bool beforeCheckMove(std::array<std::array<Tile, 8>, 8> board, PieceMove result, int x, int y);
+    bool beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y);
     // Abstract method
-    virtual PieceMove isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y) = 0;
-    bool canMove(std::array<std::array<Tile, 8>, 8> board);
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) = 0;
+    bool canMove(array2d<Tile, 8, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
     std::shared_ptr<Piece> getptr() { return shared_from_this(); }
 };

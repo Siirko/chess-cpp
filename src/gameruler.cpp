@@ -14,7 +14,7 @@ void GameRuler::setGame(const Game *game)
     blackKing = game->getBlackKing();
 }
 
-bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -55,8 +55,7 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
     return false;
 }
 
-bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color color,
-                              std::shared_ptr<Roi> king)
+bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color, std::shared_ptr<Roi> king)
 {
     for (auto piece : this->game->getAlivePieces())
     {
@@ -69,13 +68,13 @@ bool GameRuler::isKingInCheck(std::array<std::array<Tile, 8>, 8> board, Color co
     return false;
 }
 
-bool GameRuler::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board, std::shared_ptr<Piece> piece,
-                                       bool canMove, int x, int y)
+bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
+                                       int x, int y)
 {
     if (canMove)
     {
         // fake board
-        std::array<std::array<Tile, 8>, 8> fakeBoard = board;
+        array2d<Tile, 8, 8> fakeBoard = board;
         fakeBoard[x][y].setPiece(piece);
         fakeBoard[piece->getX()][piece->getY()].setPiece(nullptr);
         if (piece->getType() == PieceType::KING)
@@ -95,7 +94,7 @@ bool GameRuler::isKingInCheckAfterMove(std::array<std::array<Tile, 8>, 8> board,
     return false;
 }
 
-bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInCheckMate(array2d<Tile, 8, 8> board, Color color)
 {
     if (isKingInCheck(board, color))
     {
@@ -117,7 +116,7 @@ bool GameRuler::isKingInCheckMate(std::array<std::array<Tile, 8>, 8> board, Colo
     return false;
 }
 
-bool GameRuler::isKingInStaleMate(std::array<std::array<Tile, 8>, 8> board, Color color)
+bool GameRuler::isKingInStaleMate(array2d<Tile, 8, 8> board, Color color)
 {
     bool inCheck = isKingInCheck(board, color);
     if (!inCheck)

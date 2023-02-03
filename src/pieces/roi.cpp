@@ -10,7 +10,7 @@ Roi::Roi(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirs
 
 Roi::~Roi() {}
 
-bool Roi::isCheck(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
 {
     auto tmp = board[x][y].getPiece();
     board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
@@ -35,7 +35,7 @@ bool Roi::isCheck(std::array<std::array<Tile, 8>, 8> board, int x, int y)
     return false;
 }
 
-Piece::PieceMove Roi::isValidMove(std::array<std::array<Tile, 8>, 8> board, int x, int y)
+Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
