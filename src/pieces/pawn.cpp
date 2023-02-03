@@ -10,6 +10,50 @@ Pawn::Pawn(int x, int y, int color) : Piece(x, y, color), value{1} { this->setFi
 
 Pawn::~Pawn() {}
 
+void Pawn::checkDoubleMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
+{
+    int y_offset = this->getColor() == Color::WHITE ? 2 : -2;
+    int y_offset2 = this->getColor() == Color::WHITE ? -1 : 1;
+    if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() + y_offset &&
+        board[x][y].getPiece() == nullptr && board[x][y + y_offset2].getPiece() == nullptr)
+    {
+        result = {true, board[x][y].getPiece()};
+    }
+}
+
+void Pawn::checkMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
+{
+    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
+    if (x == this->getX() && y == this->getY() + y_offset && board[x][y].getPiece() == nullptr)
+    {
+        result = {true, board[x][y].getPiece()};
+    }
+}
+
+void Pawn::checkCapture(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
+{
+    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
+    if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + y_offset &&
+        board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() != this->getColor())
+    {
+        result = {true, board[x][y].getPiece()};
+    }
+}
+
+void Pawn::checkEnPassant(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
+{
+    // check left and right for black and white
+    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
+    if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + y_offset &&
+        board[x][y].getPiece() == nullptr && board[x][y - y_offset].getPiece() != nullptr &&
+        board[x][this->getY()].getPiece()->getColor() != this->getColor() &&
+        board[x][this->getY()].getPiece()->getType() == PieceType::PAWN &&
+        board[x][this->getY()].getPiece()->getNumMoves() == 1)
+    {
+        result = {true, board[x][this->getY()].getPiece()};
+    }
+}
+
 Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
@@ -19,99 +63,11 @@ Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-    if (this->getColor() == Color::WHITE)
-    {
-        // Check if we can move 2 tiles
-        if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() + 2 &&
-            board[x][y].getPiece() == nullptr && board[x][y - 1].getPiece() == nullptr)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if we can move 1 tile
-        else if (x == this->getX() && y == this->getY() + 1 && board[x][y].getPiece() == nullptr)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if the pawn can eat a piece
-        else if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + 1 &&
-                 board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() == Color::BLACK)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if the pawn can do "en passant" right
-        else if (x == this->getX() + 1 && y == this->getY() + 1 && board[x][y].getPiece() == nullptr &&
-                 board[this->getX() + 1][this->getY()].getPiece() != nullptr &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getColor() == Color::BLACK &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
-        {
-            std::shared_ptr<Pawn> pawn =
-                std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
-            if (pawn->getNumMoves() == 1)
-            {
-                result = {true, pawn};
-            }
-        }
-        // left
-        else if (x == this->getX() - 1 && y == this->getY() + 1 && board[x][y].getPiece() == nullptr &&
-                 board[this->getX() - 1][this->getY()].getPiece() != nullptr &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getColor() == Color::BLACK &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
-        {
-            std::shared_ptr<Pawn> pawn =
-                std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
-            if (pawn->getNumMoves() == 1)
-            {
-                result = {true, pawn};
-            }
-        }
-    }
-    // black pawn
-    else
-    {
-        // Check if we can move 2 tiles
-        if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() - 2 &&
-            board[x][y].getPiece() == nullptr && board[x][y + 1].getPiece() == nullptr)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if we can move 1 tile
-        else if (x == this->getX() && y == this->getY() - 1 && board[x][y].getPiece() == nullptr)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if the pawn can eat a piece
-        else if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() - 1 &&
-                 board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() == Color::WHITE)
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-        // Check if the pawn can do "en passant" right
-        else if (x == this->getX() + 1 && y == this->getY() - 1 && board[x][y].getPiece() == nullptr &&
-                 board[this->getX() + 1][this->getY()].getPiece() != nullptr &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getColor() == Color::WHITE &&
-                 board[this->getX() + 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
-        {
-            std::shared_ptr<Pawn> pawn =
-                std::dynamic_pointer_cast<Pawn>(board[this->getX() + 1][this->getY()].getPiece());
-            if (pawn->getNumMoves() == 1)
-            {
-                result = {true, pawn};
-            }
-        }
-        // left
-        else if (x == this->getX() - 1 && y == this->getY() - 1 && board[x][y].getPiece() == nullptr &&
-                 board[this->getX() - 1][this->getY()].getPiece() != nullptr &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getColor() == Color::WHITE &&
-                 board[this->getX() - 1][this->getY()].getPiece()->getType() == PieceType::PAWN)
-        {
-            std::shared_ptr<Pawn> pawn =
-                std::dynamic_pointer_cast<Pawn>(board[this->getX() - 1][this->getY()].getPiece());
-            if (pawn->getNumMoves() == 1)
-            {
-                result = {true, pawn};
-            }
-        }
-    }
+    this->checkDoubleMove(board, result, x, y);
+    this->checkMove(board, result, x, y);
+    this->checkCapture(board, result, x, y);
+    this->checkEnPassant(board, result, x, y);
+    // this->checkPromotion(board, result, x, y);
     result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }
