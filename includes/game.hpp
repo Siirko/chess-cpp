@@ -33,7 +33,9 @@ class Game
     std::vector<std::shared_ptr<Piece>> &getBlackEatenPieces();
     std::vector<std::shared_ptr<Piece>> &getWhiteEatenPieces();
     Board &getBoard();
+    Board getBoard() const;
     void printInfo();
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
+    friend std::ostream &operator<<(std::ostream &os, const Game &game);
 };

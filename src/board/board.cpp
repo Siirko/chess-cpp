@@ -26,50 +26,20 @@ std::string pieceSymbol(char type, Color color)
 {
     switch (type)
     {
-    case 'P':
+    case PieceType::PAWN:
         return color == Color::WHITE ? "♙" : "♟";
-    case 'T':
+    case PieceType::TOWER:
         return color == Color::WHITE ? "♖" : "♜";
-    case 'K':
+    case PieceType::KNIGHT:
         return color == Color::WHITE ? "♘" : "♞";
-    case 'B':
+    case PieceType::BISHOP:
         return color == Color::WHITE ? "♗" : "♝";
-    case 'Q':
+    case PieceType::QUEEN:
         return color == Color::WHITE ? "♕" : "♛";
-    case 'R':
+    case PieceType::KING:
         return color == Color::WHITE ? "♔" : "♚";
     default:
         return " ";
-    }
-}
-
-void Board::printBoard()
-{
-    std::string space5 = std::string(5, ' ');
-    std::cout << std::endl;
-    std::cout << "     a     b     c     d     e     f     g     h    " << std::endl;
-    std::cout << "  +-----+-----+-----+-----+-----+-----+-----+-----+" << std::endl;
-    for (int i = 8; i > 0; i--)
-    {
-        std::cout << i << " "; // numérotation ligne dans affichage
-        for (int j = 0; j < 8; j++)
-        {
-            std::cout << "|";
-            if (this->board[j][i - 1].getPiece() != nullptr)
-            {
-                std::cout << "\u0020\u0020"; // U+0020 est un esapce utf-8 taille police
-                char type = this->board[j][i - 1].getPiece()->getType();
-                std::cout << pieceSymbol(type, (Color)this->board[j][i - 1].getPiece()->getColor());
-                std::cout << "\u0020"
-                          << " ";
-            }
-            else
-            {
-                std::cout << space5;
-            }
-        }
-        std::cout << "|\n  +-----+-----+-----+-----+-----+-----+-----+-----+";
-        std::cout << std::endl;
     }
 }
 
@@ -115,19 +85,6 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     {
         throw std::invalid_argument("can't move king");
     }
-    /*
-    if (GameRuler::getInstance().isKingInCheck(this->board, (Color)piece->getColor()) &&
-        GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, valid_move.first, x, y) &&
-        valid_move.first)
-    {
-        throw std::invalid_argument("king is check !");
-    }
-    if (GameRuler::getInstance().isKingInCheckAfterMove(this->board, piece, valid_move.first, x, y) &&
-        valid_move.first)
-    {
-        throw std::invalid_argument("king will be in check !");
-    }
-    */
     if (future_move.valid_move)
     {
         // check if caste move
@@ -172,7 +129,31 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
 
 std::ostream &operator<<(std::ostream &os, const Board &board)
 {
-    // TODO: print board like printBoard() method
-    os << "Board TODO" << std::endl;
+    std::string space5 = std::string(5, ' ');
+    os << std::endl;
+    os << "     a     b     c     d     e     f     g     h    " << std::endl;
+    os << "  +-----+-----+-----+-----+-----+-----+-----+-----+" << std::endl;
+    for (int i = 8; i > 0; i--)
+    {
+        os << i << " "; // numérotation ligne dans affichage
+        for (int j = 0; j < 8; j++)
+        {
+            os << "|";
+            if (board.board[j][i - 1].getPiece() != nullptr)
+            {
+                os << "\u0020\u0020"; // U+0020 est un esapce utf-8 taille police
+                char type = board.board[j][i - 1].getPiece()->getType();
+                os << pieceSymbol(type, (Color)board.board[j][i - 1].getPiece()->getColor());
+                os << "\u0020"
+                   << " ";
+            }
+            else
+            {
+                os << space5;
+            }
+        }
+        os << "|\n  +-----+-----+-----+-----+-----+-----+-----+-----+";
+        os << std::endl;
+    }
     return os;
 }

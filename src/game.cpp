@@ -15,17 +15,18 @@
 // TODO:: Refactor the big shit i've made, do Steelmate, refactor Board display
 // game too
 
-Game::Game() : board{}, turn{1}, num_turns{0}, check{false}, checkMate{false}, staleMate{false} { init(); }
+Game::Game()
+    : board{Board()},
+      piece_handler{PieceHandler()}, turn{1}, num_turns{0}, check{false}, checkMate{false}, staleMate{false}
+{
+    init();
+}
 
 Game::~Game() { std::cout << "Game destructor" << std::endl; }
 
 void Game::init()
 {
     std::cout << "Game init" << std::endl;
-    this->board = Board();
-    this->black_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
-    this->white_eaten_pieces = std::vector<std::shared_ptr<Piece>>();
-    this->piece_handler = PieceHandler();
     this->piece_handler.forsythGeneration(*this, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
 }
@@ -50,22 +51,12 @@ std::shared_ptr<Roi> Game::getBlackKing() const
     throw std::runtime_error("No black king found");
 }
 
-void Game::printInfo()
-{
-    std::cout << "White eaten pieces: " << this->white_eaten_pieces.size() << std::endl;
-    std::cout << "Black eaten pieces: " << this->black_eaten_pieces.size() << std::endl;
-    std::cout << "Turn: ";
-    if (this->turn == 0)
-        std::cout << "BLACK" << std::endl;
-    else
-        std::cout << "WHITE" << std::endl;
-}
+void Game::printInfo() {}
 
 void Game::run()
 {
     std::cout << "Game running" << std::endl;
-    this->board.printBoard();
-    this->printInfo();
+    std::cout << *this << std::endl;
     std::string input;
     do
     {
@@ -79,8 +70,7 @@ void Game::run()
             {
                 this->turn = (this->turn + 1) % 2;
                 this->num_turns++;
-                this->board.printBoard();
-                this->printInfo();
+                std::cout << *this << std::flush;
                 this->check =
                     GameRuler::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
                 this->checkMate =
@@ -123,6 +113,17 @@ void Game::removeAlivePiece(std::shared_ptr<Piece> piece)
 
 Board &Game::getBoard() { return this->board; }
 
+Board Game::getBoard() const { return this->board; }
+
 std::vector<std::shared_ptr<Piece>> &Game::getWhiteEatenPieces() { return this->white_eaten_pieces; }
 
 std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->black_eaten_pieces; }
+
+std::ostream &operator<<(std::ostream &os, const Game &game)
+{
+    os << game.getBoard();
+    os << "White eaten pieces: " << game.white_eaten_pieces.size() << std::endl;
+    os << "Black eaten pieces: " << game.black_eaten_pieces.size() << std::endl;
+    os << "Turn: " << (game.turn == 0 ? "BLACK" : "WHITE") << std::endl;
+    return os;
+}
