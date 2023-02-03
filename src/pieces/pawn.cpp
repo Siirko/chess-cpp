@@ -1,5 +1,4 @@
 #include "../../includes/pieces/pawn.hpp"
-#include "../../includes/board/tile.hpp"
 #include "../../includes/gameruler.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include <array>

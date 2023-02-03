@@ -1,5 +1,4 @@
 #include "../../includes/pieces/bishop.hpp"
-#include "../../includes/board/tile.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include "../../includes/utilities.hpp"
 #include <array>

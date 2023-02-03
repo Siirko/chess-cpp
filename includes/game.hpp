@@ -33,6 +33,7 @@ class Game
     std::vector<std::shared_ptr<Piece>> &getBlackEatenPieces();
     std::vector<std::shared_ptr<Piece>> &getWhiteEatenPieces();
     Board &getBoard();
+    PieceHandler &getPieceHandler();
     void printInfo();
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);

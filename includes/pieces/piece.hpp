@@ -1,6 +1,9 @@
 #pragma once
+#include "../parser.hpp"
 #include <array>
+#include <functional>
 #include <memory>
+#include <vector>
 
 enum Color
 {
@@ -34,6 +37,13 @@ class Piece : public std::enable_shared_from_this<Piece>
         bool valid_move;
         std::shared_ptr<Piece> eaten_piece;
     };
+
+  private:
+    std::vector<
+        std::function<void(std::array<std::array<Tile, 8>, 8>, Piece::PieceMove &, Parser::UpdateCoords)>>
+        moveFunctions;
+
+  public:
     Piece(int x, int y, int color);
     virtual ~Piece();
     void setX(int x);
@@ -53,4 +63,7 @@ class Piece : public std::enable_shared_from_this<Piece>
     bool canMove(std::array<std::array<Tile, 8>, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
     std::shared_ptr<Piece> getptr() { return shared_from_this(); }
+    std::vector<
+        std::function<void(std::array<std::array<Tile, 8>, 8>, Piece::PieceMove &, Parser::UpdateCoords)>> &
+    getMoveFunctions();
 };

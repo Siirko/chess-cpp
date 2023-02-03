@@ -1,5 +1,5 @@
 CC := g++
-CFLAGS ?= -Wall -Werror -g -std=c++11
+CFLAGS ?= -Wall -Werror -g -std=c++11 -D_GLIBCXX_ASSERTIONS
 LDLIBS ?= -lm
 
 EXEC = main

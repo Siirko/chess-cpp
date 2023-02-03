@@ -1,5 +1,4 @@
 #include "../../includes/pieces/piece.hpp"
-#include "../../includes/board/tile.hpp"
 #include "../../includes/gameruler.hpp"
 #include <iostream>
 #include <string>
@@ -72,4 +71,10 @@ std::ostream &operator<<(std::ostream &os, const Piece &piece)
        << "x->" << piece.x << " y->" << piece.y << std::endl
        << "Num of moves: " << piece.num_moves << std::endl;
     return os;
+}
+
+std::vector<std::function<void(std::array<std::array<Tile, 8>, 8>, Piece::PieceMove &, Parser::UpdateCoords)>>
+    &Piece::getMoveFunctions()
+{
+    return this->moveFunctions;
 }

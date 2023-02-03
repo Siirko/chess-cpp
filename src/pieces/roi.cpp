@@ -1,5 +1,4 @@
 #include "../../includes/pieces/roi.hpp"
-#include "../../includes/board/tile.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include <array>
 #include <iostream>

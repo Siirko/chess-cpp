@@ -126,3 +126,5 @@ Board &Game::getBoard() { return this->board; }
 std::vector<std::shared_ptr<Piece>> &Game::getWhiteEatenPieces() { return this->white_eaten_pieces; }
 
 std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->black_eaten_pieces; }
+
+PieceHandler &Game::getPieceHandler() { return this->piece_handler; }
