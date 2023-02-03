@@ -19,27 +19,7 @@ Piece::PieceMove Bishop::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-
-    if (abs(x - this->getX()) == abs(y - this->getY()))
-    {
-        // Check if the path is clear
-        int xDir = (x - this->getX()) / abs(x - this->getX());
-        int yDir = (y - this->getY()) / abs(y - this->getY());
-        int i = this->getX() + xDir;
-        int j = this->getY() + yDir;
-        while (i != x && j != y)
-        {
-            if (board[i][j].getPiece() != nullptr)
-                return result;
-            i += xDir;
-            j += yDir;
-        }
-        // Check if the move is valid
-        if (board[x][y].getPiece() == nullptr || board[x][y].getPiece()->getColor() != this->getColor())
-        {
-            result = {true, board[x][y].getPiece()};
-        }
-    }
+    this->callCheckDiagonals(*this, board, result, x, y);
     result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

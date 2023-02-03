@@ -10,50 +10,6 @@ Pawn::Pawn(int x, int y, int color) : Piece(x, y, color), value{1} { this->setFi
 
 Pawn::~Pawn() {}
 
-void Pawn::checkDoubleMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
-{
-    int y_offset = this->getColor() == Color::WHITE ? 2 : -2;
-    int y_offset2 = this->getColor() == Color::WHITE ? -1 : 1;
-    if (this->getNumMoves() == 0 && x == this->getX() && y == this->getY() + y_offset &&
-        board[x][y].getPiece() == nullptr && board[x][y + y_offset2].getPiece() == nullptr)
-    {
-        result = {true, board[x][y].getPiece()};
-    }
-}
-
-void Pawn::checkMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
-{
-    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
-    if (x == this->getX() && y == this->getY() + y_offset && board[x][y].getPiece() == nullptr)
-    {
-        result = {true, board[x][y].getPiece()};
-    }
-}
-
-void Pawn::checkCapture(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
-{
-    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
-    if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + y_offset &&
-        board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getColor() != this->getColor())
-    {
-        result = {true, board[x][y].getPiece()};
-    }
-}
-
-void Pawn::checkEnPassant(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y)
-{
-    // check left and right for black and white
-    int y_offset = this->getColor() == Color::WHITE ? 1 : -1;
-    if ((x == this->getX() + 1 || x == this->getX() - 1) && y == this->getY() + y_offset &&
-        board[x][y].getPiece() == nullptr && board[x][y - y_offset].getPiece() != nullptr &&
-        board[x][this->getY()].getPiece()->getColor() != this->getColor() &&
-        board[x][this->getY()].getPiece()->getType() == PieceType::PAWN &&
-        board[x][this->getY()].getPiece()->getNumMoves() == 1)
-    {
-        result = {true, board[x][this->getY()].getPiece()};
-    }
-}
-
 Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
 {
     PieceMove result = {false, nullptr};
@@ -63,11 +19,11 @@ Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-    this->checkDoubleMove(board, result, x, y);
-    this->checkMove(board, result, x, y);
-    this->checkCapture(board, result, x, y);
-    this->checkEnPassant(board, result, x, y);
-    // this->checkPromotion(board, result, x, y);
+    this->callCheckDoubleMove(*this, board, result, x, y);
+    this->callCheckStraight(*this, board, result, x, y);
+    this->callCheckDiagonalCapture(*this, board, result, x, y);
+    this->callCheckEnPassant(*this, board, result, x, y);
+    // this->callCheckPromotion(*this, board, result, x, y);
     result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

@@ -17,24 +17,7 @@ Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     if (x < 0 || x > 7 || y < 0 || y > 7)
         return result;
     // Check if the move is to the same position
-    if (x == this->getX() && y == this->getY())
-        return result;
-    if (x == this->getX() + 1 && y == this->getY() + 2)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() + 2 && y == this->getY() + 1)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() + 2 && y == this->getY() - 1)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() + 1 && y == this->getY() - 2)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() - 1 && y == this->getY() - 2)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() - 2 && y == this->getY() - 1)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() - 2 && y == this->getY() + 1)
-        result = {true, board[x][y].getPiece()};
-    else if (x == this->getX() - 1 && y == this->getY() + 2)
-        result = {true, board[x][y].getPiece()};
+    this->callCheckLshape(*this, board, result, x, y);
     result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

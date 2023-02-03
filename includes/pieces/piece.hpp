@@ -30,11 +30,7 @@ class Piece : public std::enable_shared_from_this<Piece>
     int num_moves = 0;
 
   public:
-    struct PieceMove
-    {
-        bool valid_move;
-        std::shared_ptr<Piece> eaten_piece;
-    };
+    struct PieceMove;
     Piece(int x, int y, int color);
     virtual ~Piece();
     void setX(int x);
@@ -54,4 +50,10 @@ class Piece : public std::enable_shared_from_this<Piece>
     bool canMove(array2d<Tile, 8, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
     std::shared_ptr<Piece> getptr() { return shared_from_this(); }
+};
+
+struct Piece::PieceMove
+{
+    bool valid_move;
+    std::shared_ptr<Piece> eaten_piece;
 };

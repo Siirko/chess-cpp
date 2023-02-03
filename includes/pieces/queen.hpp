@@ -1,8 +1,9 @@
 #pragma once
 #include "../board/tile.hpp"
+#include "../check/queenchecker.hpp"
 #include "piece.hpp"
 
-class Queen : public Piece
+class Queen : public Piece, public QueenChecker
 {
   private:
     int value;

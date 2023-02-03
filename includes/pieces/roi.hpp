@@ -1,8 +1,9 @@
 #pragma once
 #include "../board/tile.hpp"
+#include "../check/roichecker.hpp"
 #include "piece.hpp"
 
-class Roi : public Piece
+class Roi : public Piece, public RoiChecker
 {
   private:
     int value;

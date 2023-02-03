@@ -1,16 +1,12 @@
 #pragma once
 #include "../board/tile.hpp"
+#include "../check/pawnchecker.hpp"
 #include "piece.hpp"
 
-class Pawn : public Piece
+class Pawn : public Piece, public PawnChecker
 {
   private:
     int value;
-    void checkEnPassant(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y);
-    void checkPromotion(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y);
-    void checkMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y);
-    void checkDoubleMove(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y);
-    void checkCapture(array2d<Tile, 8, 8> board, PieceMove &result, int x, int y);
 
   public:
     Pawn(int x, int y, int color);
