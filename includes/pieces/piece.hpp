@@ -1,5 +1,5 @@
 #pragma once
-#include "../board/tile.hpp"
+#include "../utilities.hpp"
 #include <array>
 #include <memory>
 
@@ -20,7 +20,7 @@ enum PieceType
 };
 
 class Tile;
-class Piece
+class Piece : public std::enable_shared_from_this<Piece>
 {
   private:
     int x;
@@ -30,6 +30,7 @@ class Piece
     int num_moves = 0;
 
   public:
+    struct PieceMove;
     Piece(int x, int y, int color);
     virtual ~Piece();
     void setX(int x);
@@ -43,8 +44,16 @@ class Piece
     char getType();
     int getNumMoves() const;
     void updateNumMoves();
+    bool beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y);
     // Abstract method
-    virtual std::pair<bool, std::shared_ptr<Piece>> isValidMove(std::array<std::array<Tile, 8>, 8> board,
-                                                                int x, int y) = 0;
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) = 0;
+    bool canMove(array2d<Tile, 8, 8> board);
     friend std::ostream &operator<<(std::ostream &os, const Piece &piece);
+    std::shared_ptr<Piece> getptr() { return shared_from_this(); }
+};
+
+struct Piece::PieceMove
+{
+    bool valid_move;
+    std::shared_ptr<Piece> eaten_piece;
 };

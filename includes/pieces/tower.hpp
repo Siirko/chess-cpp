@@ -1,8 +1,9 @@
 #pragma once
 #include "../board/tile.hpp"
+#include "../check/towerchecker.hpp"
 #include "piece.hpp"
 
-class Tower : public Piece
+class Tower : public Piece, public TowerChecker
 {
   private:
     int value;
@@ -10,6 +11,5 @@ class Tower : public Piece
   public:
     Tower(int x, int y, int color);
     ~Tower();
-    virtual std::pair<bool, std::shared_ptr<Piece>> isValidMove(std::array<std::array<Tile, 8>, 8> board,
-                                                                int x, int y) override;
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) override;
 };
