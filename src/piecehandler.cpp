@@ -31,40 +31,40 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
             switch (fen[i])
             {
             case 'p':
-                piece = std::make_shared<Pawn>(x, y, Color::BLACK);
-                break;
-            case 'P':
                 piece = std::make_shared<Pawn>(x, y, Color::WHITE);
                 break;
-            case 'r':
-                piece = std::make_shared<Tower>(x, y, Color::BLACK);
+            case 'P':
+                piece = std::make_shared<Pawn>(x, y, Color::BLACK);
                 break;
-            case 'R':
+            case 'r':
                 piece = std::make_shared<Tower>(x, y, Color::WHITE);
                 break;
-            case 'n':
-                piece = std::make_shared<Knight>(x, y, Color::BLACK);
+            case 'R':
+                piece = std::make_shared<Tower>(x, y, Color::BLACK);
                 break;
-            case 'N':
+            case 'n':
                 piece = std::make_shared<Knight>(x, y, Color::WHITE);
                 break;
-            case 'b':
-                piece = std::make_shared<Bishop>(x, y, Color::BLACK);
+            case 'N':
+                piece = std::make_shared<Knight>(x, y, Color::BLACK);
                 break;
-            case 'B':
+            case 'b':
                 piece = std::make_shared<Bishop>(x, y, Color::WHITE);
                 break;
-            case 'q':
-                piece = std::make_shared<Queen>(x, y, Color::BLACK);
+            case 'B':
+                piece = std::make_shared<Bishop>(x, y, Color::BLACK);
                 break;
-            case 'Q':
+            case 'q':
                 piece = std::make_shared<Queen>(x, y, Color::WHITE);
                 break;
+            case 'Q':
+                piece = std::make_shared<Queen>(x, y, Color::BLACK);
+                break;
             case 'k':
-                piece = std::make_shared<Roi>(x, y, Color::BLACK);
+                piece = std::make_shared<Roi>(x, y, Color::WHITE);
                 break;
             case 'K':
-                piece = std::make_shared<Roi>(x, y, Color::WHITE);
+                piece = std::make_shared<Roi>(x, y, Color::BLACK);
                 break;
             default:
                 break;

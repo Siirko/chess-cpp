@@ -17,9 +17,25 @@ GUI::~GUI() { clean(); }
 
 void GUI::run()
 {
-    while (m_isRunning)
+    std::cout << *this;
+    m_isRunning = true;
+    SDL_Event event;
+    SDL_PollEvent(&event);
+    // wait next input from user
+    while (SDL_WaitEvent(&event))
     {
-        handleEvents();
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            m_isRunning = false;
+            break;
+        case SDL_MOUSEBUTTONDOWN:
+            grabPiece();
+            break;
+        case SDL_MOUSEBUTTONUP:
+            movePiece();
+            break;
+        }
         update();
         render();
     }
@@ -67,6 +83,12 @@ void GUI::handleEvents()
     {
     case SDL_KEYDOWN:
         m_isRunning = false;
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        grabPiece();
+        break;
+    case SDL_MOUSEBUTTONUP:
+        movePiece();
         break;
     default:
         break;
@@ -171,5 +193,37 @@ void GUI::drawPieces()
                 SDL_DestroyTexture(texture);
             }
         }
+    }
+}
+
+void GUI::grabPiece()
+{
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    int i = x / 75;
+    int j = y / 75;
+    if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr)
+    {
+        m_sourceRectangle = new SDL_Rect();
+        m_sourceRectangle->x = i * 75;
+        m_sourceRectangle->y = j * 75;
+        m_sourceRectangle->w = 75;
+        m_sourceRectangle->h = 75;
+        this->m_selectedPiece = this->getPieceHandler().getPieceAt(*this, i, j);
+        std::cout << *(this->m_selectedPiece) << std::endl;
+    }
+}
+
+void GUI::movePiece()
+{
+    // place grabbed piece at mouse position
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    int i = x / 75;
+    int j = y / 75;
+    if (this->getPieceHandler().movePieceAt(*this, this->m_selectedPiece, i, j))
+    {
+        this->m_selectedPiece = nullptr;
+        delete m_sourceRectangle;
     }
 }

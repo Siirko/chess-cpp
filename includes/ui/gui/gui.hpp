@@ -22,8 +22,10 @@ class GUI : public Game
     void render();
     void drawBoard();
     void drawPieces();
+    void grabPiece();
+    void movePiece();
     void clean();
-
+    std::shared_ptr<Piece> m_selectedPiece;
     bool isRunning() { return m_isRunning; }
 
   private:
