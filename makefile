@@ -10,8 +10,8 @@ SRC_PATH = ./src
 OBJ_PATH = ./obj
 BIN_PATH = ./bin
 
-SOURCES  := $(wildcard $(SRC_PATH)/*.cpp $(SRC_PATH)/*/*.cpp)
-INCLUDES := $(wildcard $(INCLUDE_PATH)/*.hpp $(INCLUDE_PATH)/*/*.hpp)
+SOURCES  := $(wildcard $(SRC_PATH)/*.cpp $(SRC_PATH)/*/*.cpp $(SRC_PATH)/*/*/*.cpp)
+INCLUDES := $(wildcard $(INCLUDE_PATH)/*.hpp $(INCLUDE_PATH)/*/*.hpp $(INCLUDE_PATH)/*/*/*.hpp)
 OBJECTS  := $(SOURCES:$(SRC_PATH)/%.cpp=$(OBJ_PATH)/%.o)
 
 all: $(BIN_PATH)/$(EXEC)

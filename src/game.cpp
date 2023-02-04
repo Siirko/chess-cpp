@@ -1,6 +1,5 @@
 #include "../includes/game.hpp"
 #include "../includes/gameruler.hpp"
-#include "../includes/parser.hpp"
 #include "../includes/piecehandler.hpp"
 #include "../includes/pieces/bishop.hpp"
 #include "../includes/pieces/knight.hpp"

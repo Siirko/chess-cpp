@@ -1,4 +1,4 @@
-#include "../includes/ui/cli.hpp"
+#include "../includes/ui/cli/cli.hpp"
 #include <iostream>
 #include <string>
 

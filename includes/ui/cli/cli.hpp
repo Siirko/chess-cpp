@@ -1,5 +1,5 @@
 #pragma once
-#include "../game.hpp"
+#include "../../game.hpp"
 
 class CLI : public Game
 {

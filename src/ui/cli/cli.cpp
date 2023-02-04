@@ -1,7 +1,7 @@
-#include "../../includes/ui/cli.hpp"
-#include "../../includes/gameruler.hpp"
-#include "../../includes/parser.hpp"
-#include "../../includes/pieces/piece.hpp"
+#include "../../../includes/ui/cli/cli.hpp"
+#include "../../../includes/gameruler.hpp"
+#include "../../../includes/pieces/piece.hpp"
+#include "../../../includes/ui/cli/parser.hpp"
 
 #include <iostream>
 #include <memory>
