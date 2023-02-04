@@ -1,4 +1,6 @@
 #pragma once
+#include "../../pieces/piece.hpp"
+#include <regex>
 #include <string>
 
 class Parser
@@ -6,8 +8,9 @@ class Parser
   public:
     struct Coord;
     struct UpdateCoords;
+    static bool checkCastling(std::string input);
     static std::string getInput();
-    static UpdateCoords parseInput(std::string input);
+    static UpdateCoords parseInput(std::string input, Color color);
 };
 
 struct Parser::Coord

@@ -20,7 +20,7 @@ void CLI::run()
     {
         if (input.empty())
             continue;
-        Parser::UpdateCoords coords = Parser::parseInput(input);
+        Parser::UpdateCoords coords = Parser::parseInput(input, (Color)this->getTurn());
         std::shared_ptr<Piece> piece =
             this->getPieceHandler().getPieceAt(*this, coords.from.x, coords.from.y);
         if (piece != nullptr && piece->getColor() == this->getTurn())

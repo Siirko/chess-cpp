@@ -11,9 +11,6 @@
 #include <regex>
 #include <string>
 
-// TODO:: Refactor the big shit i've made, do Steelmate, refactor Board display
-// game too
-
 Game::Game()
     : board{Board()},
       piece_handler{PieceHandler()}, turn{1}, num_turns{0}, check{false}, checkMate{false}, staleMate{false}
