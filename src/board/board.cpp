@@ -61,7 +61,7 @@ void Board::updatePiece(std::shared_ptr<Piece> piece, int x, int y)
     piece->updateNumMoves();
 }
 
-void Board::doCastling(std::shared_ptr<Piece> piece, Color color, int x, int y)
+void Board::doCastling(std::shared_ptr<Piece> piece, int x, int y)
 {
     int towerX = x;
     int n_pos_towerX = x == 0 ? 3 : 5;
@@ -69,39 +69,6 @@ void Board::doCastling(std::shared_ptr<Piece> piece, Color color, int x, int y)
     std::shared_ptr<Piece> tower = this->board[towerX][y].getPiece();
     this->updatePiece(tower, n_pos_towerX, y);
     this->updatePiece(piece, n_pos_kingX, y);
-}
-
-void Board::doPromotion(std::shared_ptr<Piece> piece, int x, int y)
-{
-    /*
-    std::shared_ptr<Piece> newPiece = nullptr;
-    std::cout << "Choose a piece to promote to: " << std::endl;
-    std::cout << "1. Queen" << std::endl;
-    std::cout << "2. Tower" << std::endl;
-    std::cout << "3. Bishop" << std::endl;
-    std::cout << "4. Knight" << std::endl;
-    int choice;
-    std::cin >> choice;
-    switch (choice)
-    {
-    case 1:
-        newPiece = std::make_shared<Queen>(x, y, piece->getColor());
-        break;
-    case 2:
-        newPiece = std::make_shared<Tower>(x, y, piece->getColor());
-        break;
-    case 3:
-        newPiece = std::make_shared<Bishop>(x, y, piece->getColor());
-        break;
-    case 4:
-        newPiece = std::make_shared<Knight>(x, y, piece->getColor());
-        break;
-    default:
-        newPiece = std::make_shared<Queen>(x, y, piece->getColor());
-        break;
-    }
-    this->updatePiece(newPiece, x, y);
-    */
 }
 
 std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int y)
@@ -122,13 +89,13 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
         if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
             future_move.eaten_piece != nullptr && future_move.eaten_piece->getType() == PieceType::TOWER)
         {
-            this->doCastling(piece, (Color)piece->getColor(), x, y);
+            this->doCastling(piece, x, y);
             return eatenPiece;
         }
         // chec if pawn can do a promotion
         else if (piece->getType() == PieceType::PAWN && (y == 0 || y == 7))
         {
-            this->doPromotion(piece, x, y);
+            // this->doPromotion(piece, x, y);
             return eatenPiece;
         }
         else if (future_move.eaten_piece != nullptr &&
