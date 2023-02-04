@@ -1,10 +1,10 @@
-#include "../includes/game.hpp"
+#include "../includes/ui/cli.hpp"
 #include <iostream>
 #include <string>
 
 int main(int argc, char const *argv[])
 {
-    Game game = Game();
-    game.run();
+    CLI cli = CLI();
+    cli.run();
     return 0;
 }

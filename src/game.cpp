@@ -51,56 +51,6 @@ std::shared_ptr<Roi> Game::getBlackKing() const
     throw std::runtime_error("No black king found");
 }
 
-void Game::printInfo() {}
-
-void Game::run()
-{
-    std::cout << "Game running" << std::endl;
-    std::cout << *this << std::endl;
-    std::string input;
-    do
-    {
-        if (input.empty())
-            continue;
-        Parser::UpdateCoords coords = Parser::parseInput(input);
-        std::shared_ptr<Piece> piece = this->piece_handler.getPieceAt(*this, coords.from.x, coords.from.y);
-        if (piece != nullptr && piece->getColor() == this->turn)
-        {
-            if (this->piece_handler.movePieceAt(*this, piece, coords.to.x, coords.to.y))
-            {
-                this->turn = (this->turn + 1) % 2;
-                this->num_turns++;
-                std::cout << *this << std::flush;
-                this->check =
-                    GameRuler::getInstance().isKingInCheck(this->board.getBoard(), (Color)this->turn);
-                this->checkMate =
-                    GameRuler::getInstance().isKingInCheckMate(this->board.getBoard(), (Color)this->turn);
-                this->staleMate =
-                    GameRuler::getInstance().isKingInStaleMate(this->board.getBoard(), (Color)this->turn);
-                if (this->checkMate)
-                    break;
-                if (this->staleMate)
-                    break;
-            }
-        }
-        else if (piece == nullptr)
-        {
-            std::cout << "No piece at this position" << std::endl;
-        }
-        else if (piece->getColor() != this->turn)
-        {
-            std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
-        }
-    } while ((input = Parser::getInput()) != "/exit" && this->checkMate != true);
-    if (this->checkMate)
-    {
-        std::string color = this->turn == Color::BLACK ? "WHITE" : "BLACK";
-        std::cout << "Checkmate, " << color << " Won !" << std::endl;
-    }
-    else if (this->staleMate)
-        std::cout << "Stalemate, Draw !" << std::endl;
-}
-
 std::vector<std::shared_ptr<Piece>> Game::getAlivePieces() const { return this->alive_pieces; }
 
 void Game::addAlivePiece(std::shared_ptr<Piece> piece) { this->alive_pieces.push_back(piece); }
@@ -118,6 +68,28 @@ Board Game::getBoard() const { return this->board; }
 std::vector<std::shared_ptr<Piece>> &Game::getWhiteEatenPieces() { return this->white_eaten_pieces; }
 
 std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->black_eaten_pieces; }
+
+PieceHandler &Game::getPieceHandler() { return this->piece_handler; }
+
+int Game::getTurn() const { return this->turn; }
+
+void Game::updateTurn() { this->turn = (this->turn + 1) % 2; }
+
+int Game::getNumTurns() const { return this->num_turns; }
+
+void Game::updateNumTurns() { this->num_turns++; }
+
+bool Game::getCheck() const { return this->check; }
+
+void Game::setCheck(bool check) { this->check = check; }
+
+bool Game::getCheckMate() const { return this->checkMate; }
+
+void Game::setCheckMate(bool checkMate) { this->checkMate = checkMate; }
+
+bool Game::getStaleMate() const { return this->staleMate; }
+
+void Game::setStaleMate(bool staleMate) { this->staleMate = staleMate; }
 
 std::ostream &operator<<(std::ostream &os, const Game &game)
 {

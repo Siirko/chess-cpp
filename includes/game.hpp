@@ -26,7 +26,7 @@ class Game
   public:
     Game();
     ~Game();
-    void run();
+    virtual void run() = 0;
     std::shared_ptr<Roi> getWhiteKing() const;
     std::shared_ptr<Roi> getBlackKing() const;
     std::vector<std::shared_ptr<Piece>> getAlivePieces() const;
@@ -34,7 +34,17 @@ class Game
     std::vector<std::shared_ptr<Piece>> &getWhiteEatenPieces();
     Board &getBoard();
     Board getBoard() const;
-    void printInfo();
+    PieceHandler &getPieceHandler();
+    int getTurn() const;
+    void updateTurn();
+    int getNumTurns() const;
+    void updateNumTurns();
+    bool getCheck() const;
+    void setCheck(bool check);
+    bool getCheckMate() const;
+    void setCheckMate(bool checkMate);
+    bool getStaleMate() const;
+    void setStaleMate(bool staleMate);
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
