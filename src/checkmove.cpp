@@ -187,3 +187,15 @@ void CheckMove::checkDiagonals(Piece &self, array2d<Tile, 8, 8> board, Piece::Pi
         }
     }
 }
+
+void CheckMove::checkPromotion(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
+{
+    if (self.getColor() == Color::WHITE && y == 0)
+    {
+        result = {true, board[x][y].getPiece()};
+    }
+    else if (self.getColor() == Color::BLACK && y == 7)
+    {
+        result = {true, board[x][y].getPiece()};
+    }
+}
