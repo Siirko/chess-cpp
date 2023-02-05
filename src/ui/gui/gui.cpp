@@ -11,6 +11,7 @@ GUI::GUI() : Game()
     m_sourceRectangle = nullptr;
     m_destinationRectangle = nullptr;
     init();
+    initTextureMap();
 }
 
 GUI::~GUI() { clean(); }
@@ -27,7 +28,7 @@ void GUI::run()
         switch (event.type)
         {
         case SDL_QUIT:
-            m_isRunning = false;
+            exit(0);
             break;
         case SDL_MOUSEBUTTONDOWN:
             grabPiece();
@@ -164,33 +165,77 @@ std::string getPiecePathTex(PieceType pieceType, Color pieceColor)
     return piecePath;
 }
 
+void GUI::initTextureMap()
+{
+    std::vector<std::string> piecePaths;
+    piecePaths.push_back(getPiecePathTex(PieceType::PAWN, Color::WHITE));
+    piecePaths.push_back(getPiecePathTex(PieceType::TOWER, Color::WHITE));
+    piecePaths.push_back(getPiecePathTex(PieceType::KNIGHT, Color::WHITE));
+    piecePaths.push_back(getPiecePathTex(PieceType::BISHOP, Color::WHITE));
+    piecePaths.push_back(getPiecePathTex(PieceType::QUEEN, Color::WHITE));
+    piecePaths.push_back(getPiecePathTex(PieceType::KING, Color::WHITE));
+
+    piecePaths.push_back(getPiecePathTex(PieceType::PAWN, Color::BLACK));
+    piecePaths.push_back(getPiecePathTex(PieceType::TOWER, Color::BLACK));
+    piecePaths.push_back(getPiecePathTex(PieceType::KNIGHT, Color::BLACK));
+    piecePaths.push_back(getPiecePathTex(PieceType::BISHOP, Color::BLACK));
+    piecePaths.push_back(getPiecePathTex(PieceType::QUEEN, Color::BLACK));
+    piecePaths.push_back(getPiecePathTex(PieceType::KING, Color::BLACK));
+
+    for (auto path : piecePaths)
+    {
+        SDL_Surface *surface = IMG_Load(path.c_str());
+        if (surface == nullptr)
+        {
+            std::cout << "Error loading image: " << IMG_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        SDL_Texture *texture = SDL_CreateTextureFromSurface(m_renderer, surface);
+        if (texture == nullptr)
+        {
+            std::cout << "Error creating texture: " << SDL_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        std::string key = path.find("white") != std::string::npos ? "white" : "black";
+        key += path.find("pawn") != std::string::npos     ? "pawn"
+               : path.find("tower") != std::string::npos  ? "tower"
+               : path.find("knight") != std::string::npos ? "knight"
+               : path.find("bishop") != std::string::npos ? "bishop"
+               : path.find("queen") != std::string::npos  ? "queen"
+                                                          : "king";
+        std::cout << key << std::endl;
+        m_textureMap.insert(std::pair<std::string, SDL_Texture *>(key, texture));
+    }
+}
+
 void GUI::drawPieces()
 {
-    for (int i = 0; i < 8; i++)
+    for (int i = 8; i > 0; i--)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->getBoard().getBoard()[i][j].getPiece() != nullptr)
+            if (this->getBoard().getBoard()[j][i - 1].getPiece() != nullptr)
             {
-                char pieceType = this->getBoard().getBoard()[i][j].getPiece()->getType();
-                Color pieceColor = (Color)this->getBoard().getBoard()[i][j].getPiece()->getColor();
-                std::string piecePath = getPiecePathTex((PieceType)pieceType, pieceColor);
-                SDL_Surface *surface = IMG_Load(piecePath.c_str());
-                if (surface == nullptr)
+                char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
+                Color pieceColor = (Color)this->getBoard().getBoard()[j][i - 1].getPiece()->getColor();
+                std::string key = pieceColor == Color::WHITE ? "white" : "black";
+                key += (PieceType)pieceType == PieceType::PAWN     ? "pawn"
+                       : (PieceType)pieceType == PieceType::TOWER  ? "tower"
+                       : (PieceType)pieceType == PieceType::KNIGHT ? "knight"
+                       : (PieceType)pieceType == PieceType::BISHOP ? "bishop"
+                       : (PieceType)pieceType == PieceType::QUEEN  ? "queen"
+                                                                   : "king";
+
+                // coordinates of rect needs to be relative to the window
+                SDL_Rect rect = {j * 75, (8 - i) * 75, 75, 75};
+                if (SDL_RenderCopy(m_renderer, m_textureMap[key], NULL, &rect) != 0)
                 {
-                    std::cout << "Error loading image: " << IMG_GetError() << std::endl;
+                    std::cout << "Error rendering texture: " << SDL_GetError() << std::endl;
+                    std::cout << key << std::endl;
+                    std::cout << m_textureMap[key] << std::endl;
+                    std::cout << m_textureMap.size() << std::endl;
                     exit(EXIT_FAILURE);
                 }
-                SDL_Texture *texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-                if (texture == nullptr)
-                {
-                    std::cout << "Error creating texture: " << SDL_GetError() << std::endl;
-                    exit(EXIT_FAILURE);
-                }
-                SDL_Rect rect = {i * 75, j * 75, 75, 75};
-                SDL_RenderCopy(m_renderer, texture, NULL, &rect);
-                SDL_FreeSurface(surface);
-                SDL_DestroyTexture(texture);
             }
         }
     }
@@ -200,8 +245,11 @@ void GUI::grabPiece()
 {
     int x, y;
     SDL_GetMouseState(&x, &y);
+    // get the coordinates of the piece that was clicked according to the screen
     int i = x / 75;
     int j = y / 75;
+    // convert i and j to the coordinates of the board
+    j = 7 - j;
     if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr)
     {
         m_sourceRectangle = new SDL_Rect();
@@ -221,6 +269,8 @@ void GUI::movePiece()
     SDL_GetMouseState(&x, &y);
     int i = x / 75;
     int j = y / 75;
+    // convert i and j to the coordinates of the board
+    j = 7 - j;
     if (this->getPieceHandler().movePieceAt(*this, this->m_selectedPiece, i, j))
     {
         this->m_selectedPiece = nullptr;

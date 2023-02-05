@@ -6,6 +6,7 @@
 
 #include <array>
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
@@ -26,6 +27,7 @@ class GUI : public Game
     void movePiece();
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
+    void initTextureMap();
     bool isRunning() { return m_isRunning; }
 
   private:
@@ -35,4 +37,5 @@ class GUI : public Game
     SDL_Texture *m_texture;
     SDL_Rect *m_sourceRectangle;
     SDL_Rect *m_destinationRectangle;
+    std::map<std::string, SDL_Texture *> m_textureMap;
 };
