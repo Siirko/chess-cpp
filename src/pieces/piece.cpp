@@ -56,7 +56,13 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
         for (int j = 0; j < 8; j++)
         {
             if (this->isValidMove(board, i, j).valid_move)
+            {
+                /*
+                std::cout << "Can move to: " << i << " " << j << std::endl;
+                std::cout << *(this);
+                */
                 return true;
+            }
         }
     }
     return false;
