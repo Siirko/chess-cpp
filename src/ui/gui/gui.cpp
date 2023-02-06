@@ -23,6 +23,7 @@ void GUI::run()
     SDL_Event event;
     SDL_PollEvent(&event);
     // wait next input from user
+    render();
     while (SDL_WaitEvent(&event))
     {
         switch (event.type)
@@ -34,11 +35,26 @@ void GUI::run()
             grabPiece();
             break;
         case SDL_MOUSEBUTTONUP:
-            movePiece();
+            if (movePiece())
+            {
+                update();
+                this->updateTurn();
+                this->updateNumTurns();
+                std::cout << *this;
+                this->setCheck(GameRuler::getInstance().isKingInCheck(this->getBoard().getBoard(),
+                                                                      (Color)this->getTurn()));
+                this->setCheckMate(GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(),
+                                                                              (Color)this->getTurn()));
+                this->setStaleMate(GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(),
+                                                                              (Color)this->getTurn()));
+                if (this->getCheckMate())
+                    exit(0);
+                if (this->getStaleMate())
+                    exit(0);
+                break;
+            }
             break;
         }
-        update();
-        render();
     }
 }
 
@@ -89,7 +105,6 @@ void GUI::handleEvents()
         grabPiece();
         break;
     case SDL_MOUSEBUTTONUP:
-        movePiece();
         break;
     default:
         break;
@@ -250,7 +265,8 @@ void GUI::grabPiece()
     int j = y / 75;
     // convert i and j to the coordinates of the board
     j = 7 - j;
-    if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr)
+    if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr &&
+        this->getPieceHandler().getPieceAt(*this, i, j)->getColor() == this->getTurn())
     {
         m_sourceRectangle = new SDL_Rect();
         m_sourceRectangle->x = i * 75;
@@ -262,7 +278,7 @@ void GUI::grabPiece()
     }
 }
 
-void GUI::movePiece()
+bool GUI::movePiece()
 {
     // place grabbed piece at mouse position
     int x, y;
@@ -271,9 +287,13 @@ void GUI::movePiece()
     int j = y / 75;
     // convert i and j to the coordinates of the board
     j = 7 - j;
-    if (this->getPieceHandler().movePieceAt(*this, this->m_selectedPiece, i, j))
+    if (this->m_selectedPiece != nullptr &&
+        this->getPieceHandler().movePieceAt(*this, this->m_selectedPiece, i, j) &&
+        this->m_selectedPiece->getColor() == this->getTurn())
     {
         this->m_selectedPiece = nullptr;
         delete m_sourceRectangle;
+        return true;
     }
+    return false;
 }

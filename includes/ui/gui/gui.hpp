@@ -24,7 +24,7 @@ class GUI : public Game
     void drawBoard();
     void drawPieces();
     void grabPiece();
-    void movePiece();
+    bool movePiece();
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
     void initTextureMap();

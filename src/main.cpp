@@ -5,6 +5,23 @@
 
 int main(void)
 {
-    GUI gui;
-    gui.run();
+    std::string input;
+    std::cout << "Choose your interface (cli/gui): ";
+    std::cin >> input;
+    if (input == "cli")
+    {
+        CLI cli;
+        cli.run();
+    }
+    else if (input == "gui")
+    {
+        GUI gui;
+        gui.run();
+    }
+    else
+    {
+        std::cout << "Invalid input, defaulting to CLI" << std::endl;
+        CLI cli;
+        cli.run();
+    }
 }
