@@ -4,6 +4,7 @@
 
 GUI::GUI() : Game()
 {
+    m_ltexture = LTexture("/home/yanovskyy/Documents/projects/chess-cpp/tex");
     m_isRunning = false;
     m_window = nullptr;
     m_renderer = nullptr;
@@ -11,10 +12,10 @@ GUI::GUI() : Game()
     m_sourceRectangle = nullptr;
     m_destinationRectangle = nullptr;
     init();
-    initTextureMap();
+    m_ltexture.loadTextures(m_renderer);
 }
 
-GUI::~GUI() { clean(); }
+GUI::~GUI() {}
 
 void GUI::run()
 {
@@ -22,40 +23,11 @@ void GUI::run()
     m_isRunning = true;
     SDL_Event event;
     SDL_PollEvent(&event);
-    // wait next input from user
     render();
     while (SDL_WaitEvent(&event))
-    {
-        switch (event.type)
-        {
-        case SDL_QUIT:
-            exit(0);
-            break;
-        case SDL_MOUSEBUTTONDOWN:
-            grabPiece();
-            break;
-        case SDL_MOUSEBUTTONUP:
-            if (movePiece())
-            {
-                update();
-                this->updateTurn();
-                this->updateNumTurns();
-                std::cout << *this;
-                this->setCheck(GameRuler::getInstance().isKingInCheck(this->getBoard().getBoard(),
-                                                                      (Color)this->getTurn()));
-                this->setCheckMate(GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(),
-                                                                              (Color)this->getTurn()));
-                this->setStaleMate(GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(),
-                                                                              (Color)this->getTurn()));
-                if (this->getCheckMate())
-                    exit(0);
-                if (this->getStaleMate())
-                    exit(0);
-                break;
-            }
-            break;
-        }
-    }
+        handleEvents(&event);
+    // do stuff when the game has ended
+    clean();
 }
 
 void GUI::init()
@@ -90,23 +62,40 @@ void GUI::init()
     }
 }
 
-void GUI::update() { render(); }
-
-void GUI::handleEvents()
+void GUI::update()
 {
-    SDL_Event event;
-    SDL_PollEvent(&event);
-    switch (event.type)
+    render();
+    this->updateTurn();
+    this->updateNumTurns();
+    std::cout << *this;
+    this->setCheck(
+        GameRuler::getInstance().isKingInCheck(this->getBoard().getBoard(), (Color)this->getTurn()));
+    this->setCheckMate(
+        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(), (Color)this->getTurn()));
+    this->setStaleMate(
+        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(), (Color)this->getTurn()));
+}
+
+void GUI::handleEvents(SDL_Event *event)
+{
+    switch (event->type)
     {
-    case SDL_KEYDOWN:
-        m_isRunning = false;
+    case SDL_QUIT:
+        exit(0);
         break;
     case SDL_MOUSEBUTTONDOWN:
         grabPiece();
         break;
     case SDL_MOUSEBUTTONUP:
-        break;
-    default:
+        if (movePiece())
+        {
+            update();
+            if (this->getCheckMate())
+                exit(0);
+            if (this->getStaleMate())
+                exit(0);
+            break;
+        }
         break;
     }
 }
@@ -147,82 +136,6 @@ void GUI::drawBoard()
     }
 }
 
-std::string getPiecePathTex(PieceType pieceType, Color pieceColor)
-{
-    std::string woorking_path = SDL_GetBasePath();
-    // remove build/ from the path
-    woorking_path = woorking_path.substr(0, woorking_path.size() - 6);
-    std::string piecePath = woorking_path + "tex/";
-    switch (pieceType)
-    {
-    case PieceType::PAWN:
-        piecePath += "pawn";
-        break;
-    case PieceType::TOWER:
-        piecePath += "tower";
-        break;
-    case PieceType::KNIGHT:
-        piecePath += "knight";
-        break;
-    case PieceType::BISHOP:
-        piecePath += "bishop";
-        break;
-    case PieceType::QUEEN:
-        piecePath += "queen";
-        break;
-    case PieceType::KING:
-        piecePath += "roi";
-        break;
-    default:
-        break;
-    }
-    piecePath += pieceColor == Color::WHITE ? "_white.png" : "_black.png";
-    return piecePath;
-}
-
-void GUI::initTextureMap()
-{
-    std::vector<std::string> piecePaths;
-    piecePaths.push_back(getPiecePathTex(PieceType::PAWN, Color::WHITE));
-    piecePaths.push_back(getPiecePathTex(PieceType::TOWER, Color::WHITE));
-    piecePaths.push_back(getPiecePathTex(PieceType::KNIGHT, Color::WHITE));
-    piecePaths.push_back(getPiecePathTex(PieceType::BISHOP, Color::WHITE));
-    piecePaths.push_back(getPiecePathTex(PieceType::QUEEN, Color::WHITE));
-    piecePaths.push_back(getPiecePathTex(PieceType::KING, Color::WHITE));
-
-    piecePaths.push_back(getPiecePathTex(PieceType::PAWN, Color::BLACK));
-    piecePaths.push_back(getPiecePathTex(PieceType::TOWER, Color::BLACK));
-    piecePaths.push_back(getPiecePathTex(PieceType::KNIGHT, Color::BLACK));
-    piecePaths.push_back(getPiecePathTex(PieceType::BISHOP, Color::BLACK));
-    piecePaths.push_back(getPiecePathTex(PieceType::QUEEN, Color::BLACK));
-    piecePaths.push_back(getPiecePathTex(PieceType::KING, Color::BLACK));
-
-    for (auto path : piecePaths)
-    {
-        SDL_Surface *surface = IMG_Load(path.c_str());
-        if (surface == nullptr)
-        {
-            std::cout << "Error loading image: " << IMG_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        SDL_Texture *texture = SDL_CreateTextureFromSurface(m_renderer, surface);
-        if (texture == nullptr)
-        {
-            std::cout << "Error creating texture: " << SDL_GetError() << std::endl;
-            exit(EXIT_FAILURE);
-        }
-        std::string key = path.find("white") != std::string::npos ? "white" : "black";
-        key += path.find("pawn") != std::string::npos     ? "pawn"
-               : path.find("tower") != std::string::npos  ? "tower"
-               : path.find("knight") != std::string::npos ? "knight"
-               : path.find("bishop") != std::string::npos ? "bishop"
-               : path.find("queen") != std::string::npos  ? "queen"
-                                                          : "king";
-        std::cout << key << std::endl;
-        m_textureMap.insert(std::pair<std::string, SDL_Texture *>(key, texture));
-    }
-}
-
 void GUI::drawPieces()
 {
     for (int i = 8; i > 0; i--)
@@ -231,24 +144,20 @@ void GUI::drawPieces()
         {
             if (this->getBoard().getBoard()[j][i - 1].getPiece() != nullptr)
             {
-                char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
+                // char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
                 Color pieceColor = (Color)this->getBoard().getBoard()[j][i - 1].getPiece()->getColor();
-                std::string key = pieceColor == Color::WHITE ? "white" : "black";
-                key += (PieceType)pieceType == PieceType::PAWN     ? "pawn"
-                       : (PieceType)pieceType == PieceType::TOWER  ? "tower"
-                       : (PieceType)pieceType == PieceType::KNIGHT ? "knight"
-                       : (PieceType)pieceType == PieceType::BISHOP ? "bishop"
-                       : (PieceType)pieceType == PieceType::QUEEN  ? "queen"
-                                                                   : "king";
+                char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
+                std::string key;
+                key.push_back(tolower(pieceType));
+                key += pieceColor == Color::WHITE ? "w" : "b";
 
                 // coordinates of rect needs to be relative to the window
                 SDL_Rect rect = {j * 75, (8 - i) * 75, 75, 75};
-                if (SDL_RenderCopy(m_renderer, m_textureMap[key], NULL, &rect) != 0)
+                if (SDL_RenderCopy(m_renderer, this->m_ltexture.getTexture(key), NULL, &rect) != 0)
                 {
                     std::cout << "Error rendering texture: " << SDL_GetError() << std::endl;
                     std::cout << key << std::endl;
-                    std::cout << m_textureMap[key] << std::endl;
-                    std::cout << m_textureMap.size() << std::endl;
+                    std::cout << this->m_ltexture.getTexture(key) << std::endl;
                     exit(EXIT_FAILURE);
                 }
             }

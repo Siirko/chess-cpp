@@ -1,5 +1,6 @@
 #pragma once
 #include "../../game.hpp"
+#include "ltexture.hpp"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -18,7 +19,7 @@ class GUI : public Game
     ~GUI();
     void init();
     void run() override;
-    void handleEvents();
+    void handleEvents(SDL_Event *event);
     void update();
     void render();
     void drawBoard();
@@ -27,15 +28,14 @@ class GUI : public Game
     bool movePiece();
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
-    void initTextureMap();
     bool isRunning() { return m_isRunning; }
 
   private:
+    LTexture m_ltexture;
     bool m_isRunning;
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
     SDL_Texture *m_texture;
     SDL_Rect *m_sourceRectangle;
     SDL_Rect *m_destinationRectangle;
-    std::map<std::string, SDL_Texture *> m_textureMap;
 };
