@@ -2,17 +2,12 @@
 #include "../../../includes/gameruler.hpp"
 #include "../../../includes/pieces/piece.hpp"
 
-GUI::GUI() : Game()
+GUI::GUI()
+    : Game(), m_ltexture{LTexture("/home/yanovskyy/Documents/projects/chess-cpp/tex")}, m_window{nullptr},
+      m_renderer{nullptr}, m_sourceRectangle{nullptr}
 {
-    m_ltexture = LTexture("/home/yanovskyy/Documents/projects/chess-cpp/tex");
-    m_isRunning = false;
-    m_window = nullptr;
-    m_renderer = nullptr;
-    m_texture = nullptr;
-    m_sourceRectangle = nullptr;
-    m_destinationRectangle = nullptr;
     init();
-    m_ltexture.loadTextures(m_renderer);
+    m_ltexture.loadTextures(this->m_renderer);
 }
 
 GUI::~GUI() {}
@@ -20,14 +15,11 @@ GUI::~GUI() {}
 void GUI::run()
 {
     std::cout << *this;
-    m_isRunning = true;
     SDL_Event event;
     SDL_PollEvent(&event);
     render();
     while (SDL_WaitEvent(&event))
         handleEvents(&event);
-    // do stuff when the game has ended
-    clean();
 }
 
 void GUI::init()
@@ -42,14 +34,15 @@ void GUI::init()
         m_window = SDL_CreateWindow("chess-cpp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, 0);
         if (m_window)
         {
-            m_renderer = SDL_CreateRenderer(m_window, -1, 0);
-            if (m_renderer)
+            this->m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+            if (this->m_renderer)
             {
-                SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
+                SDL_SetRenderDrawColor(this->m_renderer, 255, 255, 255, 255);
             }
             else
             {
                 std::cout << "Renderer could not be created" << std::endl;
+                SDL_DestroyRenderer(this->m_renderer);
                 exit(EXIT_FAILURE);
             }
         }
@@ -58,7 +51,6 @@ void GUI::init()
             std::cout << "Window could not be created" << std::endl;
             exit(EXIT_FAILURE);
         }
-        m_isRunning = true;
     }
 }
 
@@ -81,7 +73,7 @@ void GUI::handleEvents(SDL_Event *event)
     switch (event->type)
     {
     case SDL_QUIT:
-        exit(0);
+        this->clean();
         break;
     case SDL_MOUSEBUTTONDOWN:
         grabPiece();
@@ -91,9 +83,9 @@ void GUI::handleEvents(SDL_Event *event)
         {
             update();
             if (this->getCheckMate())
-                exit(0);
+                this->clean();
             if (this->getStaleMate())
-                exit(0);
+                this->clean();
             break;
         }
         break;
@@ -102,36 +94,33 @@ void GUI::handleEvents(SDL_Event *event)
 
 void GUI::render()
 {
-    SDL_RenderClear(m_renderer);
+    SDL_RenderClear(this->m_renderer);
     drawBoard();
     drawPieces();
-    SDL_RenderPresent(m_renderer);
+    SDL_RenderPresent(this->m_renderer);
 }
 
 void GUI::clean()
 {
-    SDL_DestroyWindow(m_window);
-    SDL_DestroyRenderer(m_renderer);
+    SDL_DestroyRenderer(this->m_renderer);
+    SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
     SDL_Quit();
 }
 
 void GUI::drawBoard()
 {
-    SDL_SetRenderDrawColor(m_renderer, 0, 0, 0, 255);
+    SDL_SetRenderDrawColor(this->m_renderer, 0, 0, 0, 255);
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             if ((i + j) % 2 == 0)
-            {
-                SDL_SetRenderDrawColor(m_renderer, 144, 130, 109, 255);
-            }
+                SDL_SetRenderDrawColor(this->m_renderer, 144, 130, 109, 255);
             else
-            {
-                SDL_SetRenderDrawColor(m_renderer, 109, 82, 59, 255);
-            }
+                SDL_SetRenderDrawColor(this->m_renderer, 109, 82, 59, 255);
+
             SDL_Rect rect = {i * 75, j * 75, 75, 75};
-            SDL_RenderFillRect(m_renderer, &rect);
+            SDL_RenderFillRect(this->m_renderer, &rect);
         }
     }
 }
@@ -144,7 +133,6 @@ void GUI::drawPieces()
         {
             if (this->getBoard().getBoard()[j][i - 1].getPiece() != nullptr)
             {
-                // char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
                 Color pieceColor = (Color)this->getBoard().getBoard()[j][i - 1].getPiece()->getColor();
                 char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
                 std::string key;
@@ -153,7 +141,7 @@ void GUI::drawPieces()
 
                 // coordinates of rect needs to be relative to the window
                 SDL_Rect rect = {j * 75, (8 - i) * 75, 75, 75};
-                if (SDL_RenderCopy(m_renderer, this->m_ltexture.getTexture(key), NULL, &rect) != 0)
+                if (SDL_RenderCopy(this->m_renderer, this->m_ltexture.getTexture(key), NULL, &rect) != 0)
                 {
                     std::cout << "Error rendering texture: " << SDL_GetError() << std::endl;
                     std::cout << key << std::endl;

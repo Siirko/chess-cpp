@@ -8,13 +8,7 @@ LTexture::LTexture(std::string path_folder) : m_path_folder{path_folder}
     m_textureMap = std::map<std::string, SDL_Texture *>();
 }
 
-LTexture::~LTexture()
-{
-    for (auto &texture : m_textureMap)
-    {
-        SDL_DestroyTexture(texture.second);
-    }
-}
+LTexture::~LTexture() {}
 
 std::string LTexture::buildKey(std::string path)
 {

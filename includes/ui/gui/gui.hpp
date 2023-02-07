@@ -28,14 +28,10 @@ class GUI : public Game
     bool movePiece();
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
-    bool isRunning() { return m_isRunning; }
 
   private:
     LTexture m_ltexture;
-    bool m_isRunning;
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
-    SDL_Texture *m_texture;
     SDL_Rect *m_sourceRectangle;
-    SDL_Rect *m_destinationRectangle;
 };
