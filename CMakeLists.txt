@@ -22,9 +22,18 @@ FetchContent_Declare(
     GIT_PROGRESS TRUE
 )
 
-#SDL2_image
+FetchContent_GetProperties(sdl2)
 
 FetchContent_MakeAvailable(sdl2)
+
+
+add_custom_target(
+    copy-textures ALL
+    COMMENT "Copying textures"
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_CURRENT_SOURCE_DIR}/tex ${CMAKE_BINARY_DIR}/tex)
+
+
 
 file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
     ${CMAKE_CURRENT_SOURCE_DIR}/tex/*.png
@@ -34,7 +43,7 @@ file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS
 
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
-#add_dependencies(${PROJECT_NAME} sdl2)
+add_dependencies(${PROJECT_NAME} copy-textures)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/includes)
 

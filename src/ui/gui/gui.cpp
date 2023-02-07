@@ -1,11 +1,12 @@
 #include "../../../includes/ui/gui/gui.hpp"
 #include "../../../includes/gameruler.hpp"
 #include "../../../includes/pieces/piece.hpp"
+#include <experimental/filesystem>
 
 GUI::GUI()
-    : Game(), m_ltexture{LTexture("/home/yanovskyy/Documents/projects/chess-cpp/tex")}, m_window{nullptr},
-      m_renderer{nullptr}, m_sourceRectangle{nullptr}
+    : Game(), m_ltexture{LTexture()}, m_window{nullptr}, m_renderer{nullptr}, m_sourceRectangle{nullptr}
 {
+    // get current directory
     init();
     m_ltexture.loadTextures(this->m_renderer);
 }

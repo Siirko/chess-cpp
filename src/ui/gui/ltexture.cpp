@@ -23,9 +23,9 @@ std::string LTexture::buildKey(std::string path)
 
 bool LTexture::loadTextures(SDL_Renderer *renderer)
 {
-    // iterate over the folder and load all the textures
-    // C++11
-    std::experimental::filesystem::path path(m_path_folder);
+    std::experimental::filesystem::path path = std::experimental::filesystem::current_path();
+    path = path.append("/tex/");
+    std::cout << path.c_str() << std::endl;
     for (auto &p : std::experimental::filesystem::directory_iterator(path))
     {
         std::string path = p.path().string();
