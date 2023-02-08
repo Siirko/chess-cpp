@@ -20,7 +20,9 @@ void GUI::run()
     SDL_PollEvent(&event);
     render();
     while (SDL_WaitEvent(&event))
+    {
         handleEvents(&event);
+    }
 }
 
 void GUI::init()
@@ -76,6 +78,9 @@ void GUI::handleEvents(SDL_Event *event)
     case SDL_QUIT:
         this->clean();
         break;
+    case SDL_MOUSEMOTION:
+        render();
+        break;
     case SDL_MOUSEBUTTONDOWN:
         grabPiece();
         break;
@@ -87,9 +92,37 @@ void GUI::handleEvents(SDL_Event *event)
                 this->clean();
             if (this->getStaleMate())
                 this->clean();
+            this->m_selectedPiece = nullptr;
             break;
         }
         break;
+    }
+}
+
+void GUI::followMouse()
+{
+    static SDL_Rect rect;
+    if (this->m_selectedPiece != nullptr)
+    {
+        // draw a little rectangle that follows the mouse
+        int mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
+        printf("x: %d y: %d\n", mouseX, mouseY);
+        // center the rect on the middle of the mouse
+        rect.x = mouseX - 35;
+        rect.y = mouseY - 35;
+        rect.w = 75;
+        rect.h = 75;
+
+        // copy the texture of the selected piece to the rect
+        std::string key;
+        key.push_back(tolower(this->m_selectedPiece->getType()));
+        key.push_back(this->m_selectedPiece->getColor() == Color::WHITE ? 'w' : 'b');
+        if (SDL_RenderCopy(this->m_renderer, this->m_ltexture.getTexture(key), NULL, &rect) < 0)
+        {
+            std::cout << "SDL could not copy texture! SDL_Error: " << SDL_GetError() << std::endl;
+            exit(1);
+        }
     }
 }
 
@@ -98,6 +131,8 @@ void GUI::render()
     SDL_RenderClear(this->m_renderer);
     drawBoard();
     drawPieces();
+    followMouse();
+    this->showPossibleMoves();
     SDL_RenderPresent(this->m_renderer);
 }
 
@@ -141,7 +176,8 @@ void GUI::drawPieces()
                 key += pieceColor == Color::WHITE ? "w" : "b";
 
                 // coordinates of rect needs to be relative to the window
-                SDL_Rect rect = {j * 75, (8 - i) * 75, 75, 75};
+                SDL_Rect rect = {j * this->getSizeSquare(), (8 - i) * this->getSizeSquare(),
+                                 this->getSizeSquare(), this->getSizeSquare()};
                 if (SDL_RenderCopy(this->m_renderer, this->m_ltexture.getTexture(key), NULL, &rect) != 0)
                 {
                     std::cout << "Error rendering texture: " << SDL_GetError() << std::endl;
@@ -159,20 +195,37 @@ void GUI::grabPiece()
     int x, y;
     SDL_GetMouseState(&x, &y);
     // get the coordinates of the piece that was clicked according to the screen
-    int i = x / 75;
-    int j = y / 75;
+    int i = x / this->getSizeSquare();
+    int j = y / this->getSizeSquare();
     // convert i and j to the coordinates of the board
     j = 7 - j;
     if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr &&
         this->getPieceHandler().getPieceAt(*this, i, j)->getColor() == this->getTurn())
     {
         m_sourceRectangle = new SDL_Rect();
-        m_sourceRectangle->x = i * 75;
-        m_sourceRectangle->y = j * 75;
-        m_sourceRectangle->w = 75;
-        m_sourceRectangle->h = 75;
+        m_sourceRectangle->x = i * this->getSizeSquare();
+        m_sourceRectangle->y = j * this->getSizeSquare();
+        m_sourceRectangle->w = this->getSizeSquare();
+        m_sourceRectangle->h = this->getSizeSquare();
         this->m_selectedPiece = this->getPieceHandler().getPieceAt(*this, i, j);
         std::cout << *(this->m_selectedPiece) << std::endl;
+    }
+}
+
+void GUI::showPossibleMoves()
+{
+    if (this->m_selectedPiece == nullptr)
+        return;
+    std::vector<std::pair<int, int>> moves =
+        this->m_selectedPiece->getValidMoves(this->getBoard().getBoard());
+    for (auto move : moves)
+    {
+        SDL_Rect rect = {move.first * this->getSizeSquare(), (7 - move.second) * this->getSizeSquare(),
+                         this->getSizeSquare(), this->getSizeSquare()};
+        // rect is transparent
+        SDL_SetRenderDrawBlendMode(this->m_renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(this->m_renderer, 0, 0, 255, 100);
+        SDL_RenderFillRect(this->m_renderer, &rect);
     }
 }
 
@@ -181,8 +234,8 @@ bool GUI::movePiece()
     // place grabbed piece at mouse position
     int x, y;
     SDL_GetMouseState(&x, &y);
-    int i = x / 75;
-    int j = y / 75;
+    int i = x / this->getSizeSquare();
+    int j = y / this->getSizeSquare();
     // convert i and j to the coordinates of the board
     j = 7 - j;
     if (this->m_selectedPiece != nullptr &&
@@ -195,3 +248,19 @@ bool GUI::movePiece()
     }
     return false;
 }
+
+int GUI::getWidth() const
+{
+    int w;
+    SDL_GetWindowSize(this->m_window, &w, NULL);
+    return w;
+}
+
+int GUI::getHeight() const
+{
+    int h;
+    SDL_GetWindowSize(this->m_window, NULL, &h);
+    return h;
+}
+
+int GUI::getSizeSquare() const { return this->getWidth() / 8; }

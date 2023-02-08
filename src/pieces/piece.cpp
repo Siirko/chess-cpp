@@ -38,8 +38,7 @@ void Piece::updateNumMoves() { this->num_moves++; }
 
 bool Piece::beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y)
 {
-    std::shared_ptr<Piece> tt = this->getptr();
-    if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.valid_move, x, y))
+    if (GameRuler::getInstance().isKingInCheckAfterMove(board, this->getptr(), result.valid_move, x, y))
     {
         result = {false, nullptr};
     }
@@ -60,6 +59,28 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
         }
     }
     return false;
+}
+
+std::vector<std::pair<int, int>> Piece::getValidMoves(array2d<Tile, 8, 8> board)
+{
+    std::vector<std::pair<int, int>> valid_moves;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            try
+            {
+                if (this->isValidMove(board, i, j).valid_move)
+                    valid_moves.push_back(std::make_pair(i, j));
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+                continue;
+            }
+        }
+    }
+    return valid_moves;
 }
 
 std::ostream &operator<<(std::ostream &os, const Piece &piece)

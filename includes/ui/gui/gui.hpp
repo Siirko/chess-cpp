@@ -26,8 +26,13 @@ class GUI : public Game
     void drawPieces();
     void grabPiece();
     bool movePiece();
+    void followMouse();
+    void showPossibleMoves();
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
+    int getWidth() const;
+    int getHeight() const;
+    int getSizeSquare() const;
 
   private:
     LTexture m_ltexture;
