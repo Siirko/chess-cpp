@@ -44,7 +44,6 @@ Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // Check if the move is to the same position
     if (x == this->getX() && y == this->getY())
         return result;
-
     // special rule, castle move
     this->callCheckCastling(*this, board, result, x, y);
     this->callCheckSquaresMoves(*this, board, result, x, y);

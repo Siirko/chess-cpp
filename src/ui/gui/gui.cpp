@@ -69,6 +69,7 @@ void GUI::update()
         GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(), (Color)this->getTurn()));
     this->setStaleMate(
         GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(), (Color)this->getTurn()));
+    std::cout << "Check: " << (this->getCheck() == true ? "TRUE" : "FALSE ") << std::endl;
 }
 
 void GUI::handleEvents(SDL_Event *event)
@@ -107,8 +108,8 @@ void GUI::followMouse()
         // draw a little rectangle that follows the mouse
         int mouseX, mouseY;
         SDL_GetMouseState(&mouseX, &mouseY);
-        printf("x: %d y: %d\n", mouseX, mouseY);
-        // center the rect on the middle of the mouse
+        // printf("x: %d y: %d\n", mouseX, mouseY);
+        //  center the rect on the middle of the mouse
         rect.x = mouseX - 35;
         rect.y = mouseY - 35;
         rect.w = 75;
@@ -131,7 +132,7 @@ void GUI::render()
     SDL_RenderClear(this->m_renderer);
     drawBoard();
     drawPieces();
-    followMouse();
+    // followMouse();
     this->showPossibleMoves();
     SDL_RenderPresent(this->m_renderer);
 }

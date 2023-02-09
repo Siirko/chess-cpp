@@ -1,7 +1,12 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/board/board.hpp"
+#include "../includes/pieces/bishop.hpp"
+#include "../includes/pieces/knight.hpp"
+#include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/piece.hpp"
+#include "../includes/pieces/queen.hpp"
 #include "../includes/pieces/roi.hpp"
+#include "../includes/pieces/tower.hpp"
 #include <array>
 #include <iostream>
 #include <memory>
@@ -20,31 +25,32 @@ bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (board[i][j].getPiece() != nullptr)
+            auto piece = board[i][j].getPiece();
+            if (piece != nullptr)
             {
+                if (piece->getType() == PieceType::KING)
+                    continue;
+
                 switch (color)
                 {
                 case Color::WHITE:
-                    if (board[i][j].getPiece()->getColor() == Color::BLACK)
+                    if (piece->getColor() == Color::BLACK)
                     {
-                        if (board[i][j]
-                                .getPiece()
-                                ->isValidMove(board, whiteKing->getX(), whiteKing->getY())
-                                .valid_move)
+                        if (piece->isValidMove(board, whiteKing->getX(), whiteKing->getY()).valid_move)
                         {
                             return true;
                         }
                     }
                     break;
                 case Color::BLACK:
-                    if (board[i][j].getPiece()->getColor() == Color::WHITE)
+                    if (piece->getColor() == Color::WHITE)
                     {
-                        if (board[i][j]
-                                .getPiece()
-                                ->isValidMove(board, blackKing->getX(), blackKing->getY())
-                                .valid_move)
+                        if (piece->isValidMove(board, blackKing->getX(), blackKing->getY()).valid_move)
                         {
-                            return true;
+                            // i have no idea why i need to check only for
+                            // for this color but it somehow works idk
+                            if (!blackKing->isCheck(board, i, j))
+                                return true;
                         }
                     }
                     break;
@@ -55,40 +61,19 @@ bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
     return false;
 }
 
-bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color, std::shared_ptr<Roi> king)
-{
-    for (auto piece : this->game->getAlivePieces())
-    {
-        if (piece->getColor() == color)
-        {
-            if (piece->isValidMove(board, king->getX(), king->getY()).valid_move)
-                return true;
-        }
-    }
-    return false;
-}
-
 bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
                                        int x, int y)
 {
-    if (canMove)
+    if (canMove && piece->getType() != PieceType::KING)
     {
-        // fake board
         array2d<Tile, 8, 8> fakeBoard = board;
-        fakeBoard[x][y].setPiece(piece);
-        fakeBoard[piece->getX()][piece->getY()].setPiece(nullptr);
-        if (piece->getType() == PieceType::KING)
-        {
-            // make a copy
-            std::shared_ptr<Roi> king = std::make_shared<Roi>(*std::dynamic_pointer_cast<Roi>(piece));
-            king->setX(x);
-            king->setY(y);
-            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE, king)
-                                                     : isKingInCheck(fakeBoard, Color::BLACK, king);
-        }
-        else
-            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE)
-                                                     : isKingInCheck(fakeBoard, Color::BLACK);
+        std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);
+        fakeBoard[x][y].setPiece(tmp);
+        fakeBoard[tmp->getX()][tmp->getY()].setPiece(nullptr);
+        tmp->setX(x);
+        tmp->setY(y);
+        return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE)
+                                                 : isKingInCheck(fakeBoard, Color::BLACK);
     }
 
     return false;

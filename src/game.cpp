@@ -67,6 +67,8 @@ std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->
 
 PieceHandler &Game::getPieceHandler() { return this->piece_handler; }
 
+PieceHandler Game::getPieceHandler() const { return this->piece_handler; }
+
 int Game::getTurn() const { return this->turn; }
 
 void Game::updateTurn() { this->turn = (this->turn + 1) % 2; }

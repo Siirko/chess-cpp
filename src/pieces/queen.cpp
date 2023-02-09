@@ -19,8 +19,8 @@ Piece::PieceMove Queen::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     if (x == this->getX() && y == this->getY())
         return result;
     // check left down diagonal
-    this->callCheckDiagonals(*this, board, result, x, y);
     this->callCheckRows(*this, board, result, x, y);
+    this->callCheckDiagonals(*this, board, result, x, y);
     this->callCheckColumns(*this, board, result, x, y);
     result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
