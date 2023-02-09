@@ -77,6 +77,12 @@ void CheckMove::checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::
     // Check if the move is one tile away
     if (abs(x - self.getX()) <= 1 && abs(y - self.getY()) <= 1)
     {
+        // check if is there opposite king
+        if (board[x][y].getPiece() != nullptr && board[x][y].getPiece()->getType() == PieceType::KING &&
+            board[x][y].getPiece()->getColor() != self.getColor())
+        {
+            throw std::invalid_argument("can't move king");
+        }
         // Check if the tile is empty or if there is an opponent piece
         if (board[x][y].getPiece() == nullptr || board[x][y].getPiece()->getColor() != self.getColor())
         {

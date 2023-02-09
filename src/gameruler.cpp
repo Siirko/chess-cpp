@@ -25,31 +25,32 @@ bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (board[i][j].getPiece() != nullptr)
+            auto piece = board[i][j].getPiece();
+            if (piece != nullptr)
             {
+                if (piece->getType() == PieceType::KING)
+                    continue;
+
                 switch (color)
                 {
                 case Color::WHITE:
-                    if (board[i][j].getPiece()->getColor() == Color::BLACK)
+                    if (piece->getColor() == Color::BLACK)
                     {
-                        if (board[i][j]
-                                .getPiece()
-                                ->isValidMove(board, whiteKing->getX(), whiteKing->getY())
-                                .valid_move)
+                        if (piece->isValidMove(board, whiteKing->getX(), whiteKing->getY()).valid_move)
                         {
                             return true;
                         }
                     }
                     break;
                 case Color::BLACK:
-                    if (board[i][j].getPiece()->getColor() == Color::WHITE)
+                    if (piece->getColor() == Color::WHITE)
                     {
-                        if (board[i][j]
-                                .getPiece()
-                                ->isValidMove(board, blackKing->getX(), blackKing->getY())
-                                .valid_move)
+                        if (piece->isValidMove(board, blackKing->getX(), blackKing->getY()).valid_move)
                         {
-                            return true;
+                            // i have no idea why i need to check only for
+                            // for this color but it somehow works idk
+                            if (!blackKing->isCheck(board, i, j))
+                                return true;
                         }
                     }
                     break;
@@ -63,7 +64,7 @@ bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
 bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
                                        int x, int y)
 {
-    if (canMove)
+    if (canMove && piece->getType() != PieceType::KING)
     {
         array2d<Tile, 8, 8> fakeBoard = board;
         std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);

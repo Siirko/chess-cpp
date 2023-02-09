@@ -38,7 +38,6 @@ void Piece::updateNumMoves() { this->num_moves++; }
 
 bool Piece::beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y)
 {
-
     if (GameRuler::getInstance().isKingInCheckAfterMove(board, this->getptr(), result.valid_move, x, y))
     {
         result = {false, nullptr};
