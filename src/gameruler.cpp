@@ -1,7 +1,12 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/board/board.hpp"
+#include "../includes/pieces/bishop.hpp"
+#include "../includes/pieces/knight.hpp"
+#include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/piece.hpp"
+#include "../includes/pieces/queen.hpp"
 #include "../includes/pieces/roi.hpp"
+#include "../includes/pieces/tower.hpp"
 #include <array>
 #include <iostream>
 #include <memory>
@@ -55,40 +60,19 @@ bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
     return false;
 }
 
-bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color, std::shared_ptr<Roi> king)
-{
-    for (auto piece : this->game->getAlivePieces())
-    {
-        if (piece->getColor() == color)
-        {
-            if (piece->isValidMove(board, king->getX(), king->getY()).valid_move)
-                return true;
-        }
-    }
-    return false;
-}
-
 bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
                                        int x, int y)
 {
     if (canMove)
     {
-        // fake board
         array2d<Tile, 8, 8> fakeBoard = board;
-        fakeBoard[x][y].setPiece(piece);
-        fakeBoard[piece->getX()][piece->getY()].setPiece(nullptr);
-        if (piece->getType() == PieceType::KING)
-        {
-            // make a copy
-            std::shared_ptr<Roi> king = std::make_shared<Roi>(*std::dynamic_pointer_cast<Roi>(piece));
-            king->setX(x);
-            king->setY(y);
-            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE, king)
-                                                     : isKingInCheck(fakeBoard, Color::BLACK, king);
-        }
-        else
-            return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE)
-                                                     : isKingInCheck(fakeBoard, Color::BLACK);
+        std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);
+        fakeBoard[x][y].setPiece(tmp);
+        fakeBoard[tmp->getX()][tmp->getY()].setPiece(nullptr);
+        tmp->setX(x);
+        tmp->setY(y);
+        return piece->getColor() == Color::WHITE ? isKingInCheck(fakeBoard, Color::WHITE)
+                                                 : isKingInCheck(fakeBoard, Color::BLACK);
     }
 
     return false;

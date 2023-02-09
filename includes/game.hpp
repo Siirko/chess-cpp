@@ -35,6 +35,7 @@ class Game
     Board &getBoard();
     Board getBoard() const;
     PieceHandler &getPieceHandler();
+    PieceHandler getPieceHandler() const;
     int getTurn() const;
     void updateTurn();
     int getNumTurns() const;
