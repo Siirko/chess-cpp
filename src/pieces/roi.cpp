@@ -13,7 +13,8 @@ Roi::~Roi() {}
 bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
 {
     auto tmp = board[x][y].getPiece();
-    board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
+    if (x != this->getX() && y != this->getY())
+        board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
     // Check if any opponent piece is attacking the king
     for (int i = 0; i < 8; i++)
     {
