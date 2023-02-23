@@ -60,7 +60,7 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->isValidMove(board, i, j).valid_move)
+            if (this->isValidMove(board, i, j, true).valid_move)
                 return true;
         }
     }
@@ -76,7 +76,7 @@ std::vector<std::pair<int, int>> Piece::getValidMoves(array2d<Tile, 8, 8> board)
         {
             try
             {
-                if (this->isValidMove(board, i, j).valid_move)
+                if (this->isValidMove(board, i, j, true).valid_move)
                     valid_moves.push_back(std::make_pair(i, j));
             }
             catch (const std::exception &e)

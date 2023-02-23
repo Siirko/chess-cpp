@@ -77,7 +77,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     Piece::PieceMove future_move;
     try
     {
-        future_move = piece->isValidMove(this->board, x, y);
+        future_move = piece->isValidMove(this->board, x, y, true);
     }
     catch (const std::exception &e)
     {

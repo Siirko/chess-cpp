@@ -10,7 +10,7 @@ Knight::Knight(int x, int y, int color) : Piece(x, y, color), value{3} { this->s
 
 Knight::~Knight() {}
 
-Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
+Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
@@ -18,6 +18,7 @@ Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
         return result;
     // Check if the move is to the same position
     this->callCheckLshape(*this, board, result, x, y);
-    result.valid_move = this->beforeCheckMove(board, result, x, y);
+    if (beforeCheck)
+        result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

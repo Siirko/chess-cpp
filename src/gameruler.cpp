@@ -1,12 +1,7 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/board/board.hpp"
-#include "../includes/pieces/bishop.hpp"
-#include "../includes/pieces/knight.hpp"
-#include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/piece.hpp"
-#include "../includes/pieces/queen.hpp"
 #include "../includes/pieces/roi.hpp"
-#include "../includes/pieces/tower.hpp"
 #include <array>
 #include <iostream>
 #include <memory>
@@ -22,8 +17,7 @@ void GameRuler::setGame(const Game *game)
 bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
 {
     auto king = this->getKing(color);
-    return !this->game->getCheck((Color)!king->getColor()) &&
-           king->isCheck(board, king->getX(), king->getY());
+    return king->isCheck(board, king->getX(), king->getY());
 }
 
 bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
