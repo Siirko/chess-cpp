@@ -90,9 +90,15 @@ void GUI::handleEvents(SDL_Event *event)
         {
             update();
             if (this->getCheckMate())
+            {
+                std::cout << "Checkmate!" << std::endl;
                 this->clean();
-            if (this->getStaleMate())
+            }
+            else if (this->getStaleMate())
+            {
+                std::cout << "Stalemate!" << std::endl;
                 this->clean();
+            }
             this->m_selectedPiece = nullptr;
             break;
         }

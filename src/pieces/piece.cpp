@@ -38,13 +38,19 @@ void Piece::updateNumMoves() { this->num_moves++; }
 
 bool Piece::beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y)
 {
-    if (GameRuler::getInstance().isKingInCheckAfterMove(board, this->getptr(), result.valid_move, x, y))
+    if (result.valid_move == false)
     {
         result = {false, nullptr};
     }
-    if (result.eaten_piece != nullptr && result.eaten_piece->getColor() == this->getColor() &&
-        this->getType() != PieceType::KING)
+    else if (GameRuler::getInstance().isKingInCheckAfterMove(board, this->getptr(), result.valid_move, x, y))
+    {
         result = {false, nullptr};
+    }
+    else if (result.eaten_piece != nullptr && result.eaten_piece->getColor() == this->getColor() &&
+             this->getType() != PieceType::KING)
+    {
+        result = {false, nullptr};
+    }
     return result.valid_move;
 }
 
@@ -75,7 +81,6 @@ std::vector<std::pair<int, int>> Piece::getValidMoves(array2d<Tile, 8, 8> board)
             }
             catch (const std::exception &e)
             {
-                std::cerr << e.what() << '\n';
                 continue;
             }
         }

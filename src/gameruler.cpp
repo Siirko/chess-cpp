@@ -19,24 +19,20 @@ void GameRuler::setGame(const Game *game)
     blackKing = game->getBlackKing();
 }
 
-/**
- * @brief Check if the king is in check for the given color and board
- */
 bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
 {
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
-            auto ennemy_piece = board[i][j].getPiece();
-            if (ennemy_piece == nullptr || ennemy_piece->getType() == PieceType::KING ||
-                ennemy_piece->getColor() == color)
-                continue;
-            auto king = color == Color::WHITE ? whiteKing : blackKing;
-            auto ennemy_king = color == Color::WHITE ? blackKing : whiteKing;
-            if (ennemy_piece->isValidMove(board, king->getX(), king->getY()).valid_move)
+            if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getType() != PieceType::KING &&
+                board[i][j].getPiece()->getColor() != color)
             {
-                return true;
+                auto ennemy_piece = board[i][j].getPiece();
+                if (ennemy_piece
+                        ->isValidMove(board, this->getKing(color)->getX(), this->getKing(color)->getY())
+                        .valid_move)
+                    return true;
             }
         }
     }
@@ -48,13 +44,14 @@ bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_pt
 {
     if (canMove && piece->getType() != PieceType::KING)
     {
-        array2d<Tile, 8, 8> fakeBoard = board;
+        auto fakeBoard = board;
         std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);
         fakeBoard[x][y].setPiece(tmp);
         fakeBoard[tmp->getX()][tmp->getY()].setPiece(nullptr);
         tmp->setX(x);
         tmp->setY(y);
-        return isKingInCheck(fakeBoard, (Color)piece->getColor());
+        auto king = this->getKing((Color)piece->getColor());
+        return king->isCheck(fakeBoard, king->getX(), king->getY());
     }
     return false;
 }
@@ -101,4 +98,9 @@ bool GameRuler::isKingInStaleMate(array2d<Tile, 8, 8> board, Color color)
         }
     }
     return inCheck ? false : true;
+}
+
+std::shared_ptr<Roi> GameRuler::getKing(Color color) const
+{
+    return color == Color::WHITE ? whiteKing : blackKing;
 }
