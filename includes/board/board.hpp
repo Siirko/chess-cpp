@@ -14,7 +14,7 @@ class Board
     Board();
     ~Board();
     Tile getTile(int x, int y) const;
-    std::array<std::array<Tile, 8>, 8> getBoard() const;
+    std::array<std::array<Tile, 8>, 8> getArray() const;
     void setPiece(std::shared_ptr<Piece> piece);
     std::shared_ptr<Piece> movePiece(std::shared_ptr<Piece> piece, int x, int y);
     void doCastling(std::shared_ptr<Piece> piece, int x, int y);

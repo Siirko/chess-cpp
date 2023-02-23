@@ -45,7 +45,7 @@ std::string pieceSymbol(char type, Color color)
 
 Tile Board::getTile(int x, int y) const { return this->board[x][y]; }
 
-array2d<Tile, 8, 8> Board::getBoard() const { return this->board; }
+array2d<Tile, 8, 8> Board::getArray() const { return this->board; }
 
 void Board::setPiece(std::shared_ptr<Piece> piece)
 {
