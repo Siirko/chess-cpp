@@ -19,10 +19,10 @@ bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
     {
         for (int j = 0; j < 8; j++)
         {
+            auto ennemy_piece = board[i][j].getPiece();
             if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getColor() != this->getColor())
             {
-                PieceMove result = board[i][j].getPiece()->isValidMove(board, x, y);
-                if (result.valid_move)
+                if (ennemy_piece->isValidMove(board, x, y).valid_move)
                 {
                     board[x][y].setPiece(tmp);
                     return true;

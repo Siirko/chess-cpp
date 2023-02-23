@@ -21,22 +21,9 @@ void GameRuler::setGame(const Game *game)
 
 bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)
 {
-    for (int i = 0; i < 8; i++)
-    {
-        for (int j = 0; j < 8; j++)
-        {
-            if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getType() != PieceType::KING &&
-                board[i][j].getPiece()->getColor() != color)
-            {
-                auto ennemy_piece = board[i][j].getPiece();
-                if (ennemy_piece
-                        ->isValidMove(board, this->getKing(color)->getX(), this->getKing(color)->getY())
-                        .valid_move)
-                    return true;
-            }
-        }
-    }
-    return false;
+    auto king = this->getKing(color);
+    return !this->game->getCheck((Color)!king->getColor()) &&
+           king->isCheck(board, king->getX(), king->getY());
 }
 
 bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove,
@@ -44,14 +31,13 @@ bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_pt
 {
     if (canMove && piece->getType() != PieceType::KING)
     {
-        auto fakeBoard = board;
+        auto fake_board = board;
         std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);
-        fakeBoard[x][y].setPiece(tmp);
-        fakeBoard[tmp->getX()][tmp->getY()].setPiece(nullptr);
+        fake_board[x][y].setPiece(tmp);
+        fake_board[tmp->getX()][tmp->getY()].setPiece(nullptr);
         tmp->setX(x);
         tmp->setY(y);
-        auto king = this->getKing((Color)piece->getColor());
-        return king->isCheck(fakeBoard, king->getX(), king->getY());
+        return isKingInCheck(fake_board, (Color)piece->getColor());
     }
     return false;
 }
