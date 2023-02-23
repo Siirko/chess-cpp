@@ -30,11 +30,11 @@ void CLI::run()
                 this->updateTurn();
                 this->updateNumTurns();
                 std::cout << *this << std::flush;
-                this->setCheck(GameRuler::getInstance().isKingInCheck(this->getBoard().getBoard(),
+                this->setCheck(GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(),
                                                                       (Color)this->getTurn()));
-                this->setCheckMate(GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(),
+                this->setCheckMate(GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(),
                                                                               (Color)this->getTurn()));
-                this->setStaleMate(GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(),
+                this->setStaleMate(GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(),
                                                                               (Color)this->getTurn()));
                 if (this->getCheckMate())
                     break;

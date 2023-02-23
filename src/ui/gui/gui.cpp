@@ -64,11 +64,11 @@ void GUI::update()
     this->updateNumTurns();
     std::cout << *this;
     this->setCheck(
-        GameRuler::getInstance().isKingInCheck(this->getBoard().getBoard(), (Color)this->getTurn()));
+        GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(), (Color)this->getTurn()));
     this->setCheckMate(
-        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getBoard(), (Color)this->getTurn()));
+        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
     this->setStaleMate(
-        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getBoard(), (Color)this->getTurn()));
+        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
     std::cout << "Check: " << (this->getCheck() == true ? "TRUE" : "FALSE ") << std::endl;
 }
 
@@ -90,9 +90,15 @@ void GUI::handleEvents(SDL_Event *event)
         {
             update();
             if (this->getCheckMate())
+            {
+                std::cout << "Checkmate!" << std::endl;
                 this->clean();
-            if (this->getStaleMate())
+            }
+            else if (this->getStaleMate())
+            {
+                std::cout << "Stalemate!" << std::endl;
                 this->clean();
+            }
             this->m_selectedPiece = nullptr;
             break;
         }
@@ -168,10 +174,10 @@ void GUI::drawPieces()
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->getBoard().getBoard()[j][i - 1].getPiece() != nullptr)
+            if (this->getBoard().getArray()[j][i - 1].getPiece() != nullptr)
             {
-                Color pieceColor = (Color)this->getBoard().getBoard()[j][i - 1].getPiece()->getColor();
-                char pieceType = this->getBoard().getBoard()[j][i - 1].getPiece()->getType();
+                Color pieceColor = (Color)this->getBoard().getArray()[j][i - 1].getPiece()->getColor();
+                char pieceType = this->getBoard().getArray()[j][i - 1].getPiece()->getType();
                 std::string key;
                 key.push_back(tolower(pieceType));
                 key += pieceColor == Color::WHITE ? "w" : "b";
@@ -218,7 +224,7 @@ void GUI::showPossibleMoves()
     if (this->m_selectedPiece == nullptr)
         return;
     std::vector<std::pair<int, int>> moves =
-        this->m_selectedPiece->getValidMoves(this->getBoard().getBoard());
+        this->m_selectedPiece->getValidMoves(this->getBoard().getArray());
     for (auto move : moves)
     {
         SDL_Rect rect = {move.first * this->getSizeSquare(), (7 - move.second) * this->getSizeSquare(),

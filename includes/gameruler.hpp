@@ -30,4 +30,6 @@ class GameRuler
                                 int y);
     bool isKingInCheckMate(array2d<Tile, 8, 8> board, Color color);
     bool isKingInStaleMate(array2d<Tile, 8, 8> board, Color color);
+    std::shared_ptr<Roi> getKing(Color color) const;
+    Game &getGame() const { return *const_cast<Game *>(game); }
 };

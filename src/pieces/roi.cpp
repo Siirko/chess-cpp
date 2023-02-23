@@ -13,17 +13,16 @@ Roi::~Roi() {}
 bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
 {
     auto tmp = board[x][y].getPiece();
-    board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
-    // Check if any opponent piece is attacking the king
+    if (x != this->getX() && y != this->getY())
+        board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (board[i][j].getPiece() != nullptr && board[i][j].getPiece()->getColor() != this->getColor())
+            auto enemy_piece = board[i][j].getPiece();
+            if (enemy_piece != nullptr && enemy_piece->getColor() != this->getColor())
             {
-                PieceMove result = board[i][j].getPiece()->isValidMove(board, x, y);
-                // std::cout << board[i][j].getPiece()->getType() << ", " << *(result.second) << std::endl;
-                if (result.valid_move)
+                if (enemy_piece->isValidMove(board, x, y, false).valid_move)
                 {
                     board[x][y].setPiece(tmp);
                     return true;
@@ -35,7 +34,7 @@ bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
     return false;
 }
 
-Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
+Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
@@ -47,6 +46,7 @@ Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // special rule, castle move
     this->callCheckCastling(*this, board, result, x, y);
     this->callCheckSquaresMoves(*this, board, result, x, y);
-    result.valid_move = this->beforeCheckMove(board, result, x, y);
+    if (beforeCheck)
+        result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

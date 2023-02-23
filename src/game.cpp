@@ -23,6 +23,7 @@ Game::~Game() { std::cout << "Game destructor" << std::endl; }
 void Game::init()
 {
     std::cout << "Game init" << std::endl;
+    // init rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     this->piece_handler.forsythGeneration(*this, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
 }
