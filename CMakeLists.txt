@@ -22,9 +22,30 @@ FetchContent_Declare(
     GIT_PROGRESS TRUE
 )
 
+FetchContent_Declare(
+    sdl2_image
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_image
+    GIT_TAG release-2.6.2
+    GIT_PROGRESS TRUE
+)
+
 FetchContent_GetProperties(sdl2)
 
-FetchContent_MakeAvailable(sdl2)
+if(NOT sdl2_POPULATED)
+    FetchContent_Populate(sdl2)
+    message (STATUS "SDL2 source dir: ${sdl2_SOURCE_DIR}")
+    message (STATUS "SDL2 binary dir: ${sdl2_BINARY_DIR}")
+    add_subdirectory(${sdl2_SOURCE_DIR} ${sdl2_BINARY_DIR})
+endif()
+
+FetchContent_GetProperties(sdl2_image)
+
+if(NOT sdl2_image_POPULATED)
+    FetchContent_Populate(sdl2_image)
+    message (STATUS "SDL2_image source dir: ${sdl2_image_SOURCE_DIR}")
+    message (STATUS "SDL2_image binary dir: ${sdl2_image_BINARY_DIR}")
+    add_subdirectory(${sdl2_image_SOURCE_DIR} ${sdl2_image_BINARY_DIR})
+endif()
 
 
 add_custom_target(
@@ -45,6 +66,9 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCES})
 
 add_dependencies(${PROJECT_NAME} copy-textures)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/includes)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2 SDL2_image SDL2_ttf stdc++fs)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main SDL2-static SDL2_image SDL2_ttf stdc++fs)
+target_include_directories(${PROJECT_NAME} 
+                            PUBLIC ${sdl2_SOURCE_DIR}/include
+                            PUBLIC ${sdl2_image_SOURCE_DIR}/include
+                            PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/includes)
