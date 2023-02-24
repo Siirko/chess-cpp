@@ -83,8 +83,10 @@ void GUI::handleEvents(SDL_Event *event)
         render();
         break;
     case SDL_MOUSEBUTTONDOWN:
+    {
         grabPiece();
         break;
+    }
     case SDL_MOUSEBUTTONUP:
         if (movePiece())
         {
@@ -157,12 +159,10 @@ void GUI::drawBoard()
     {
         for (int j = 0; j < 8; j++)
         {
-            if ((i + j) % 2 == 0)
-                SDL_SetRenderDrawColor(this->m_renderer, 144, 130, 109, 255);
-            else
-                SDL_SetRenderDrawColor(this->m_renderer, 109, 82, 59, 255);
-
-            SDL_Rect rect = {i * 75, j * 75, 75, 75};
+            RGBA color = tileColor(i, j);
+            SDL_SetRenderDrawColor(this->m_renderer, color.r, color.g, color.b, 255);
+            SDL_Rect rect = {i * this->getSizeSquare(), j * this->getSizeSquare(), this->getSizeSquare(),
+                             this->getSizeSquare()};
             SDL_RenderFillRect(this->m_renderer, &rect);
         }
     }
@@ -231,7 +231,8 @@ void GUI::showPossibleMoves()
                          this->getSizeSquare(), this->getSizeSquare()};
         // rect is transparent
         SDL_SetRenderDrawBlendMode(this->m_renderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(this->m_renderer, 0, 0, 255, 100);
+        RGBA move_possible = getColorFromHEX(0x0000FF);
+        SDL_SetRenderDrawColor(this->m_renderer, move_possible.r, move_possible.g, move_possible.b, 100);
         SDL_RenderFillRect(this->m_renderer, &rect);
     }
 }
