@@ -3,6 +3,32 @@
 #include "../../../includes/pieces/piece.hpp"
 #include <experimental/filesystem>
 
+struct RGBA
+{
+    Uint8 r;
+    Uint8 g;
+    Uint8 b;
+};
+
+RGBA getColorFromHEX(Uint32 hex)
+{
+    RGBA rgb;
+    rgb.r = (hex >> 16) & 0xFF;
+    rgb.g = (hex >> 8) & 0xFF;
+    rgb.b = hex & 0xFF;
+    return rgb;
+}
+
+RGBA tileColor(int i, int j)
+{
+    RGBA color;
+    if ((i + j) % 2 == 0)
+        color = getColorFromHEX(0x6D523B);
+    else
+        color = getColorFromHEX(0x90826c);
+    return color;
+}
+
 GUI::GUI()
     : Game(), m_ltexture{LTexture()}, m_window{nullptr}, m_renderer{nullptr}, m_sourceRectangle{nullptr}
 {
@@ -21,6 +47,7 @@ void GUI::run()
     render();
     while (SDL_WaitEvent(&event))
     {
+        render();
         handleEvents(&event);
     }
 }
@@ -54,6 +81,20 @@ void GUI::init()
             std::cout << "Window could not be created" << std::endl;
             exit(EXIT_FAILURE);
         }
+        if (TTF_Init() == -1)
+        {
+            std::cout << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
+            exit(EXIT_FAILURE);
+        }
+        else
+        {
+            m_font = TTF_OpenFont("ttf/Inter-SemiBold.otf", 110);
+            if (m_font == NULL)
+            {
+                std::cout << "Failed to load lazy font! SDL_ttf Error: " << TTF_GetError() << std::endl;
+                exit(EXIT_FAILURE);
+            }
+        }
     }
 }
 
@@ -78,9 +119,6 @@ void GUI::handleEvents(SDL_Event *event)
     {
     case SDL_QUIT:
         this->clean();
-        break;
-    case SDL_MOUSEMOTION:
-        render();
         break;
     case SDL_MOUSEBUTTONDOWN:
     {
@@ -147,6 +185,8 @@ void GUI::render()
 
 void GUI::clean()
 {
+    TTF_CloseFont(this->m_font);
+    TTF_Quit();
     SDL_DestroyRenderer(this->m_renderer);
     SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
     SDL_Quit();
@@ -159,13 +199,60 @@ void GUI::drawBoard()
     {
         for (int j = 0; j < 8; j++)
         {
+            // draw text (a-h, 1-8)
             RGBA color = tileColor(i, j);
             SDL_SetRenderDrawColor(this->m_renderer, color.r, color.g, color.b, 255);
             SDL_Rect rect = {i * this->getSizeSquare(), j * this->getSizeSquare(), this->getSizeSquare(),
                              this->getSizeSquare()};
             SDL_RenderFillRect(this->m_renderer, &rect);
+            // draw text (a-h, 1-8)
+            if (i == 7 || j == 7)
+                drawTextInTile(i, j);
         }
     }
+}
+
+void GUI::drawTextInTile(int i, int j)
+{
+    int textWidth = 0;
+    int textHeight = 0;
+    std::string text = i == 7 ? std::to_string(8 - j) : j == 7 ? std::string(1, 'a' + i) : "";
+    SDL_Color textColor = {240, 240, 240};
+    SDL_Surface *textSurface = TTF_RenderText_Blended(this->m_font, text.c_str(), textColor);
+    if (textSurface == NULL)
+    {
+        std::cout << "Unable to render text surface! SDL_ttf Error: " << TTF_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    SDL_Texture *textTexture = SDL_CreateTextureFromSurface(this->m_renderer, textSurface);
+    if (textTexture == NULL)
+    {
+        std::cout << "Unable to create texture from rendered text! SDL Error: " << SDL_GetError()
+                  << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    SDL_Rect textRect;
+    if (SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight) < 0)
+    {
+        std::cout << "Unable to query texture! SDL Error: " << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    // display number on the right side of the tile in the last column
+    if (i == 7)
+        textRect = {i * this->getSizeSquare() + this->getSizeSquare() - 8, j * this->getSizeSquare(),
+                    (int)(textWidth / 8), (int)(textHeight / 8)};
+    // display letter on the bottom right of the tile in the last row
+    if (j == 7)
+        textRect = {(i + 1) * this->getSizeSquare() - (int)(textWidth / 8) - 2,
+                    j * this->getSizeSquare() + this->getSizeSquare() - 17, (int)(textWidth / 8),
+                    (int)(textHeight / 8)};
+    if (SDL_RenderCopy(this->m_renderer, textTexture, NULL, &textRect) < 0)
+    {
+        std::cout << "SDL could not copy texture! SDL_Error: " << SDL_GetError() << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
 }
 
 void GUI::drawPieces()

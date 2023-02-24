@@ -11,33 +11,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
-struct RGBA
-{
-    Uint8 r;
-    Uint8 g;
-    Uint8 b;
-};
-
-RGBA getColorFromHEX(Uint32 hex)
-{
-    RGBA rgb;
-    rgb.r = (hex >> 16) & 0xFF;
-    rgb.g = (hex >> 8) & 0xFF;
-    rgb.b = hex & 0xFF;
-    return rgb;
-}
-
-RGBA tileColor(int i, int j)
-{
-    RGBA color;
-    if ((i + j) % 2 == 0)
-        color = getColorFromHEX(0x6D523B);
-    else
-        color = getColorFromHEX(0x90826c);
-    return color;
-}
-
 class GUI : public Game
 {
   public:
@@ -54,6 +27,7 @@ class GUI : public Game
     bool movePiece();
     void followMouse();
     void showPossibleMoves();
+    void drawTextInTile(int i, int j);
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
     int getWidth() const;
@@ -61,6 +35,7 @@ class GUI : public Game
     int getSizeSquare() const;
 
   private:
+    TTF_Font *m_font;
     LTexture m_ltexture;
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
