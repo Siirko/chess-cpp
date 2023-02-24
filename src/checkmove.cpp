@@ -86,16 +86,9 @@ void CheckMove::checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::
         // Check if the tile is empty or if there is an opponent piece
         if (board[x][y].getPiece() == nullptr || board[x][y].getPiece()->getColor() != self.getColor())
         {
-            // check if the king is not in check
-            if (!king.isCheck(board, x, y))
-            {
-                // check if the king is not in check
-                result = {true, board[x][y].getPiece()};
-            }
-            else
-            {
+            if (king.isCheck(board, x, y))
                 throw std::invalid_argument("can't move king");
-            }
+            result = {true, board[x][y].getPiece()};
         }
     }
 }

@@ -60,7 +60,7 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->isValidMove(board, i, j, true).valid_move)
+            if (this->isValidMove(board, i, j, false).valid_move)
                 return true;
         }
     }
