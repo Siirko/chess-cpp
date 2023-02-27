@@ -18,7 +18,7 @@ Game::Game()
     init();
 }
 
-Game::~Game() { std::cout << "Game destructor" << std::endl; }
+Game::~Game() { std::cout << std::endl << this->endResult() << std::endl; }
 
 void Game::init()
 {
@@ -26,6 +26,40 @@ void Game::init()
     // init rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     this->piece_handler.forsythGeneration(*this, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
+}
+
+std::string Game::endResult() const
+{
+    std::string res = "";
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            auto piece = this->getBoard().getArray()[j][i].getPiece();
+            if (piece != nullptr)
+            {
+                res.append((piece->getColor() == Color::WHITE ? "w" : "b"));
+                res.append(1, piece->getType());
+            }
+            res.append(",");
+        }
+    }
+    if (this->getCheckMate())
+    {
+        if (this->getTurn() == Color::WHITE)
+            res.append(" 0-1"); // black wins
+        else
+            res.append(" 1-0"); // white wins
+    }
+    else if (this->getStaleMate())
+    {
+        res.append(" 1/2-1/2");
+    }
+    else
+    {
+        res.append(" ?-?"); // game ended by /quit
+    }
+    return res;
 }
 
 std::shared_ptr<King> Game::getWhiteKing() const

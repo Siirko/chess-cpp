@@ -50,7 +50,7 @@ void CLI::run()
         {
             std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
         }
-    } while ((input = Parser::getInput()) != "/exit" && this->getCheckMate() != true);
+    } while ((input = Parser::getInput()) != "/quit" && this->getCheckMate() != true);
     if (this->getCheckMate())
     {
         std::string color = this->getTurn() == Color::BLACK ? "WHITE" : "BLACK";

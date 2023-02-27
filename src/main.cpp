@@ -5,7 +5,7 @@
 
 int main(void)
 {
-    GUI gui;
-    gui.run();
+    CLI cli;
+    cli.run();
     return 0;
 }

@@ -49,5 +49,6 @@ class Game
     void setStaleMate(bool staleMate);
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
+    std::string endResult() const;
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
 };
