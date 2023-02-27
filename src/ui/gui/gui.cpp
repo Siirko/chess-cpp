@@ -199,7 +199,6 @@ void GUI::drawBoard()
     {
         for (int j = 0; j < 8; j++)
         {
-            // draw text (a-h, 1-8)
             RGBA color = tileColor(i, j);
             SDL_SetRenderDrawColor(this->m_renderer, color.r, color.g, color.b, 255);
             SDL_Rect rect = {i * this->getSizeSquare(), j * this->getSizeSquare(), this->getSizeSquare(),
@@ -318,7 +317,7 @@ void GUI::showPossibleMoves()
                          this->getSizeSquare(), this->getSizeSquare()};
         // rect is transparent
         SDL_SetRenderDrawBlendMode(this->m_renderer, SDL_BLENDMODE_BLEND);
-        RGBA move_possible = getColorFromHEX(0x0000FF);
+        RGBA move_possible = getColorFromHEX(0x2465ff);
         SDL_SetRenderDrawColor(this->m_renderer, move_possible.r, move_possible.g, move_possible.b, 100);
         SDL_RenderFillRect(this->m_renderer, &rect);
     }
