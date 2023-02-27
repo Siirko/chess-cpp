@@ -11,7 +11,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-
 class GUI : public Game
 {
   public:
@@ -28,6 +27,7 @@ class GUI : public Game
     bool movePiece();
     void followMouse();
     void showPossibleMoves();
+    void drawTextInTile(int i, int j);
     void clean();
     std::shared_ptr<Piece> m_selectedPiece;
     int getWidth() const;
@@ -35,8 +35,10 @@ class GUI : public Game
     int getSizeSquare() const;
 
   private:
+    TTF_Font *m_font;
     LTexture m_ltexture;
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
     SDL_Rect *m_sourceRectangle;
+    // Uint32 getColorFromHEX(SDL_Renderer *render, Uint32 hex);
 };
