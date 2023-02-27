@@ -1,15 +1,16 @@
 #pragma once
 #include "../board/tile.hpp"
-#include "../check/towerchecker.hpp"
+#include "../check/kingchecker.hpp"
 #include "piece.hpp"
 
-class Tower : public Piece, public TowerChecker
+class King : public Piece, public KingChecker
 {
   private:
     int value;
 
   public:
-    Tower(int x, int y, int color);
-    ~Tower();
+    King(int x, int y, int color);
+    ~King();
+    bool isCheck(array2d<Tile, 8, 8> board, int x, int y);
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
 };

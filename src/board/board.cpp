@@ -28,7 +28,7 @@ std::string pieceSymbol(char type, Color color)
     {
     case PieceType::PAWN:
         return color == Color::WHITE ? "♟" : "♙";
-    case PieceType::TOWER:
+    case PieceType::ROOK:
         return color == Color::WHITE ? "♜" : "♖";
     case PieceType::KNIGHT:
         return color == Color::WHITE ? "♞" : "♘";
@@ -87,7 +87,7 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
     {
         // check if caste move
         if (piece->getType() == PieceType::KING && piece->getNumMoves() == 0 &&
-            future_move.eaten_piece != nullptr && future_move.eaten_piece->getType() == PieceType::TOWER)
+            future_move.eaten_piece != nullptr && future_move.eaten_piece->getType() == PieceType::ROOK)
         {
             this->doCastling(piece, x, y);
             return eatenPiece;

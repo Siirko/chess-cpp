@@ -1,8 +1,8 @@
 #pragma once
 #include "board/board.hpp"
 #include "piecehandler.hpp"
+#include "pieces/king.hpp"
 #include "pieces/piece.hpp"
-#include "pieces/roi.hpp"
 #include <array>
 #include <memory>
 #include <vector>
@@ -27,8 +27,8 @@ class Game
     Game();
     ~Game();
     virtual void run() = 0;
-    std::shared_ptr<Roi> getWhiteKing() const;
-    std::shared_ptr<Roi> getBlackKing() const;
+    std::shared_ptr<King> getWhiteKing() const;
+    std::shared_ptr<King> getBlackKing() const;
     std::vector<std::shared_ptr<Piece>> getAlivePieces() const;
     std::vector<std::shared_ptr<Piece>> &getBlackEatenPieces();
     std::vector<std::shared_ptr<Piece>> &getWhiteEatenPieces();

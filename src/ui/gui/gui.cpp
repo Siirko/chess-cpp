@@ -110,7 +110,8 @@ void GUI::update()
         GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
     this->setStaleMate(
         GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
-    std::cout << "Check: " << (this->getCheck() == true ? "TRUE" : "FALSE ") << std::endl;
+    std::cout << "Turn: " << this->getNumTurns() << std::endl;
+    std::cout << "Check: " << (this->getCheck() ? "TRUE" : "FALSE ") << std::endl;
 }
 
 void GUI::handleEvents(SDL_Event *event)

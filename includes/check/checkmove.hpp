@@ -14,7 +14,7 @@ class CheckMove
     void checkDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkDiagonalCapture(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 
-    friend class TowerChecker;
+    friend class RookChecker;
     void checkRows(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkColumns(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 
@@ -25,7 +25,7 @@ class CheckMove
     friend class KnightChecker;
     void checkLshape(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 
-    friend class RoiChecker;
+    friend class KingChecker;
     void checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 };

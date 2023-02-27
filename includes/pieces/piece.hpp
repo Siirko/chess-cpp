@@ -13,11 +13,11 @@ enum Color
 enum PieceType
 {
     PAWN = 'P',
-    TOWER = 'T',
-    KNIGHT = 'K',
+    ROOK = 'R',
+    KNIGHT = 'N',
     BISHOP = 'B',
     QUEEN = 'Q',
-    KING = 'R'
+    KING = 'K'
 };
 
 class Tile;

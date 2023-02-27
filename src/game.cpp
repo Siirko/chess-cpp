@@ -2,11 +2,11 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/piecehandler.hpp"
 #include "../includes/pieces/bishop.hpp"
+#include "../includes/pieces/king.hpp"
 #include "../includes/pieces/knight.hpp"
 #include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/queen.hpp"
-#include "../includes/pieces/roi.hpp"
-#include "../includes/pieces/tower.hpp"
+#include "../includes/pieces/rook.hpp"
 #include <iostream>
 #include <regex>
 #include <string>
@@ -28,22 +28,22 @@ void Game::init()
     GameRuler::getInstance().setGame(this);
 }
 
-std::shared_ptr<Roi> Game::getWhiteKing() const
+std::shared_ptr<King> Game::getWhiteKing() const
 {
     for (auto piece : this->alive_pieces)
     {
         if (piece->getColor() == Color::WHITE && piece->getType() == PieceType::KING)
-            return std::dynamic_pointer_cast<Roi>(piece);
+            return std::dynamic_pointer_cast<King>(piece);
     }
     throw std::runtime_error("No white king found");
 }
 
-std::shared_ptr<Roi> Game::getBlackKing() const
+std::shared_ptr<King> Game::getBlackKing() const
 {
     for (auto piece : this->alive_pieces)
     {
         if (piece->getColor() == Color::BLACK && piece->getType() == PieceType::KING)
-            return std::dynamic_pointer_cast<Roi>(piece);
+            return std::dynamic_pointer_cast<King>(piece);
     }
     throw std::runtime_error("No black king found");
 }

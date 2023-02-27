@@ -7,4 +7,5 @@ int main(void)
 {
     GUI gui;
     gui.run();
+    return 0;
 }

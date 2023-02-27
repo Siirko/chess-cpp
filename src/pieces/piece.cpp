@@ -29,6 +29,10 @@ char Piece::getType()
     // Get the name of the piece and print the first letter
     // index 1 is choosen because for exemple name is "4Pawn"
     std::string type = typeid(*this).name();
+    // if find Knight if type, return N
+    // hacky way but works
+    if (type.find("Knight") != std::string::npos)
+        return 'N';
     return type.at(1);
 }
 

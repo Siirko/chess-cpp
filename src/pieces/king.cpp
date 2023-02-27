@@ -1,4 +1,4 @@
-#include "../../includes/pieces/roi.hpp"
+#include "../../includes/pieces/king.hpp"
 #include "../../includes/board/tile.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include <array>
@@ -6,15 +6,14 @@
 #include <set>
 #include <string>
 
-Roi::Roi(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
+King::King(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
 
-Roi::~Roi() {}
+King::~King() {}
 
-bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
+bool King::isCheck(array2d<Tile, 8, 8> board, int x, int y)
 {
     auto tmp = board[x][y].getPiece();
-    if (x != this->getX() && y != this->getY())
-        board[x][y].setPiece(std::make_shared<Roi>(x, y, this->getColor()));
+    board[x][y].setPiece(std::make_shared<King>(x, y, this->getColor()));
     for (int i = 0; i < 8; i++)
     {
         for (int j = 0; j < 8; j++)
@@ -34,7 +33,7 @@ bool Roi::isCheck(array2d<Tile, 8, 8> board, int x, int y)
     return false;
 }
 
-Piece::PieceMove Roi::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
+Piece::PieceMove King::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board

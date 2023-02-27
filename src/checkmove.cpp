@@ -1,6 +1,6 @@
 #include "../includes/check/checkmove.hpp"
+#include "../includes/pieces/king.hpp"
 #include "../includes/pieces/piece.hpp"
-#include "../includes/pieces/roi.hpp"
 #include <set>
 
 void CheckMove::checkDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
@@ -53,9 +53,9 @@ void CheckMove::checkEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::Pi
 void CheckMove::checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
 {
     // cast self to king type
-    Roi &king = dynamic_cast<Roi &>(self);
+    King &king = dynamic_cast<King &>(self);
     if (self.getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
-        board[x][y].getPiece()->getType() == PieceType::TOWER && board[x][y].getPiece()->getNumMoves() == 0)
+        board[x][y].getPiece()->getType() == PieceType::ROOK && board[x][y].getPiece()->getNumMoves() == 0)
     {
         std::set<int> coord_to_check = x == 7 ? std::set<int>{5, 6} : std::set<int>{1, 2, 3};
         for (auto coord : coord_to_check)
@@ -73,7 +73,7 @@ void CheckMove::checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::
                                  int y)
 {
     // cast self to king type
-    Roi &king = dynamic_cast<Roi &>(self);
+    King &king = dynamic_cast<King &>(self);
     // Check if the move is one tile away
     if (abs(x - self.getX()) <= 1 && abs(y - self.getY()) <= 1)
     {

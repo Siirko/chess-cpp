@@ -1,20 +1,20 @@
-#include "../../includes/pieces/tower.hpp"
+#include "../../includes/pieces/rook.hpp"
 #include "../../includes/board/tile.hpp"
 #include "../../includes/gameruler.hpp"
+#include "../../includes/pieces/king.hpp"
 #include "../../includes/pieces/piece.hpp"
-#include "../../includes/pieces/roi.hpp"
 #include <array>
 #include <cstdlib>
 #include <iostream>
 #include <set>
 #include <string>
 
-Tower::Tower(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
+Rook::Rook(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFirstMove(false); }
 
-Tower::~Tower() {}
+Rook::~Rook() {}
 
 // TODO: need to decide who check if king is in check (board or the piece itself)
-Piece::PieceMove Tower::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
+Piece::PieceMove Rook::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
