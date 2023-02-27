@@ -62,6 +62,7 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
         {
             if (this->isValidMove(board, i, j, false).valid_move)
                 return true;
+            }
         }
     }
     return false;

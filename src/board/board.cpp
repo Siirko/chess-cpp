@@ -27,17 +27,17 @@ std::string pieceSymbol(char type, Color color)
     switch (type)
     {
     case PieceType::PAWN:
-        return color == Color::WHITE ? "♙" : "♟";
+        return color == Color::WHITE ? "♟" : "♙";
     case PieceType::TOWER:
-        return color == Color::WHITE ? "♖" : "♜";
+        return color == Color::WHITE ? "♜" : "♖";
     case PieceType::KNIGHT:
-        return color == Color::WHITE ? "♘" : "♞";
+        return color == Color::WHITE ? "♞" : "♘";
     case PieceType::BISHOP:
-        return color == Color::WHITE ? "♗" : "♝";
+        return color == Color::WHITE ? "♝" : "♗";
     case PieceType::QUEEN:
-        return color == Color::WHITE ? "♕" : "♛";
+        return color == Color::WHITE ? "♛" : "♕";
     case PieceType::KING:
-        return color == Color::WHITE ? "♔" : "♚";
+        return color == Color::WHITE ? "♚" : "♔";
     default:
         return " ";
     }
