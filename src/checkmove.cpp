@@ -46,7 +46,9 @@ void CheckMove::checkEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::Pi
         board[x][self.getY()].getPiece()->getType() == PieceType::PAWN &&
         board[x][self.getY()].getPiece()->getNumMoves() == 1)
     {
-        result = {true, board[x][self.getY()].getPiece()};
+        auto pawn = board[x][self.getY()].getPiece();
+        if (pawn->getFirstMove())
+            result = {true, board[x][self.getY()].getPiece()};
     }
 }
 

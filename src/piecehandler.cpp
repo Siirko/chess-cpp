@@ -83,6 +83,12 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
     bool valid = true;
     try
     {
+        for (auto pawn : game.getAlivePieces())
+        {
+            if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() &&
+                pawn->getType() == PieceType::PAWN)
+                pawn->setFirstMove(false);
+        }
         std::shared_ptr<Piece> eatenPiece = game.getBoard().movePiece(piece, x, y);
         if (eatenPiece != nullptr && eatenPiece->getType() != PieceType::KING)
         {

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-Piece::Piece(int x, int y, int color) : x{x}, y{y}, color{color}, firstMove{true} {}
+Piece::Piece(int x, int y, int color) : x{x}, y{y}, color{color}, firstMove{false} {}
 
 Piece::~Piece() {}
 
