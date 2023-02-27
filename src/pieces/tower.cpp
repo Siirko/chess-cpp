@@ -1,5 +1,6 @@
 #include "../../includes/pieces/tower.hpp"
 #include "../../includes/board/tile.hpp"
+#include "../../includes/gameruler.hpp"
 #include "../../includes/pieces/piece.hpp"
 #include "../../includes/pieces/roi.hpp"
 #include <array>
@@ -13,7 +14,7 @@ Tower::Tower(int x, int y, int color) : Piece(x, y, color), value{5} { this->set
 Tower::~Tower() {}
 
 // TODO: need to decide who check if king is in check (board or the piece itself)
-Piece::PieceMove Tower::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
+Piece::PieceMove Tower::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
@@ -26,6 +27,7 @@ Piece::PieceMove Tower::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     // Check if we can move in the same column (up or down)
     this->callCheckRows(*this, board, result, x, y);
     this->callCheckColumns(*this, board, result, x, y);
-    result.valid_move = this->beforeCheckMove(board, result, x, y);
+    if (beforeCheck)
+        result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

@@ -35,11 +35,13 @@ class Game
     Board &getBoard();
     Board getBoard() const;
     PieceHandler &getPieceHandler();
+    PieceHandler getPieceHandler() const;
     int getTurn() const;
     void updateTurn();
     int getNumTurns() const;
     void updateNumTurns();
     bool getCheck() const;
+    bool getCheck(Color color) const { return this->turn == color && this->check; }
     void setCheck(bool check);
     bool getCheckMate() const;
     void setCheckMate(bool checkMate);

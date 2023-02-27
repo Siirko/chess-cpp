@@ -1,10 +1,10 @@
 #include "../includes/ui/cli/cli.hpp"
+#include "../includes/ui/gui/gui.hpp"
 #include <iostream>
 #include <string>
 
-int main(int argc, char const *argv[])
+int main(void)
 {
-    CLI cli = CLI();
-    cli.run();
-    return 0;
+    GUI gui;
+    gui.run();
 }

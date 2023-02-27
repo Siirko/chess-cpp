@@ -11,5 +11,5 @@ class Bishop : public Piece, public BishopChecker
   public:
     Bishop(int x, int y, int color);
     ~Bishop();
-    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y) override;
+    virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
 };

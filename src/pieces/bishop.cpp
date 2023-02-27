@@ -10,7 +10,7 @@ Bishop::Bishop(int x, int y, int color) : Piece(x, y, color), value{3} { this->s
 
 Bishop::~Bishop() {}
 
-Piece::PieceMove Bishop::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
+Piece::PieceMove Bishop::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
@@ -20,6 +20,7 @@ Piece::PieceMove Bishop::isValidMove(array2d<Tile, 8, 8> board, int x, int y)
     if (x == this->getX() && y == this->getY())
         return result;
     this->callCheckDiagonals(*this, board, result, x, y);
-    result.valid_move = this->beforeCheckMove(board, result, x, y);
+    if (beforeCheck)
+        result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }

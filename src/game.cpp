@@ -23,6 +23,7 @@ Game::~Game() { std::cout << "Game destructor" << std::endl; }
 void Game::init()
 {
     std::cout << "Game init" << std::endl;
+    // init rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
     this->piece_handler.forsythGeneration(*this, "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
     GameRuler::getInstance().setGame(this);
 }
@@ -66,6 +67,8 @@ std::vector<std::shared_ptr<Piece>> &Game::getWhiteEatenPieces() { return this->
 std::vector<std::shared_ptr<Piece>> &Game::getBlackEatenPieces() { return this->black_eaten_pieces; }
 
 PieceHandler &Game::getPieceHandler() { return this->piece_handler; }
+
+PieceHandler Game::getPieceHandler() const { return this->piece_handler; }
 
 int Game::getTurn() const { return this->turn; }
 

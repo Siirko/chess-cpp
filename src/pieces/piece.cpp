@@ -38,14 +38,19 @@ void Piece::updateNumMoves() { this->num_moves++; }
 
 bool Piece::beforeCheckMove(array2d<Tile, 8, 8> board, PieceMove result, int x, int y)
 {
-    std::shared_ptr<Piece> tt = this->getptr();
-    if (GameRuler::getInstance().isKingInCheckAfterMove(board, tt, result.valid_move, x, y))
+    if (result.valid_move == false)
     {
         result = {false, nullptr};
     }
-    if (result.eaten_piece != nullptr && result.eaten_piece->getColor() == this->getColor() &&
-        this->getType() != PieceType::KING)
+    else if (GameRuler::getInstance().isKingInCheckAfterMove(board, this->getptr(), result.valid_move, x, y))
+    {
         result = {false, nullptr};
+    }
+    else if (result.eaten_piece != nullptr && result.eaten_piece->getColor() == this->getColor() &&
+             this->getType() != PieceType::KING)
+    {
+        result = {false, nullptr};
+    }
     return result.valid_move;
 }
 
@@ -55,17 +60,33 @@ bool Piece::canMove(array2d<Tile, 8, 8> board)
     {
         for (int j = 0; j < 8; j++)
         {
-            if (this->isValidMove(board, i, j).valid_move)
-            {
-                /*
-                std::cout << "Can move to: " << i << " " << j << std::endl;
-                std::cout << *(this);
-                */
+            if (this->isValidMove(board, i, j, false).valid_move)
                 return true;
             }
         }
     }
     return false;
+}
+
+std::vector<std::pair<int, int>> Piece::getValidMoves(array2d<Tile, 8, 8> board)
+{
+    std::vector<std::pair<int, int>> valid_moves;
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            try
+            {
+                if (this->isValidMove(board, i, j, true).valid_move)
+                    valid_moves.push_back(std::make_pair(i, j));
+            }
+            catch (const std::exception &e)
+            {
+                continue;
+            }
+        }
+    }
+    return valid_moves;
 }
 
 std::ostream &operator<<(std::ostream &os, const Piece &piece)

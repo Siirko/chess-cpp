@@ -26,9 +26,10 @@ class GameRuler
     }
     void setGame(const Game *game);
     bool isKingInCheck(array2d<Tile, 8, 8> board, Color color);
-    bool isKingInCheck(array2d<Tile, 8, 8> board, Color color, std::shared_ptr<Roi> king);
     bool isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_ptr<Piece> piece, bool canMove, int x,
                                 int y);
     bool isKingInCheckMate(array2d<Tile, 8, 8> board, Color color);
     bool isKingInStaleMate(array2d<Tile, 8, 8> board, Color color);
+    std::shared_ptr<Roi> getKing(Color color) const;
+    Game &getGame() const { return *const_cast<Game *>(game); }
 };
