@@ -28,7 +28,7 @@ class GUI : public Game
     void followMouse();
     void showPossibleMoves();
     void drawTextInTile(int i, int j);
-    void clean();
+    void end();
     std::shared_ptr<Piece> m_selectedPiece;
     int getWidth() const;
     int getHeight() const;

@@ -18,7 +18,31 @@ Game::Game()
     init();
 }
 
-Game::~Game() { std::cout << std::endl << this->endResult() << std::endl; }
+Game::~Game()
+{
+    if (this->getCheckMate())
+    {
+        std::string color = this->getTurn() == Color::BLACK ? "WHITE" : "BLACK";
+        std::cout << "Checkmate, " << color << " Won !" << std::endl;
+    }
+    else if (this->getStaleMate())
+        std::cout << "Stalemate, Draw !" << std::endl;
+
+    std::cout << std::endl << this->endResult() << std::endl;
+}
+
+void Game::updateStatus()
+{
+    this->updateTurn();
+    this->updateNumTurns();
+    std::cout << *this << std::flush;
+    this->setCheck(
+        GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(), (Color)this->getTurn()));
+    this->setCheckMate(
+        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
+    this->setStaleMate(
+        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
+}
 
 void Game::init()
 {

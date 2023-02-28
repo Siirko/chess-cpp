@@ -50,5 +50,6 @@ class Game
     void addAlivePiece(std::shared_ptr<Piece> piece);
     void removeAlivePiece(std::shared_ptr<Piece> piece);
     std::string endResult() const;
+    void updateStatus();
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
 };

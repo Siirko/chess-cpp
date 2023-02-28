@@ -101,15 +101,7 @@ void GUI::init()
 void GUI::update()
 {
     render();
-    this->updateTurn();
-    this->updateNumTurns();
-    std::cout << *this;
-    this->setCheck(
-        GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(), (Color)this->getTurn()));
-    this->setCheckMate(
-        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
-    this->setStaleMate(
-        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
+    this->updateStatus();
     std::cout << "Turn: " << this->getNumTurns() << std::endl;
     std::cout << "Check: " << (this->getCheck() ? "TRUE" : "FALSE ") << std::endl;
 }
@@ -119,7 +111,7 @@ void GUI::handleEvents(SDL_Event *event)
     switch (event->type)
     {
     case SDL_QUIT:
-        this->clean();
+        this->end();
         break;
     case SDL_MOUSEBUTTONDOWN:
     {
@@ -131,15 +123,9 @@ void GUI::handleEvents(SDL_Event *event)
         {
             update();
             if (this->getCheckMate())
-            {
-                std::cout << "Checkmate!" << std::endl;
-                this->clean();
-            }
+                this->end();
             else if (this->getStaleMate())
-            {
-                std::cout << "Stalemate!" << std::endl;
-                this->clean();
-            }
+                this->end();
             this->m_selectedPiece = nullptr;
             break;
         }
@@ -184,7 +170,7 @@ void GUI::render()
     SDL_RenderPresent(this->m_renderer);
 }
 
-void GUI::clean()
+void GUI::end()
 {
     TTF_CloseFont(this->m_font);
     TTF_Quit();
