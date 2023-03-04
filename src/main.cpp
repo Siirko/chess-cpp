@@ -3,9 +3,31 @@
 #include <iostream>
 #include <string>
 
-int main(void)
+int main(int argc, char *argv[])
 {
-    CLI cli;
-    cli.run();
+    if (argc == 1)
+    {
+        CLI cli;
+        cli.run();
+    }
+    else if (argc == 2)
+    {
+        std::string arg = argv[1];
+        if (arg == "--gui")
+        {
+            GUI gui;
+            gui.run();
+        }
+        else
+        {
+            std::cout << "Invalid argument" << std::endl;
+            return 1;
+        }
+    }
+    else
+    {
+        std::cout << "Invalid number of arguments" << std::endl;
+        return 1;
+    }
     return 0;
 }

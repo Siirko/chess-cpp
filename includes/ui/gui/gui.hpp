@@ -39,6 +39,4 @@ class GUI : public Game
     LTexture m_ltexture;
     SDL_Window *m_window;
     SDL_Renderer *m_renderer;
-    SDL_Rect *m_sourceRectangle;
-    // Uint32 getColorFromHEX(SDL_Renderer *render, Uint32 hex);
 };
