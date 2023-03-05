@@ -27,15 +27,7 @@ void CLI::run()
         {
             if (this->getPieceHandler().movePieceAt(*this, piece, coords.to.x, coords.to.y))
             {
-                this->updateTurn();
-                this->updateNumTurns();
-                std::cout << *this << std::flush;
-                this->setCheck(GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(),
-                                                                      (Color)this->getTurn()));
-                this->setCheckMate(GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(),
-                                                                              (Color)this->getTurn()));
-                this->setStaleMate(GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(),
-                                                                              (Color)this->getTurn()));
+                this->updateStatus();
                 if (this->getCheckMate())
                     break;
                 if (this->getStaleMate())
@@ -50,12 +42,5 @@ void CLI::run()
         {
             std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
         }
-    } while ((input = Parser::getInput()) != "/exit" && this->getCheckMate() != true);
-    if (this->getCheckMate())
-    {
-        std::string color = this->getTurn() == Color::BLACK ? "WHITE" : "BLACK";
-        std::cout << "Checkmate, " << color << " Won !" << std::endl;
-    }
-    else if (this->getStaleMate())
-        std::cout << "Stalemate, Draw !" << std::endl;
+    } while ((input = Parser::getInput()) != "/quit" && this->getCheckMate() != true);
 }

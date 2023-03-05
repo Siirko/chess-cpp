@@ -4,7 +4,7 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class RoiChecker
+class KingChecker
 {
   private:
     static void callCheckSquaresMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
@@ -19,5 +19,5 @@ class RoiChecker
         CheckMove c = CheckMove();
         c.checkCastling(self, board, result, x, y);
     }
-    friend class Roi;
+    friend class King;
 };

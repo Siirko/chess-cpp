@@ -2,11 +2,11 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/piecehandler.hpp"
 #include "../includes/pieces/bishop.hpp"
+#include "../includes/pieces/king.hpp"
 #include "../includes/pieces/knight.hpp"
 #include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/queen.hpp"
-#include "../includes/pieces/roi.hpp"
-#include "../includes/pieces/tower.hpp"
+#include "../includes/pieces/rook.hpp"
 #include <iostream>
 #include <regex>
 #include <string>
@@ -18,7 +18,31 @@ Game::Game()
     init();
 }
 
-Game::~Game() { std::cout << "Game destructor" << std::endl; }
+Game::~Game()
+{
+    if (this->getCheckMate())
+    {
+        std::string color = this->getTurn() == Color::BLACK ? "WHITE" : "BLACK";
+        std::cout << "Checkmate, " << color << " Won !" << std::endl;
+    }
+    else if (this->getStaleMate())
+        std::cout << "Stalemate, Draw !" << std::endl;
+
+    std::cout << std::endl << this->endResult() << std::endl;
+}
+
+void Game::updateStatus()
+{
+    this->updateTurn();
+    this->updateNumTurns();
+    std::cout << *this << std::flush;
+    this->setCheck(
+        GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(), (Color)this->getTurn()));
+    this->setCheckMate(
+        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
+    this->setStaleMate(
+        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
+}
 
 void Game::init()
 {
@@ -28,22 +52,56 @@ void Game::init()
     GameRuler::getInstance().setGame(this);
 }
 
-std::shared_ptr<Roi> Game::getWhiteKing() const
+std::string Game::endResult() const
+{
+    std::string res = "";
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            auto piece = this->getBoard().getArray()[j][i].getPiece();
+            if (piece != nullptr)
+            {
+                res.append((piece->getColor() == Color::WHITE ? "w" : "b"));
+                res.append(1, piece->getType());
+            }
+            res.append(",");
+        }
+    }
+    if (this->getCheckMate())
+    {
+        if (this->getTurn() == Color::WHITE)
+            res.append(" 0-1"); // black wins
+        else
+            res.append(" 1-0"); // white wins
+    }
+    else if (this->getStaleMate())
+    {
+        res.append(" 1/2-1/2");
+    }
+    else
+    {
+        res.append(" ?-?"); // game ended by /quit
+    }
+    return res;
+}
+
+std::shared_ptr<King> Game::getWhiteKing() const
 {
     for (auto piece : this->alive_pieces)
     {
         if (piece->getColor() == Color::WHITE && piece->getType() == PieceType::KING)
-            return std::dynamic_pointer_cast<Roi>(piece);
+            return std::dynamic_pointer_cast<King>(piece);
     }
     throw std::runtime_error("No white king found");
 }
 
-std::shared_ptr<Roi> Game::getBlackKing() const
+std::shared_ptr<King> Game::getBlackKing() const
 {
     for (auto piece : this->alive_pieces)
     {
         if (piece->getColor() == Color::BLACK && piece->getType() == PieceType::KING)
-            return std::dynamic_pointer_cast<Roi>(piece);
+            return std::dynamic_pointer_cast<King>(piece);
     }
     throw std::runtime_error("No black king found");
 }

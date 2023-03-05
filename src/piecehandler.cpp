@@ -5,8 +5,7 @@
 #include "../includes/pieces/pawn.hpp"
 #include "../includes/pieces/piece.hpp"
 #include "../includes/pieces/queen.hpp"
-#include "../includes/pieces/roi.hpp"
-#include "../includes/pieces/tower.hpp"
+#include "../includes/pieces/rook.hpp"
 
 #include <iostream>
 
@@ -37,10 +36,10 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
                 piece = std::make_shared<Pawn>(x, y, Color::BLACK);
                 break;
             case 'r':
-                piece = std::make_shared<Tower>(x, y, Color::WHITE);
+                piece = std::make_shared<Rook>(x, y, Color::WHITE);
                 break;
             case 'R':
-                piece = std::make_shared<Tower>(x, y, Color::BLACK);
+                piece = std::make_shared<Rook>(x, y, Color::BLACK);
                 break;
             case 'n':
                 piece = std::make_shared<Knight>(x, y, Color::WHITE);
@@ -61,10 +60,10 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
                 piece = std::make_shared<Queen>(x, y, Color::BLACK);
                 break;
             case 'k':
-                piece = std::make_shared<Roi>(x, y, Color::WHITE);
+                piece = std::make_shared<King>(x, y, Color::WHITE);
                 break;
             case 'K':
-                piece = std::make_shared<Roi>(x, y, Color::BLACK);
+                piece = std::make_shared<King>(x, y, Color::BLACK);
                 break;
             default:
                 break;
@@ -84,6 +83,12 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
     bool valid = true;
     try
     {
+        for (auto pawn : game.getAlivePieces())
+        {
+            if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() &&
+                pawn->getType() == PieceType::PAWN)
+                pawn->setFirstMove(false);
+        }
         std::shared_ptr<Piece> eatenPiece = game.getBoard().movePiece(piece, x, y);
         if (eatenPiece != nullptr && eatenPiece->getType() != PieceType::KING)
         {
@@ -116,8 +121,8 @@ std::shared_ptr<Piece> PieceHandler::makeCopy(std::shared_ptr<Piece> piece) cons
     case PieceType::PAWN:
         copy = std::make_shared<Pawn>(piece->getX(), piece->getY(), piece->getColor());
         break;
-    case PieceType::TOWER:
-        copy = std::make_shared<Tower>(piece->getX(), piece->getY(), piece->getColor());
+    case PieceType::ROOK:
+        copy = std::make_shared<Rook>(piece->getX(), piece->getY(), piece->getColor());
         break;
     case PieceType::KNIGHT:
         copy = std::make_shared<Knight>(piece->getX(), piece->getY(), piece->getColor());
@@ -129,7 +134,7 @@ std::shared_ptr<Piece> PieceHandler::makeCopy(std::shared_ptr<Piece> piece) cons
         copy = std::make_shared<Queen>(piece->getX(), piece->getY(), piece->getColor());
         break;
     case PieceType::KING:
-        copy = std::make_shared<Roi>(piece->getX(), piece->getY(), piece->getColor());
+        copy = std::make_shared<King>(piece->getX(), piece->getY(), piece->getColor());
         break;
     default:
         break;

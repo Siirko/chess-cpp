@@ -26,5 +26,7 @@ Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool
     // this->callCheckPromotion(*this, board, result, x, y);
     if (beforeCheck)
         result.valid_move = this->beforeCheckMove(board, result, x, y);
+    if (result.valid_move && this->getNumMoves() == 0)
+        this->setFirstMove(true);
     return result;
 }

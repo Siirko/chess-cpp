@@ -11,7 +11,7 @@ std::string Parser::getInput()
     std::string input;
     std::cout << "Enter your move: ";
     std::cin >> input;
-    if (input == "/exit")
+    if (input == "/quit")
         return input;
     if (!std::regex_match(input, pattern) && !std::regex_match(input, big_rook_pattern) &&
         !std::regex_match(input, little_rook_pattern))

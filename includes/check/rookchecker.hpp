@@ -4,7 +4,7 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class TowerChecker
+class RookChecker
 {
   private:
     static void callCheckRows(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
@@ -18,5 +18,5 @@ class TowerChecker
         CheckMove c = CheckMove();
         c.checkColumns(self, board, result, x, y);
     }
-    friend class Tower;
+    friend class Rook;
 };

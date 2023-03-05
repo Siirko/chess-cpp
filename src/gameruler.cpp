@@ -1,7 +1,7 @@
 #include "../includes/gameruler.hpp"
 #include "../includes/board/board.hpp"
+#include "../includes/pieces/king.hpp"
 #include "../includes/pieces/piece.hpp"
-#include "../includes/pieces/roi.hpp"
 #include <array>
 #include <iostream>
 #include <memory>
@@ -44,7 +44,7 @@ bool GameRuler::isKingInCheckMate(array2d<Tile, 8, 8> board, Color color)
         {
             try
             {
-                if (piece->getColor() == color && piece->canMove(board))
+                if (piece->getColor() == color && piece->getValidMoves(board).size() > 0)
                     return false;
             }
             catch (const std::exception &e)
@@ -67,7 +67,7 @@ bool GameRuler::isKingInStaleMate(array2d<Tile, 8, 8> board, Color color)
         {
             try
             {
-                if (piece->getColor() == color && piece->canMove(board))
+                if (piece->getColor() == color && piece->getValidMoves(board).size() > 0)
                     return false;
             }
             catch (const std::exception &e)
@@ -80,7 +80,7 @@ bool GameRuler::isKingInStaleMate(array2d<Tile, 8, 8> board, Color color)
     return inCheck ? false : true;
 }
 
-std::shared_ptr<Roi> GameRuler::getKing(Color color) const
+std::shared_ptr<King> GameRuler::getKing(Color color) const
 {
     return color == Color::WHITE ? whiteKing : blackKing;
 }

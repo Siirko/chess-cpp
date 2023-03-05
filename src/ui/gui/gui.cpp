@@ -29,12 +29,13 @@ RGBA tileColor(int i, int j)
     return color;
 }
 
-GUI::GUI()
-    : Game(), m_ltexture{LTexture()}, m_window{nullptr}, m_renderer{nullptr}, m_sourceRectangle{nullptr}
+GUI::GUI() : Game(), m_ltexture{LTexture()}, m_window{nullptr}, m_renderer{nullptr}
 {
     // get current directory
     init();
     m_ltexture.loadTextures(this->m_renderer);
+    // set anti-aliasing
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 }
 
 GUI::~GUI() {}
@@ -64,7 +65,7 @@ void GUI::init()
         m_window = SDL_CreateWindow("chess-cpp", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 600, 0);
         if (m_window)
         {
-            this->m_renderer = SDL_CreateRenderer(m_window, -1, 0);
+            this->m_renderer = SDL_CreateRenderer(m_window, -1, SDL_RENDERER_ACCELERATED);
             if (this->m_renderer)
             {
                 SDL_SetRenderDrawColor(this->m_renderer, 255, 255, 255, 255);
@@ -101,16 +102,9 @@ void GUI::init()
 void GUI::update()
 {
     render();
-    this->updateTurn();
-    this->updateNumTurns();
-    std::cout << *this;
-    this->setCheck(
-        GameRuler::getInstance().isKingInCheck(this->getBoard().getArray(), (Color)this->getTurn()));
-    this->setCheckMate(
-        GameRuler::getInstance().isKingInCheckMate(this->getBoard().getArray(), (Color)this->getTurn()));
-    this->setStaleMate(
-        GameRuler::getInstance().isKingInStaleMate(this->getBoard().getArray(), (Color)this->getTurn()));
-    std::cout << "Check: " << (this->getCheck() == true ? "TRUE" : "FALSE ") << std::endl;
+    this->updateStatus();
+    std::cout << "Turn: " << this->getNumTurns() << std::endl;
+    std::cout << "Check: " << (this->getCheck() ? "TRUE" : "FALSE ") << std::endl;
 }
 
 void GUI::handleEvents(SDL_Event *event)
@@ -118,7 +112,7 @@ void GUI::handleEvents(SDL_Event *event)
     switch (event->type)
     {
     case SDL_QUIT:
-        this->clean();
+        this->end();
         break;
     case SDL_MOUSEBUTTONDOWN:
     {
@@ -130,15 +124,9 @@ void GUI::handleEvents(SDL_Event *event)
         {
             update();
             if (this->getCheckMate())
-            {
-                std::cout << "Checkmate!" << std::endl;
-                this->clean();
-            }
+                this->end();
             else if (this->getStaleMate())
-            {
-                std::cout << "Stalemate!" << std::endl;
-                this->clean();
-            }
+                this->end();
             this->m_selectedPiece = nullptr;
             break;
         }
@@ -183,7 +171,7 @@ void GUI::render()
     SDL_RenderPresent(this->m_renderer);
 }
 
-void GUI::clean()
+void GUI::end()
 {
     TTF_CloseFont(this->m_font);
     TTF_Quit();
@@ -241,7 +229,7 @@ void GUI::drawTextInTile(int i, int j)
         textRect = {i * this->getSizeSquare() + this->getSizeSquare() - 8, j * this->getSizeSquare(),
                     (int)(textWidth / 8), (int)(textHeight / 8)};
     // display letter on the bottom right of the tile in the last row
-    if (j == 7)
+    else if (j == 7)
         textRect = {(i + 1) * this->getSizeSquare() - (int)(textWidth / 8) - 2,
                     j * this->getSizeSquare() + this->getSizeSquare() - 17, (int)(textWidth / 8),
                     (int)(textHeight / 8)};
@@ -295,11 +283,6 @@ void GUI::grabPiece()
     if (this->getPieceHandler().getPieceAt(*this, i, j) != nullptr &&
         this->getPieceHandler().getPieceAt(*this, i, j)->getColor() == this->getTurn())
     {
-        m_sourceRectangle = new SDL_Rect();
-        m_sourceRectangle->x = i * this->getSizeSquare();
-        m_sourceRectangle->y = j * this->getSizeSquare();
-        m_sourceRectangle->w = this->getSizeSquare();
-        m_sourceRectangle->h = this->getSizeSquare();
         this->m_selectedPiece = this->getPieceHandler().getPieceAt(*this, i, j);
         std::cout << *(this->m_selectedPiece) << std::endl;
     }
@@ -323,6 +306,48 @@ void GUI::showPossibleMoves()
     }
 }
 
+void drawCircle(SDL_Renderer *renderer, int x, int y, int radius)
+{
+    int offsetx, offsety, d;
+    offsetx = 0;
+    offsety = radius;
+    d = radius - 1;
+    while (offsety >= offsetx)
+    {
+        SDL_RenderDrawPoint(renderer, x + offsetx, y + offsety);
+        SDL_RenderDrawPoint(renderer, x + offsety, y + offsetx);
+        SDL_RenderDrawPoint(renderer, x - offsetx, y + offsety);
+        SDL_RenderDrawPoint(renderer, x - offsety, y + offsetx);
+        SDL_RenderDrawPoint(renderer, x + offsetx, y - offsety);
+        SDL_RenderDrawPoint(renderer, x + offsety, y - offsetx);
+        SDL_RenderDrawPoint(renderer, x - offsetx, y - offsety);
+        SDL_RenderDrawPoint(renderer, x - offsety, y - offsetx);
+        if (d >= 2 * offsetx)
+        {
+            d -= 2 * offsetx + 1;
+            offsetx++;
+        }
+        else if (d < 2 * (radius - offsety))
+        {
+            d += 2 * offsety - 1;
+            offsety--;
+        }
+        else
+        {
+            d += 2 * (offsety - offsetx - 1);
+            offsety--;
+            offsetx++;
+        }
+    }
+    // fill it
+    SDL_RenderDrawLine(renderer, x - radius, y, x + radius, y);
+    for (int i = 1; i < radius; i++)
+    {
+        SDL_RenderDrawLine(renderer, x - radius, y + i, x + radius, y + i);
+        SDL_RenderDrawLine(renderer, x - radius, y - i, x + radius, y - i);
+    }
+}
+
 bool GUI::movePiece()
 {
     // place grabbed piece at mouse position
@@ -337,7 +362,6 @@ bool GUI::movePiece()
         this->m_selectedPiece->getColor() == this->getTurn())
     {
         this->m_selectedPiece = nullptr;
-        delete m_sourceRectangle;
         return true;
     }
     return false;

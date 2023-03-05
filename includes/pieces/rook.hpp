@@ -1,16 +1,15 @@
 #pragma once
 #include "../board/tile.hpp"
-#include "../check/roichecker.hpp"
+#include "../check/rookchecker.hpp"
 #include "piece.hpp"
 
-class Roi : public Piece, public RoiChecker
+class Rook : public Piece, public RookChecker
 {
   private:
     int value;
 
   public:
-    Roi(int x, int y, int color);
-    ~Roi();
-    bool isCheck(array2d<Tile, 8, 8> board, int x, int y);
+    Rook(int x, int y, int color);
+    ~Rook();
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
 };
