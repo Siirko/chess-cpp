@@ -12,5 +12,5 @@ class PieceHandler
     bool movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, int y);
     std::shared_ptr<Piece> getPieceAt(Game &game, int x, int y);
     std::shared_ptr<Piece> makeCopy(std::shared_ptr<Piece> piece) const;
-    void promotePiece(Piece &toPromote, PieceType type);
+    void promotePiece(std::shared_ptr<Piece> &toPromote, PieceType type);
 };

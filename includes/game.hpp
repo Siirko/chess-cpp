@@ -28,7 +28,7 @@ class Game
     Game();
     virtual ~Game();
     virtual void run() = 0;
-    virtual void promotePawn(Piece &toPromote) = 0;
+    virtual void promotePawn(std::shared_ptr<Piece> &toPromote) = 0;
     std::shared_ptr<King> getWhiteKing() const;
     std::shared_ptr<King> getBlackKing() const;
     std::vector<std::shared_ptr<Piece>> getAlivePieces() const;

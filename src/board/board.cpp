@@ -92,12 +92,6 @@ std::shared_ptr<Piece> Board::movePiece(std::shared_ptr<Piece> piece, int x, int
             this->doCastling(piece, x, y);
             return eatenPiece;
         }
-        // chec if pawn can do a promotion
-        else if (piece->getType() == PieceType::PAWN && (y == 0 || y == 7))
-        {
-            // this->doPromotion(piece, x, y);
-            return eatenPiece;
-        }
         else if (future_move.eaten_piece != nullptr &&
                  future_move.eaten_piece->getColor() == piece->getColor())
         {

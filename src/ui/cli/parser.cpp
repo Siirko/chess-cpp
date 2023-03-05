@@ -9,10 +9,10 @@ const std::regex little_rook_pattern("(O|o|0)-(O|o|0)");
 PieceType Parser::getInputPromotion()
 {
     std::cout << "Promote pawn to:" << std::endl;
-    std::cout << PieceType::QUEEN << " (Queen)" << std::endl;
-    std::cout << PieceType::ROOK << " (Rook)" << std::endl;
-    std::cout << PieceType::BISHOP << " (Bishop)" << std::endl;
-    std::cout << PieceType::KNIGHT << " (Knight)" << std::endl;
+    std::cout << (char)PieceType::QUEEN << " (Queen)" << std::endl;
+    std::cout << (char)PieceType::ROOK << " (Rook)" << std::endl;
+    std::cout << (char)PieceType::BISHOP << " (Bishop)" << std::endl;
+    std::cout << (char)PieceType::KNIGHT << " (Knight)" << std::endl;
     char input;
     do
     {

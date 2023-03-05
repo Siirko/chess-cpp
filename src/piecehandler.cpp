@@ -6,7 +6,7 @@
 #include "../includes/pieces/piece.hpp"
 #include "../includes/pieces/queen.hpp"
 #include "../includes/pieces/rook.hpp"
-
+#include <functional>
 #include <iostream>
 
 void PieceHandler::forsythGeneration(Game &game, std::string fen)
@@ -102,10 +102,13 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
                 game.getWhiteEatenPieces().push_back(eatenPiece);
             game.removeAlivePiece(eatenPiece);
         }
-        /*
         if (piece->getType() == PieceType::PAWN && (piece->getY() == 0 || piece->getY() == 7))
-            game.promotePawn(*piece);
-        */
+        {
+            game.promotePawn(piece);
+            game.getBoard().setPiece(piece);
+            // doesn't update alive pieces
+            std::cout << *piece << std::endl;
+        }
     }
     catch (const std::exception &e)
     {
@@ -115,25 +118,26 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
     return valid;
 }
 
-void PieceHandler::promotePiece(Piece &toPromote, PieceType type)
+void PieceHandler::promotePiece(std::shared_ptr<Piece> &toPromote, PieceType type)
 {
     switch (type)
     {
     case PieceType::QUEEN:
-        toPromote = (Queen &)toPromote;
+        toPromote.reset(new Queen(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
         break;
     case PieceType::ROOK:
-        toPromote = (Rook &)toPromote;
+        toPromote.reset(new Rook(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
         break;
     case PieceType::BISHOP:
-        toPromote = (Bishop &)toPromote;
+        toPromote.reset(new Bishop(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
         break;
     case PieceType::KNIGHT:
-        toPromote = (Knight &)toPromote;
+        toPromote.reset(new Knight(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
         break;
     default:
         break;
     }
+    std::cout << "Promoted to " << toPromote->getType() << std::endl;
 }
 
 std::shared_ptr<Piece> PieceHandler::getPieceAt(Game &game, int x, int y)

@@ -45,8 +45,9 @@ void CLI::run()
     } while ((input = Parser::getInputMove()) != "/quit" && this->getCheckMate() != true);
 }
 
-void CLI::promotePawn(Piece &toPromote)
+void CLI::promotePawn(std::shared_ptr<Piece> &toPromote)
 {
     PieceType type = Parser::getInputPromotion();
     this->getPieceHandler().promotePiece(toPromote, type);
+    std::cout << "Promoted to " << toPromote->getType() << std::endl;
 }

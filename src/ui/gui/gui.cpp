@@ -383,4 +383,4 @@ int GUI::getHeight() const
 
 int GUI::getSizeSquare() const { return this->getWidth() / 8; }
 
-void GUI::promotePawn(Piece &toPromote) {}
+void GUI::promotePawn(std::shared_ptr<Piece> &toPromote) {}
