@@ -18,6 +18,7 @@ class GUI : public Game
     ~GUI();
     void init();
     void run() override;
+    void promotePawn(Piece &toPromote) override;
     void handleEvents(SDL_Event *event);
     void update();
     void render();

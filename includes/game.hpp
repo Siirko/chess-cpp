@@ -2,6 +2,7 @@
 #include "board/board.hpp"
 #include "piecehandler.hpp"
 #include "pieces/king.hpp"
+#include "pieces/pawn.hpp"
 #include "pieces/piece.hpp"
 #include <array>
 #include <memory>
@@ -25,8 +26,9 @@ class Game
 
   public:
     Game();
-    ~Game();
+    virtual ~Game();
     virtual void run() = 0;
+    virtual void promotePawn(Piece &toPromote) = 0;
     std::shared_ptr<King> getWhiteKing() const;
     std::shared_ptr<King> getBlackKing() const;
     std::vector<std::shared_ptr<Piece>> getAlivePieces() const;

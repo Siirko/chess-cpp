@@ -78,17 +78,21 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
     }
 }
 
+void setFirstMove(Game &game)
+{
+    for (auto pawn : game.getAlivePieces())
+    {
+        if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() && pawn->getType() == PieceType::PAWN)
+            pawn->setFirstMove(false);
+    }
+}
+
 bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, int y)
 {
     bool valid = true;
     try
     {
-        for (auto pawn : game.getAlivePieces())
-        {
-            if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() &&
-                pawn->getType() == PieceType::PAWN)
-                pawn->setFirstMove(false);
-        }
+        setFirstMove(game);
         std::shared_ptr<Piece> eatenPiece = game.getBoard().movePiece(piece, x, y);
         if (eatenPiece != nullptr && eatenPiece->getType() != PieceType::KING)
         {
@@ -98,6 +102,10 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
                 game.getWhiteEatenPieces().push_back(eatenPiece);
             game.removeAlivePiece(eatenPiece);
         }
+        /*
+        if (piece->getType() == PieceType::PAWN && (piece->getY() == 0 || piece->getY() == 7))
+            game.promotePawn(*piece);
+        */
     }
     catch (const std::exception &e)
     {
@@ -105,6 +113,27 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
         valid = false;
     }
     return valid;
+}
+
+void PieceHandler::promotePiece(Piece &toPromote, PieceType type)
+{
+    switch (type)
+    {
+    case PieceType::QUEEN:
+        toPromote = (Queen &)toPromote;
+        break;
+    case PieceType::ROOK:
+        toPromote = (Rook &)toPromote;
+        break;
+    case PieceType::BISHOP:
+        toPromote = (Bishop &)toPromote;
+        break;
+    case PieceType::KNIGHT:
+        toPromote = (Knight &)toPromote;
+        break;
+    default:
+        break;
+    }
 }
 
 std::shared_ptr<Piece> PieceHandler::getPieceAt(Game &game, int x, int y)

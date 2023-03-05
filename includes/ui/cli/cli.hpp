@@ -7,4 +7,5 @@ class CLI : public Game
     CLI();
     ~CLI();
     void run() override;
+    void promotePawn(Piece &toPromote) override;
 };

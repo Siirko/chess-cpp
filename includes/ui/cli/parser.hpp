@@ -9,7 +9,8 @@ class Parser
     struct Coord;
     struct UpdateCoords;
     static bool checkCastling(std::string input);
-    static std::string getInput();
+    static std::string getInputMove();
+    static PieceType getInputPromotion();
     static UpdateCoords parseInput(std::string input, Color color);
 };
 

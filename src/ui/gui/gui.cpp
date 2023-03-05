@@ -382,3 +382,5 @@ int GUI::getHeight() const
 }
 
 int GUI::getSizeSquare() const { return this->getWidth() / 8; }
+
+void GUI::promotePawn(Piece &toPromote) {}

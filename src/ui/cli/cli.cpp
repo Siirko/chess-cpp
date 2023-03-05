@@ -42,5 +42,11 @@ void CLI::run()
         {
             std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
         }
-    } while ((input = Parser::getInput()) != "/quit" && this->getCheckMate() != true);
+    } while ((input = Parser::getInputMove()) != "/quit" && this->getCheckMate() != true);
+}
+
+void CLI::promotePawn(Piece &toPromote)
+{
+    PieceType type = Parser::getInputPromotion();
+    this->getPieceHandler().promotePiece(toPromote, type);
 }
