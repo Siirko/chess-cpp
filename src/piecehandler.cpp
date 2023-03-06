@@ -6,7 +6,7 @@
 #include "../includes/pieces/piece.hpp"
 #include "../includes/pieces/queen.hpp"
 #include "../includes/pieces/rook.hpp"
-
+#include <functional>
 #include <iostream>
 
 void PieceHandler::forsythGeneration(Game &game, std::string fen)
@@ -78,17 +78,21 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
     }
 }
 
+void setFirstMove(Game &game)
+{
+    for (auto pawn : game.getAlivePieces())
+    {
+        if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() && pawn->getType() == PieceType::PAWN)
+            pawn->setFirstMove(false);
+    }
+}
+
 bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, int y)
 {
     bool valid = true;
     try
     {
-        for (auto pawn : game.getAlivePieces())
-        {
-            if (pawn->getFirstMove() && game.getTurn() == pawn->getColor() &&
-                pawn->getType() == PieceType::PAWN)
-                pawn->setFirstMove(false);
-        }
+        setFirstMove(game);
         std::shared_ptr<Piece> eatenPiece = game.getBoard().movePiece(piece, x, y);
         if (eatenPiece != nullptr && eatenPiece->getType() != PieceType::KING)
         {
@@ -98,6 +102,16 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
                 game.getWhiteEatenPieces().push_back(eatenPiece);
             game.removeAlivePiece(eatenPiece);
         }
+        if (piece->getType() == PieceType::PAWN && (piece->getY() == 0 || piece->getY() == 7))
+        {
+            // It should update manually, but apparently
+            // the pointers are not being updated
+            game.removeAlivePiece(piece);
+            // ping-pong
+            game.promotePawn(piece);
+            game.getBoard().setPiece(piece);
+            game.addAlivePiece(piece);
+        }
     }
     catch (const std::exception &e)
     {
@@ -105,6 +119,27 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
         valid = false;
     }
     return valid;
+}
+
+void PieceHandler::promotePiece(std::shared_ptr<Piece> &toPromote, PieceType type)
+{
+    switch (type)
+    {
+    case PieceType::QUEEN:
+        toPromote.reset(new Queen(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
+        break;
+    case PieceType::ROOK:
+        toPromote.reset(new Rook(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
+        break;
+    case PieceType::BISHOP:
+        toPromote.reset(new Bishop(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
+        break;
+    case PieceType::KNIGHT:
+        toPromote.reset(new Knight(toPromote->getX(), toPromote->getY(), toPromote->getColor()));
+        break;
+    default:
+        break;
+    }
 }
 
 std::shared_ptr<Piece> PieceHandler::getPieceAt(Game &game, int x, int y)

@@ -6,7 +6,23 @@ const std::regex pattern("[a-h][1-8][a-h][1-8]");
 const std::regex big_rook_pattern("(O|o|0)-(O|o|0)-(O|o|0)");
 const std::regex little_rook_pattern("(O|o|0)-(O|o|0)");
 
-std::string Parser::getInput()
+PieceType Parser::getInputPromotion()
+{
+    std::cout << "Promote pawn to:" << std::endl;
+    std::cout << (char)PieceType::QUEEN << " (Queen)" << std::endl;
+    std::cout << (char)PieceType::ROOK << " (Rook)" << std::endl;
+    std::cout << (char)PieceType::BISHOP << " (Bishop)" << std::endl;
+    std::cout << (char)PieceType::KNIGHT << " (Knight)" << std::endl;
+    char input;
+    do
+    {
+        std::cin >> input;
+    } while (input != PieceType::QUEEN && input != PieceType::ROOK && input != PieceType::BISHOP &&
+             input != PieceType::KNIGHT);
+    return (PieceType)input;
+}
+
+std::string Parser::getInputMove()
 {
     std::string input;
     std::cout << "Enter your move: ";
