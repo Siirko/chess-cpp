@@ -19,6 +19,8 @@ class Game
     bool check;
     bool checkMate;
     bool staleMate;
+    bool resigned;
+    bool draw;
     std::vector<std::shared_ptr<Piece>> black_eaten_pieces;
     std::vector<std::shared_ptr<Piece>> white_eaten_pieces;
     std::vector<std::shared_ptr<Piece>> alive_pieces;
@@ -53,5 +55,10 @@ class Game
     void removeAlivePiece(std::shared_ptr<Piece> piece);
     std::string endResult() const;
     void updateStatus();
+    bool getResigned() const { return this->resigned; }
+    bool getDraw() const { return this->draw; }
+    void setResigned() { this->resigned = true; }
+    void setDraw() { this->draw = true; }
+    Color whoResigned() const;
     friend std::ostream &operator<<(std::ostream &os, const Game &game);
 };
