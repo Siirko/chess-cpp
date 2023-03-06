@@ -49,5 +49,4 @@ void CLI::promotePawn(std::shared_ptr<Piece> &toPromote)
 {
     PieceType type = Parser::getInputPromotion();
     this->getPieceHandler().promotePiece(toPromote, type);
-    std::cout << "Promoted to " << toPromote->getType() << std::endl;
 }

@@ -30,12 +30,13 @@ class GUI : public Game
     void showPossibleMoves();
     void drawTextInTile(int i, int j);
     void end();
-    std::shared_ptr<Piece> m_selectedPiece;
     int getWidth() const;
     int getHeight() const;
     int getSizeSquare() const;
 
   private:
+    bool isPromoting = false;
+    std::shared_ptr<Piece> m_selectedPiece;
     TTF_Font *m_font;
     LTexture m_ltexture;
     SDL_Window *m_window;

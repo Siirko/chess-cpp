@@ -104,10 +104,13 @@ bool PieceHandler::movePieceAt(Game &game, std::shared_ptr<Piece> piece, int x, 
         }
         if (piece->getType() == PieceType::PAWN && (piece->getY() == 0 || piece->getY() == 7))
         {
+            // It should update manually, but apparently
+            // the pointers are not being updated
+            game.removeAlivePiece(piece);
+            // ping-pong
             game.promotePawn(piece);
             game.getBoard().setPiece(piece);
-            // doesn't update alive pieces
-            std::cout << *piece << std::endl;
+            game.addAlivePiece(piece);
         }
     }
     catch (const std::exception &e)
@@ -137,7 +140,6 @@ void PieceHandler::promotePiece(std::shared_ptr<Piece> &toPromote, PieceType typ
     default:
         break;
     }
-    std::cout << "Promoted to " << toPromote->getType() << std::endl;
 }
 
 std::shared_ptr<Piece> PieceHandler::getPieceAt(Game &game, int x, int y)

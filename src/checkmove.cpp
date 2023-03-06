@@ -59,6 +59,8 @@ void CheckMove::checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::Pie
     if (self.getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
         board[x][y].getPiece()->getType() == PieceType::ROOK && board[x][y].getPiece()->getNumMoves() == 0)
     {
+        if (king.isCheck(board, self.getX(), self.getY()))
+            throw std::invalid_argument("can't move king");
         std::set<int> coord_to_check = x == 7 ? std::set<int>{5, 6} : std::set<int>{2, 3};
         for (auto coord : coord_to_check)
         {

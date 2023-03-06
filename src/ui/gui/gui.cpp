@@ -3,6 +3,8 @@
 #include "../../../includes/pieces/piece.hpp"
 #include <experimental/filesystem>
 
+// this code is a little messy
+
 struct RGBA
 {
     Uint8 r;
@@ -31,11 +33,8 @@ RGBA tileColor(int i, int j)
 
 GUI::GUI() : Game(), m_ltexture{LTexture()}, m_window{nullptr}, m_renderer{nullptr}
 {
-    // get current directory
     init();
     m_ltexture.loadTextures(this->m_renderer);
-    // set anti-aliasing
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 }
 
 GUI::~GUI() {}
@@ -306,48 +305,6 @@ void GUI::showPossibleMoves()
     }
 }
 
-void drawCircle(SDL_Renderer *renderer, int x, int y, int radius)
-{
-    int offsetx, offsety, d;
-    offsetx = 0;
-    offsety = radius;
-    d = radius - 1;
-    while (offsety >= offsetx)
-    {
-        SDL_RenderDrawPoint(renderer, x + offsetx, y + offsety);
-        SDL_RenderDrawPoint(renderer, x + offsety, y + offsetx);
-        SDL_RenderDrawPoint(renderer, x - offsetx, y + offsety);
-        SDL_RenderDrawPoint(renderer, x - offsety, y + offsetx);
-        SDL_RenderDrawPoint(renderer, x + offsetx, y - offsety);
-        SDL_RenderDrawPoint(renderer, x + offsety, y - offsetx);
-        SDL_RenderDrawPoint(renderer, x - offsetx, y - offsety);
-        SDL_RenderDrawPoint(renderer, x - offsety, y - offsetx);
-        if (d >= 2 * offsetx)
-        {
-            d -= 2 * offsetx + 1;
-            offsetx++;
-        }
-        else if (d < 2 * (radius - offsety))
-        {
-            d += 2 * offsety - 1;
-            offsety--;
-        }
-        else
-        {
-            d += 2 * (offsety - offsetx - 1);
-            offsety--;
-            offsetx++;
-        }
-    }
-    // fill it
-    SDL_RenderDrawLine(renderer, x - radius, y, x + radius, y);
-    for (int i = 1; i < radius; i++)
-    {
-        SDL_RenderDrawLine(renderer, x - radius, y + i, x + radius, y + i);
-        SDL_RenderDrawLine(renderer, x - radius, y - i, x + radius, y - i);
-    }
-}
-
 bool GUI::movePiece()
 {
     // place grabbed piece at mouse position
@@ -383,4 +340,19 @@ int GUI::getHeight() const
 
 int GUI::getSizeSquare() const { return this->getWidth() / 8; }
 
-void GUI::promotePawn(std::shared_ptr<Piece> &toPromote) {}
+void GUI::promotePawn(std::shared_ptr<Piece> &toPromote)
+{
+    // TODO:: add a scene to choose the piece type and not use the console
+    std::cout << "Promote pawn to:" << std::endl;
+    std::cout << (char)PieceType::QUEEN << " (Queen)" << std::endl;
+    std::cout << (char)PieceType::ROOK << " (Rook)" << std::endl;
+    std::cout << (char)PieceType::BISHOP << " (Bishop)" << std::endl;
+    std::cout << (char)PieceType::KNIGHT << " (Knight)" << std::endl;
+    char input;
+    do
+    {
+        std::cin >> input;
+    } while (input != PieceType::QUEEN && input != PieceType::ROOK && input != PieceType::BISHOP &&
+             input != PieceType::KNIGHT);
+    this->getPieceHandler().promotePiece(toPromote, (PieceType)input);
+}
