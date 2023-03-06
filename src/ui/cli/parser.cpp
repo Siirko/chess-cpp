@@ -27,7 +27,7 @@ std::string Parser::getInputMove()
     std::string input;
     std::cout << "Enter your move: ";
     std::cin >> input;
-    if (input == "/quit")
+    if (input == "/quit" || input == "/resign" || input == "/draw")
         return input;
     if (!std::regex_match(input, pattern) && !std::regex_match(input, big_rook_pattern) &&
         !std::regex_match(input, little_rook_pattern))

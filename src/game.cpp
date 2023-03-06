@@ -12,8 +12,8 @@
 #include <string>
 
 Game::Game()
-    : board{Board()},
-      piece_handler{PieceHandler()}, turn{1}, num_turns{0}, check{false}, checkMate{false}, staleMate{false}
+    : board{Board()}, piece_handler{PieceHandler()}, turn{1}, num_turns{0}, check{false}, checkMate{false},
+      staleMate{false}, resigned{false}
 {
     init();
 }
@@ -27,8 +27,25 @@ Game::~Game()
     }
     else if (this->getStaleMate())
         std::cout << "Stalemate, Draw !" << std::endl;
+    else if (this->getResigned())
+        std::cout << "Resignation, " << (this->getTurn() == Color::BLACK ? "WHITE" : "BLACK") << " Won !"
+                  << std::endl;
+    else if (this->getDraw())
+        std::cout << "Draw !" << std::endl;
 
     std::cout << std::endl << this->endResult() << std::endl;
+}
+
+Color Game::whoResigned() const
+{
+    if (this->resigned)
+    {
+        if (this->turn == Color::WHITE)
+            return Color::BLACK;
+        else
+            return Color::WHITE;
+    }
+    return (Color)-1;
 }
 
 void Game::updateStatus()
@@ -68,14 +85,14 @@ std::string Game::endResult() const
             res.append(",");
         }
     }
-    if (this->getCheckMate())
+    if (this->getCheckMate() || this->getResigned())
     {
         if (this->getTurn() == Color::WHITE)
             res.append(" 0-1"); // black wins
         else
             res.append(" 1-0"); // white wins
     }
-    else if (this->getStaleMate())
+    else if (this->getStaleMate() || this->getDraw())
     {
         res.append(" 1/2-1/2");
     }
