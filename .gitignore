@@ -5,3 +5,4 @@ games/
 vgcore.*
 build/
 test/test.log
+docs/
