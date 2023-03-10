@@ -149,14 +149,18 @@ f7f6
 e5e4
 d7c8
 e4e7
-c8c1
-# Le coup suivant n'a pas eu lieu dans ce match.
-# Si blanc prend la tour noire non protegee 68. Qb6xd8 alors c'est pat.
+# Noirs de jouer
+# Les coup suivants n'ont pas eu lieu dans ce match.
+# Noirs offre sa dame, puis sa tour, acceptés par blancs, le roi ne peut plus jouer
+c8b8
+b6b8
+d8d7
+e7d7
 #
-b6d8
 # == PAT ===
 /quit
 # --------- Voici les coups ayant été vraiment joues, reprenant à partir de 68. d5
+# c8c1
 # d4d5
 # c1f4
 # h3g2
@@ -176,4 +180,4 @@ b6d8
 # f2f3
 #/quit
 
-,,bQ,,,,,,,,,,,,,,,,,,,wP,,wK,,,,wP,,,wP,,wP,,,,,wP,,wP,bP,,,,,bP,,bP,,,,,wR,,bP,bK,,,,wQ,,,,, 1/2-1/2
+,,,,,,,,,,,,,,,,,,,,,wP,,wK,,,,wP,,,wP,,wP,,,,,wP,,wP,bP,,,,,bP,,bP,,,,wR,,,bP,bK,,wQ,,,,,,, 1/2-1/2
