@@ -5,25 +5,25 @@
 
 // this code is a little messy
 
-struct RGBA
+struct RGB
 {
     Uint8 r;
     Uint8 g;
     Uint8 b;
 };
 
-RGBA getColorFromHEX(Uint32 hex)
+RGB getColorFromHEX(Uint32 hex)
 {
-    RGBA rgb;
+    RGB rgb;
     rgb.r = (hex >> 16) & 0xFF;
     rgb.g = (hex >> 8) & 0xFF;
     rgb.b = hex & 0xFF;
     return rgb;
 }
 
-RGBA tileColor(int i, int j)
+RGB tileColor(int i, int j)
 {
-    RGBA color;
+    RGB color;
     if ((i + j) % 2 == 0)
         color = getColorFromHEX(0x6D523B);
     else
@@ -186,7 +186,7 @@ void GUI::drawBoard()
     {
         for (int j = 0; j < 8; j++)
         {
-            RGBA color = tileColor(i, j);
+            RGB color = tileColor(i, j);
             SDL_SetRenderDrawColor(this->m_renderer, color.r, color.g, color.b, 255);
             SDL_Rect rect = {i * this->getSizeSquare(), j * this->getSizeSquare(), this->getSizeSquare(),
                              this->getSizeSquare()};
@@ -299,7 +299,7 @@ void GUI::showPossibleMoves()
                          this->getSizeSquare(), this->getSizeSquare()};
         // rect is transparent
         SDL_SetRenderDrawBlendMode(this->m_renderer, SDL_BLENDMODE_BLEND);
-        RGBA move_possible = getColorFromHEX(0x2465ff);
+        RGB move_possible = getColorFromHEX(0x2465ff);
         SDL_SetRenderDrawColor(this->m_renderer, move_possible.r, move_possible.g, move_possible.b, 100);
         SDL_RenderFillRect(this->m_renderer, &rect);
     }
