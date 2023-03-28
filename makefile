@@ -3,7 +3,7 @@ CFLAGS ?= -Wall -Werror -g -std=c++11
 FLAGS_GUI := -lstdc++fs -lSDL2 -lSDL2_image -lSDL2_ttf -DWITH_GUI
 LDLIBS ?= -lm
 
-EXEC = chess
+EXEC = chess-cli
 EXECGUI = chess-gui
 
 INCLUDE_PATH ?= ./includes
