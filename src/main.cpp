@@ -16,6 +16,11 @@ int main(int argc, char *argv[])
             GUI gui;
             gui.run();
         }
+        else if (arg == "--cli")
+        {
+            CLI cli;
+            cli.run();
+        }
         else
         {
             std::cout << "Invalid argument" << std::endl;
@@ -25,6 +30,7 @@ int main(int argc, char *argv[])
     else
     {
         std::cout << "Invalid number of arguments" << std::endl;
+        std::cout << "Usage: ./chess [--gui|--cli]" << std::endl;
         return 1;
     }
 #else

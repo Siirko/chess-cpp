@@ -22,6 +22,10 @@ cli: $(BIN_PATH)/$(EXEC)
 gui:
 	$(MAKE) GUI_ON=true $(BIN_PATH)/$(EXECGUI)
 
+docs:
+	mkdir -p ./docs
+	doxygen Doxyfile
+
 $(BIN_PATH)/$(EXEC): $(OBJ_PATH)/main.o $(OBJECTS)
 	mkdir -p $(BIN_PATH)
 	$(CC) -o $@ $^ $(CFLAGS)
