@@ -13,7 +13,7 @@
 
 Game::Game()
     : board{Board()}, piece_handler{PieceHandler()}, turn{1}, num_turns{0}, check{false}, checkMate{false},
-      staleMate{false}, resigned{false}
+      staleMate{false}, resigned{false}, draw{false}
 {
     init();
 }

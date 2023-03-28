@@ -18,7 +18,6 @@ void CLI::run()
     std::string input;
     do
     {
-        input = Parser::getInputMove();
         if (input.empty())
             continue;
         Parser::UpdateCoords coords = Parser::parseInput(input, (Color)this->getTurn());
@@ -43,7 +42,8 @@ void CLI::run()
         {
             std::cout << (piece->getColor() == Color::WHITE ? "BLACK" : "WHITE") << " turn" << std::endl;
         }
-    } while ((input != "/quit" && input != "/resign" && input != "/draw") && this->getCheckMate() != true);
+    } while (((input = Parser::getInputMove()) != "/quit" && input != "/resign" && input != "/draw") &&
+             this->getCheckMate() != true);
     if (input == "/resign")
         this->setResigned();
     else if (input == "/draw")
