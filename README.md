@@ -67,12 +67,11 @@ libsdl2-dev
 libsdl2-image-dev
 libsdl2-ttf-dev
 ```
+ou similaire en fonction de la distribution d'installé sur votre machine.
+
 
 Aperçu : 
 ![GUI](https://i.imgur.com/RW7rHsh.png)
- ou similaire en fonction de la distribution d'installé sur votre machine.
-
-
 
 ## Tests
 Aucun test n'échoue.
