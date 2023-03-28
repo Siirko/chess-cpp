@@ -4,7 +4,7 @@ LDLIBS ?= -lm
 
 EXEC = chess-cpp
 
-INCLUDE_PATH ?= ./include
+INCLUDE_PATH ?= ./includes
 
 SRC_PATH = ./src
 OBJ_PATH = ./obj
