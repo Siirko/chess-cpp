@@ -1,16 +1,14 @@
 #include "../includes/ui/cli/cli.hpp"
+#ifdef WITH_GUI
 #include "../includes/ui/gui/gui.hpp"
+#endif
 #include <iostream>
 #include <string>
 
 int main(int argc, char *argv[])
 {
-    if (argc == 1)
-    {
-        CLI cli;
-        cli.run();
-    }
-    else if (argc == 2)
+#ifdef WITH_GUI
+    if (argc == 2)
     {
         std::string arg = argv[1];
         if (arg == "--gui")
@@ -29,5 +27,9 @@ int main(int argc, char *argv[])
         std::cout << "Invalid number of arguments" << std::endl;
         return 1;
     }
+#else
+    CLI cli;
+    cli.run();
+#endif
     return 0;
 }
