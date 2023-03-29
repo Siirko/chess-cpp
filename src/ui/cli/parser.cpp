@@ -12,16 +12,14 @@ PieceType Parser::getInputPromotion()
     std::cout << (char)PieceType::QUEEN << " (Queen)" << std::endl;
     std::cout << (char)PieceType::ROOK << " (Rook)" << std::endl;
     std::cout << (char)PieceType::BISHOP << " (Bishop)" << std::endl;
-    std::cout << 'K' << " (Knight)"
+    std::cout << (char)PieceType::KNIGHT << " (Knight)"
               << std::endl; // K is used here for passing test, normaly N is for Knight and K is for King
     char input;
     do
     {
         std::cin >> input;
     } while (input != PieceType::QUEEN && input != PieceType::ROOK && input != PieceType::BISHOP &&
-             input != 'K');
-    if (input == 'K')
-        return PieceType::KNIGHT;
+             input != PieceType::KNIGHT);
     return (PieceType)input;
 }
 
