@@ -16,10 +16,12 @@ INCLUDES := $(wildcard $(INCLUDE_PATH)/*.hpp $(INCLUDE_PATH)/*/*.hpp $(INCLUDE_P
 OBJECTS  := $(SOURCES:$(SRC_PATH)/%.cpp=$(OBJ_PATH)/%.o)
 GUI_ON := false
 
-cli: $(BIN_PATH)/$(EXEC)
+.PHONY: cli
+cli: clean
+	$(MAKE) $(BIN_PATH)/$(EXEC)
 
 .PHONY: gui
-gui:
+gui: clean
 	$(MAKE) GUI_ON=true $(BIN_PATH)/$(EXECGUI)
 
 docs:
