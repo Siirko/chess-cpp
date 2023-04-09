@@ -83,24 +83,23 @@ Le code à étais divisé en plusieurs partie :
 - ``ui/``  comportant la partie CLI et GUI.
 
 ### Traitement des coups légaux
-La  classe ``GameRuler`` s'occupe de cela, elle à la particularité de suivre le pattern [Singleton](https://refactoring.guru/design-patterns/singleton).
+La classe "GameRuler" s'occupe de cela. Elle a la particularité de suivre le pattern [Singleton](https://refactoring.guru/design-patterns/singleton).
 
 ### Traitement des pièces
-``PieceHandler`` s'occupe d'initialiser les pièces sur l'échéquié en suivant la notation ["Forsyth-Edwards Notation"](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation),  mais aussi de faire l'effort de déplacer une pièce en une position donnée à une autre sur l'échéquié lorsque le coup est légal.
+"PieceHandler" s'occupe d'initialiser les pièces sur l'échiquier en suivant la notation ["Forsyth-Edwards Notation"](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation). Elle est également responsable du déplacement des pièces en une position donnée à une autre sur l'échiquier lorsque le coup est légal.
 
 ### Déplacement des pièces
-Tous les types de mouvements pour les pièces on étais écrite dans ``checkmove.cpp`` puis ils sont dispatché dans les en-têtes attitrés (``bishopchecker.hpp``, ``kingchecker.hpp`` ...). 
+Tous les types de mouvements pour les pièces ont été écrits dans ``checkmove.cpp``, puis ils ont été répartis dans les en-têtes correspondants (``bishopchecker.hpp``, ``kingchecker.hpp``, etc...).
 
-Cela permet une granularité sur la gestion des coups et évite les répetitions de code, par exemple il est possible de réutiliser les fonctions écrite pour le Fou et la Tour et de les appliquer pour la Reine. 
-
-Pour plus d'information sur l'idée/réalisation : https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Friendship_and_the_Attorney-Client
+Cela permet une granularité dans la gestion des coups et évite les répétitions de code. Par exemple, il est possible de réutiliser les fonctions écrites pour le Fou et la Tour et de les appliquer à la Reine. Pour plus d'informations sur cette idée/réalisation, voir :
+https://en.wikibooks.org/wiki/More_C%2B%2B_Idioms/Friendship_and_the_Attorney-Client
 
 ### CLI & GUI
-La classe ``Game`` possède une méthode abstraite ``run()`` qui vas être redéfini par la classe ``CLI`` et ``GUI`` pour gérer les comportements de l'utilisateur. 
+La classe ``Game`` possède une méthode abstraite ``run()`` qui est redéfinie par les classes ``CLI`` et ``GUI`` pour gérer les comportements de l'utilisateur.
 
-La manière optimal de faire d'implémenter cela aurais étais d'utiliser le pattern [Observer](https://refactoring.guru/design-patterns/observer) avec comme observer un CLI et un GUI, mais le projet n'est pas réalisé dans le cadre d'un cours de conception, donc je me permet certaine libertés.
+La manière optimale de le faire aurait été d'utiliser le pattern  [Observer](https://refactoring.guru/design-patterns/observer) avec un CLI et un GUI comme observateurs, mais ce projet n'a pas été réalisé dans le cadre d'un cours de conception, donc j'ai pris certaines libertés.
 
 ## Note
-- ``ui/gui/gui.cpp`` est un petit bazar, elle nécessite une refactorisation mais vue que la réalisation d'un GUI n'a pas étais demandé, cela ne vas certainement pas être fait.
+- ``ui/gui/gui.cpp`` est un peu désorganisé. Il nécessite une refonte, mais comme la réalisation d'une interface graphique n'a pas été demandée, cela ne sera probablement pas fait.
 
 
