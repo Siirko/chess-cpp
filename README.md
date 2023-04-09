@@ -87,7 +87,7 @@ Le code à étais divisé en plusieurs partie :
 La classe ``GameRuler`` s'occupe de cela. Elle a la particularité de suivre le pattern [Singleton](https://refactoring.guru/design-patterns/singleton).
 
 ### Traitement des pièces
-"PieceHandler" s'occupe d'initialiser les pièces sur l'échiquier en suivant la notation ["Forsyth-Edwards Notation"](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation). Elle est également responsable du déplacement des pièces en une position donnée à une autre sur l'échiquier lorsque le coup est légal.
+``PieceHandler`` s'occupe d'initialiser les pièces sur l'échiquier en suivant la notation [Forsyth-Edwards Notation](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation). Elle est également responsable du déplacement des pièces en une position donnée à une autre sur l'échiquier lorsque le coup est légal.
 
 ### Déplacement des pièces
 Tous les types de mouvements pour les pièces ont été écrits dans ``checkmove.cpp``, puis ils ont été répartis dans les en-têtes correspondants (``bishopchecker.hpp``, ``kingchecker.hpp``, etc...).
