@@ -84,7 +84,7 @@ Le code à étais divisé en plusieurs partie :
 - ``ui/``  comportant la partie CLI et GUI.
 
 ### Traitement des coups légaux
-La classe "GameRuler" s'occupe de cela. Elle a la particularité de suivre le pattern [Singleton](https://refactoring.guru/design-patterns/singleton).
+La classe ``GameRuler`` s'occupe de cela. Elle a la particularité de suivre le pattern [Singleton](https://refactoring.guru/design-patterns/singleton).
 
 ### Traitement des pièces
 "PieceHandler" s'occupe d'initialiser les pièces sur l'échiquier en suivant la notation ["Forsyth-Edwards Notation"](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation). Elle est également responsable du déplacement des pièces en une position donnée à une autre sur l'échiquier lorsque le coup est légal.
