@@ -102,5 +102,6 @@ La manière optimale de le faire aurait été d'utiliser le pattern  [Observer](
 
 ## Note
 - ``ui/gui/gui.cpp`` est un peu désorganisé. Il nécessite une refonte, mais comme la réalisation d'une interface graphique n'a pas été demandée, cela ne sera probablement pas fait.
+- Le code et la documentation ont été écrits en anglais.
 
 
