@@ -7,6 +7,7 @@
   - [Compilation \& utilisation](#compilation--utilisation)
     - [CLI](#cli)
     - [GUI](#gui)
+      - [Aperçu](#aperçu)
   - [Tests](#tests)
   - [Réalisations](#réalisations)
     - [Traitement des coups légaux](#traitement-des-coups-légaux)
@@ -70,7 +71,7 @@ libsdl2-ttf-dev
 ou similaire en fonction de la distribution d'installé sur votre machine.
 
 
-Aperçu : 
+#### Aperçu
 ![GUI](https://i.imgur.com/RW7rHsh.png)
 
 ## Tests
