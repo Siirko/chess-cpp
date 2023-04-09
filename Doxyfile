@@ -28,11 +28,12 @@ INLINE_SOURCES = YES
 CLASS_DIAGRAMS = YES
 CLASS_GRAPH = YES
 GENERATE_TREEVIEW = YES
-COLLABORATION_GRAPH = YES
+COLLABORATION_GRAPH = NO
 HAVE_DOT = YES
 
 # Number of threads to use for DOT
 DOT_NUM_THREADS = 4
+DOT_NODE_ATTR = shape=record, style=filled, color=white
 
 # Use UML notation for class diagrams
 UML_LOOK = YES
