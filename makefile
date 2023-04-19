@@ -17,12 +17,15 @@ OBJECTS  := $(SOURCES:$(SRC_PATH)/%.cpp=$(OBJ_PATH)/%.o)
 GUI_ON := false
 
 .PHONY: cli
-cli: clean
+cli:
 	$(MAKE) $(BIN_PATH)/$(EXEC)
 
 .PHONY: gui
 gui: clean
 	$(MAKE) GUI_ON=true $(BIN_PATH)/$(EXECGUI)
+
+test: cli
+	$(MAKE) -C ./test	
 
 docs:
 	mkdir -p ./docs
