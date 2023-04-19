@@ -75,6 +75,20 @@ ou similaire en fonction de la distribution d'installé sur votre machine.
 ![GUI](https://i.imgur.com/RW7rHsh.png)
 
 ## Tests
+Pour lancer les tests :
+```
+$ make test
+```
+à la racine du projet.
+
+ou
+
+```
+$ make
+$ cd ./test
+$ ./test-level.sh <1-4> ../bin/chess-cli
+```
+
 Aucun test n'échoue.
 
 ## Réalisations
