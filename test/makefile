@@ -1,3 +1,4 @@
 EXEC = chess-cli
+NUM_TESTS = 1 2 3 4
 all:
-	for i in {1..4}; do ./test-level.sh $$i ../bin/$(EXEC); done
+	$(foreach test,$(NUM_TESTS),./test-level.sh $(test) ../bin/$(EXEC);)
