@@ -122,22 +122,11 @@ void CheckMove::checkColumns(Piece &self, array2d<Tile, 8, 8> board, Piece::Piec
     if (x == self.getX() && y != self.getY())
     {
         bool going_up = y > self.getY();
-        int i;
-        if (going_up)
+        int i = going_up ? self.getY() + 1 : self.getY() - 1;
+        for (; i != y; going_up ? i++ : i--)
         {
-            for (i = self.getY() + 1; i < y; i++)
-            {
-                if (board[x][i].getPiece() != nullptr)
-                    return;
-            }
-        }
-        else
-        {
-            for (i = self.getY() - 1; i > y; i--)
-            {
-                if (board[x][i].getPiece() != nullptr)
-                    return;
-            }
+            if (board[x][i].getPiece() != nullptr)
+                return;
         }
         result = {true, board[x][y].getPiece()};
     }
