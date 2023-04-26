@@ -148,22 +148,11 @@ void CheckMove::checkRows(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMo
     if (y == self.getY() && x != self.getX())
     {
         bool going_right = x > self.getX();
-        int i;
-        if (going_right)
+        int i = going_right ? self.getX() + 1 : self.getX() - 1;
+        for (; i != x; going_right ? i++ : i--)
         {
-            for (i = self.getX() + 1; i < x; i++)
-            {
-                if (board[i][y].getPiece() != nullptr)
-                    return;
-            }
-        }
-        else
-        {
-            for (i = self.getX() - 1; i > x; i--)
-            {
-                if (board[i][y].getPiece() != nullptr)
-                    return;
-            }
+            if (board[i][y].getPiece() != nullptr)
+                return;
         }
         result = {true, board[x][y].getPiece()};
     }
@@ -188,17 +177,5 @@ void CheckMove::checkDiagonals(Piece &self, array2d<Tile, 8, 8> board, Piece::Pi
         {
             result = {true, board[x][y].getPiece()};
         }
-    }
-}
-
-void CheckMove::checkPromotion(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
-{
-    if (self.getColor() == Color::WHITE && y == 0)
-    {
-        result = {true, board[x][y].getPiece()};
-    }
-    else if (self.getColor() == Color::BLACK && y == 7)
-    {
-        result = {true, board[x][y].getPiece()};
     }
 }
