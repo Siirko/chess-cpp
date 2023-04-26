@@ -103,24 +103,14 @@ std::string Game::endResult() const
     return res;
 }
 
-std::shared_ptr<King> Game::getWhiteKing() const
+std::shared_ptr<King> Game::getKing(Color color) const
 {
     for (auto piece : this->alive_pieces)
     {
-        if (piece->getColor() == Color::WHITE && piece->getType() == PieceType::KING)
+        if (piece->getColor() == color && piece->getType() == PieceType::KING)
             return std::dynamic_pointer_cast<King>(piece);
     }
     throw std::runtime_error("No white king found");
-}
-
-std::shared_ptr<King> Game::getBlackKing() const
-{
-    for (auto piece : this->alive_pieces)
-    {
-        if (piece->getColor() == Color::BLACK && piece->getType() == PieceType::KING)
-            return std::dynamic_pointer_cast<King>(piece);
-    }
-    throw std::runtime_error("No black king found");
 }
 
 std::vector<std::shared_ptr<Piece>> Game::getAlivePieces() const { return this->alive_pieces; }
