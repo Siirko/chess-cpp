@@ -23,7 +23,6 @@ Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool
     this->callCheckStraight(*this, board, result, x, y);
     this->callCheckDiagonalCapture(*this, board, result, x, y);
     this->callCheckEnPassant(*this, board, result, x, y);
-    // this->callCheckPromotion(*this, board, result, x, y);
     if (beforeCheck)
         result.valid_move = this->beforeCheckMove(board, result, x, y);
     if (result.valid_move && this->getNumMoves() == 0)

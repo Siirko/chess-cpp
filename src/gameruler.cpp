@@ -10,8 +10,8 @@
 void GameRuler::setGame(const Game *game)
 {
     this->game = game;
-    whiteKing = game->getWhiteKing();
-    blackKing = game->getBlackKing();
+    whiteKing = game->getKing(Color::WHITE);
+    blackKing = game->getKing(Color::BLACK);
 }
 
 bool GameRuler::isKingInCheck(array2d<Tile, 8, 8> board, Color color)

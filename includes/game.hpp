@@ -44,15 +44,9 @@ class Game
      */
     virtual void promotePawn(std::shared_ptr<Piece> &toPromote) = 0;
     /**
-     * @brief Get the White King piece
-     * @return The White King piece
+     * @brief Get the King corresponding to the color give
      */
-    std::shared_ptr<King> getWhiteKing() const;
-    /**
-     * @brief Get the Black King piece
-     * @return The Black King piece
-     */
-    std::shared_ptr<King> getBlackKing() const;
+    std::shared_ptr<King> getKing(Color color) const;
     /**
      * @brief Get alive pieces from current game
      * @return Alive pieces from current game

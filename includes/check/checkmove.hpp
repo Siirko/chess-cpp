@@ -15,7 +15,6 @@ class CheckMove
   private:
     friend class PawnChecker;
     void checkEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
-    void checkPromotion(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkStraight(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkDiagonalCapture(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);

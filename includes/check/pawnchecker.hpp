@@ -14,12 +14,6 @@ class PawnChecker
         CheckMove c = CheckMove();
         c.checkEnPassant(self, board, result, x, y);
     }
-    static void callCheckPromotion(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                   int y)
-    {
-        CheckMove c = CheckMove();
-        c.checkPromotion(self, board, result, x, y);
-    }
     static void callCheckStraight(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
                                   int y)
     {

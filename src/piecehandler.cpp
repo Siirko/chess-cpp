@@ -9,6 +9,9 @@
 #include <functional>
 #include <iostream>
 
+// can't do tolower() at compile time (constexpr), so doing this for
+// the sake of readability
+const char UPPER_TO_LOWER = 'a' - 'A';
 void PieceHandler::forsythGeneration(Game &game, std::string fen)
 {
     int x = 0;
@@ -29,40 +32,40 @@ void PieceHandler::forsythGeneration(Game &game, std::string fen)
             std::shared_ptr<Piece> piece = nullptr;
             switch (fen[i])
             {
-            case 'p':
+            case PieceType::PAWN + UPPER_TO_LOWER:
                 piece = std::make_shared<Pawn>(x, y, Color::WHITE);
                 break;
-            case 'P':
+            case PieceType::PAWN:
                 piece = std::make_shared<Pawn>(x, y, Color::BLACK);
                 break;
-            case 'r':
+            case PieceType::ROOK + UPPER_TO_LOWER:
                 piece = std::make_shared<Rook>(x, y, Color::WHITE);
                 break;
-            case 'R':
+            case PieceType::ROOK:
                 piece = std::make_shared<Rook>(x, y, Color::BLACK);
                 break;
-            case 'n':
+            case PieceType::KNIGHT + UPPER_TO_LOWER:
                 piece = std::make_shared<Knight>(x, y, Color::WHITE);
                 break;
-            case 'N':
+            case PieceType::KNIGHT:
                 piece = std::make_shared<Knight>(x, y, Color::BLACK);
                 break;
-            case 'b':
+            case PieceType::BISHOP + UPPER_TO_LOWER:
                 piece = std::make_shared<Bishop>(x, y, Color::WHITE);
                 break;
-            case 'B':
+            case PieceType::BISHOP:
                 piece = std::make_shared<Bishop>(x, y, Color::BLACK);
                 break;
-            case 'q':
+            case PieceType::QUEEN + UPPER_TO_LOWER:
                 piece = std::make_shared<Queen>(x, y, Color::WHITE);
                 break;
-            case 'Q':
+            case PieceType::QUEEN:
                 piece = std::make_shared<Queen>(x, y, Color::BLACK);
                 break;
-            case 'k':
+            case PieceType::KING + UPPER_TO_LOWER:
                 piece = std::make_shared<King>(x, y, Color::WHITE);
                 break;
-            case 'K':
+            case PieceType::KING:
                 piece = std::make_shared<King>(x, y, Color::BLACK);
                 break;
             default:
