@@ -45,15 +45,16 @@ class CheckMove
 
     friend class QueenChecker;
     friend class BishopChecker;
-    /**
-     * @brief Check if the piece can move diagonally (up, down, left, right).
-     */
     void checkDiagonals(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 
     friend class KnightChecker;
     void checkLshape(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 
     friend class KingChecker;
+    /**
+     * @brief Check if the piece can move in a square (up, down, left, right).
+     * @note throw error if the piece cannot move
+     */
     void checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
     void checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 };
