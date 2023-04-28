@@ -53,8 +53,12 @@ class CheckMove
     friend class KingChecker;
     /**
      * @brief Check if the piece can move in a square (up, down, left, right).
-     * @note throw error if the piece cannot move
+     * @note throw error if the piece cannot move because it will put the king in check
      */
     void checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
+    /**
+     * @brief Check if we can castle.
+     * @note throw error if the piece cannot castle (cannot move because it will put the king in check)
+     */
     void checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);
 };

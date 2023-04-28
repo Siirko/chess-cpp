@@ -13,7 +13,6 @@ Rook::Rook(int x, int y, int color) : Piece(x, y, color), value{5} { this->setFi
 
 Rook::~Rook() {}
 
-// TODO: need to decide who check if king is in check (board or the piece itself)
 Piece::PieceMove Rook::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck)
 {
     PieceMove result = {false, nullptr};
