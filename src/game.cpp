@@ -110,7 +110,7 @@ std::shared_ptr<King> Game::getKing(Color color) const
         if (piece->getColor() == color && piece->getType() == PieceType::KING)
             return std::dynamic_pointer_cast<King>(piece);
     }
-    throw std::runtime_error("No white king found");
+    throw std::runtime_error("No king found");
 }
 
 std::vector<std::shared_ptr<Piece>> Game::getAlivePieces() const { return this->alive_pieces; }
