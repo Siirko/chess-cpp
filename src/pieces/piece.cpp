@@ -32,7 +32,7 @@ char Piece::getType()
     // if find Knight if type, return N
     // hacky way but works
     if (type.find("Knight") != std::string::npos)
-        return 'N';
+        return (char)PieceType::KNIGHT;
     return type.at(1);
 }
 
