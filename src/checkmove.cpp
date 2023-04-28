@@ -1,6 +1,7 @@
 #include "../includes/check/checkmove.hpp"
 #include "../includes/pieces/king.hpp"
 #include "../includes/pieces/piece.hpp"
+#include <cassert>
 #include <set>
 
 void CheckMove::checkDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
@@ -54,7 +55,7 @@ void CheckMove::checkEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::Pi
 
 void CheckMove::checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
 {
-    // cast self to king type
+    assert(self.getType() == PieceType::KING);
     King &king = dynamic_cast<King &>(self);
     if (self.getNumMoves() == 0 && board[x][y].getPiece() != nullptr &&
         board[x][y].getPiece()->getType() == PieceType::ROOK && board[x][y].getPiece()->getNumMoves() == 0)
@@ -76,7 +77,7 @@ void CheckMove::checkCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::Pie
 void CheckMove::checkSquareMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
                                  int y)
 {
-    // cast self to king type
+    assert(self.getType() == PieceType::KING);
     King &king = dynamic_cast<King &>(self);
     // Check if the move is one tile away
     if (abs(x - self.getX()) <= 1 && abs(y - self.getY()) <= 1)

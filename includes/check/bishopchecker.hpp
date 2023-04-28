@@ -4,14 +4,12 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class BishopChecker
+class BishopChecker : public CheckMove
 {
   private:
-    static void callCheckDiagonals(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                   int y)
+    void callCheckDiagonals(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkDiagonals(self, board, result, x, y);
+        this->checkDiagonals(self, board, result, x, y);
     }
     friend class Bishop;
 };
