@@ -12,6 +12,26 @@
 class Piece;
 class CheckMove
 {
+    // Those two functions is herited by all the checkers and can be used directly by the pieces.
+  public:
+    /**
+     * @brief Check if the piece is going out of bounds.
+     * @param x The x position of the piece.
+     * @param y The y position of the piece.
+     * @return true if the piece is going out of bounds.
+     * @return false if the piece is not going out of bounds.
+     */
+    bool checkOutOfBounds(int x, int y) { return x < 0 || x > 7 || y < 0 || y > 7; }
+    /**
+     * @brief Check if the piece is going to the same position.
+     * @param x The x position of the piece.
+     * @param y The y position of the piece.
+     * @param x2 The x position of the move.
+     * @param y2 The y position of the move.
+     * @return true if the piece is going to the same position.
+     */
+    bool checkSamePosition(int x, int y, int x2, int y2) { return x == x2 && y == y2; }
+
   private:
     friend class PawnChecker;
     void checkEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y);

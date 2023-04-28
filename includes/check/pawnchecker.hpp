@@ -4,33 +4,25 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class PawnChecker
+class PawnChecker : public CheckMove
 {
-  public:
   private:
-    static void callCheckEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                   int y)
+    void callCheckEnPassant(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkEnPassant(self, board, result, x, y);
+        this->checkEnPassant(self, board, result, x, y);
     }
-    static void callCheckStraight(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
+    void callCheckStraight(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
+    {
+        this->checkStraight(self, board, result, x, y);
+    }
+    void callCheckDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
+    {
+        this->checkDoubleMove(self, board, result, x, y);
+    }
+    void callCheckDiagonalCapture(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
                                   int y)
     {
-        CheckMove c = CheckMove();
-        c.checkStraight(self, board, result, x, y);
-    }
-    static void callCheckDoubleMove(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                    int y)
-    {
-        CheckMove c = CheckMove();
-        c.checkDoubleMove(self, board, result, x, y);
-    }
-    static void callCheckDiagonalCapture(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result,
-                                         int x, int y)
-    {
-        CheckMove c = CheckMove();
-        c.checkDiagonalCapture(self, board, result, x, y);
+        this->checkDiagonalCapture(self, board, result, x, y);
     }
     friend class Pawn;
 };

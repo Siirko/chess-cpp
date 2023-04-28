@@ -4,19 +4,16 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class RookChecker
+class RookChecker : public CheckMove
 {
   private:
-    static void callCheckRows(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
+    void callCheckRows(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkRows(self, board, result, x, y);
+        this->checkRows(self, board, result, x, y);
     }
-    static void callCheckColumns(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                 int y)
+    void callCheckColumns(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkColumns(self, board, result, x, y);
+        this->checkColumns(self, board, result, x, y);
     }
     friend class Rook;
 };

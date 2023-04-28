@@ -4,20 +4,16 @@
 #include "../pieces/piece.hpp"
 #include "../utilities.hpp"
 
-class KingChecker
+class KingChecker : public CheckMove
 {
   private:
-    static void callCheckSquaresMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                      int y)
+    void callCheckSquaresMoves(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkSquareMoves(self, board, result, x, y);
+        this->checkSquareMoves(self, board, result, x, y);
     }
-    static void callCheckCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x,
-                                  int y)
+    void callCheckCastling(Piece &self, array2d<Tile, 8, 8> board, Piece::PieceMove &result, int x, int y)
     {
-        CheckMove c = CheckMove();
-        c.checkCastling(self, board, result, x, y);
+        this->checkCastling(self, board, result, x, y);
     }
     friend class King;
 };

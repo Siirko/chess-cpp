@@ -18,10 +18,10 @@ Piece::PieceMove Rook::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool
 {
     PieceMove result = {false, nullptr};
     // Check if the move is out of the board
-    if (x < 0 || x > 7 || y < 0 || y > 7)
+    if (this->checkOutOfBounds(x, y))
         return result;
     // Check if the move is to the same position
-    if (x == this->getX() && y == this->getY())
+    if (this->checkSamePosition(this->getX(), this->getY(), x, y))
         return result;
 
     // Check if we can move in the same column (up or down)
