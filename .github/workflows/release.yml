@@ -1,5 +1,9 @@
 name: Publish Release
 on:
+  workflow_run:
+    workflows: ["C/C++ CI"]
+    types:
+      - completed
   push:
     tags:
       - 'v*'
