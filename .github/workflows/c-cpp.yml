@@ -12,13 +12,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - uses: mattnotmitt/doxygen-action@1.9.5
-      with:
-        doxyfile-path: ./Doxyfile
+ #   - uses: actions/checkout@v3
+ #   - uses: mattnotmitt/doxygen-action@1.9.5
+ #     with:
+ #       doxyfile-path: ./Doxyfile
     - name: make
       run: make
     - name: make test
       run: make test
-    - name: make docs
-      run: make docs
+ #   - name: make docs
+ #     run: make docs
