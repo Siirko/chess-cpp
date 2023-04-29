@@ -53,6 +53,7 @@ class Piece : public std::enable_shared_from_this<Piece>
     int getColor() const;
     bool getFirstMove() const;
     void setFirstMove(bool firstMove);
+    virtual std::shared_ptr<Piece> copy() = 0;
     /**
      * @brief Get the type of the piece.
      * @return The type of the piece.

@@ -29,3 +29,10 @@ Piece::PieceMove Pawn::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool
         this->setFirstMove(true);
     return result;
 }
+
+std::shared_ptr<Piece> Pawn::copy()
+{
+    std::shared_ptr<Piece> result = std::make_shared<Pawn>(this->getX(), this->getY(), this->getColor());
+    result->setFirstMove(this->getFirstMove());
+    return result;
+}

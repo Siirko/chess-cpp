@@ -12,4 +12,5 @@ class Bishop : public Piece, public BishopChecker
     Bishop(int x, int y, int color);
     ~Bishop();
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
+    virtual std::shared_ptr<Piece> copy() override;
 };

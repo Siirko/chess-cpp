@@ -25,3 +25,10 @@ Piece::PieceMove Queen::isValidMove(array2d<Tile, 8, 8> board, int x, int y, boo
         result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }
+
+std::shared_ptr<Piece> Queen::copy()
+{
+    std::shared_ptr<Piece> result = std::make_shared<Queen>(this->getX(), this->getY(), this->getColor());
+    result->setFirstMove(this->getFirstMove());
+    return result;
+}

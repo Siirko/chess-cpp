@@ -12,4 +12,5 @@ class Queen : public Piece, public QueenChecker
     Queen(int x, int y, int color);
     ~Queen();
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
+    virtual std::shared_ptr<Piece> copy() override;
 };

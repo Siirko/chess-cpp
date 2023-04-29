@@ -38,12 +38,6 @@ class PieceHandler
      */
     std::shared_ptr<Piece> getPieceAt(Game &game, int x, int y);
     /**
-     * @brief Makes a copy of the given piece.
-     * @param piece The piece to make a copy of.
-     * @return The copy of the given piece.
-     */
-    std::shared_ptr<Piece> makeCopy(std::shared_ptr<Piece> piece) const;
-    /**
      * @brief Promotes the given piece to the given type.
      * @param toPromote The piece to promote.
      * @param type The type to promote the piece to.
