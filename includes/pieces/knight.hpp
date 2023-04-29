@@ -12,4 +12,5 @@ class Knight : public Piece, public KnightChecker
     Knight(int x, int y, int color);
     ~Knight();
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
+    virtual std::shared_ptr<Piece> copy() override;
 };

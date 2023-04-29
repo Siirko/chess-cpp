@@ -22,4 +22,5 @@ class King : public Piece, public KingChecker
      */
     bool isCheck(array2d<Tile, 8, 8> board, int x, int y);
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
+    virtual std::shared_ptr<Piece> copy() override;
 };

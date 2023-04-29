@@ -150,32 +150,3 @@ std::shared_ptr<Piece> PieceHandler::getPieceAt(Game &game, int x, int y)
     auto piece = game.getBoard().getTile(x, y).getPiece();
     return piece != nullptr ? piece : nullptr;
 }
-
-std::shared_ptr<Piece> PieceHandler::makeCopy(std::shared_ptr<Piece> piece) const
-{
-    std::shared_ptr<Piece> copy = nullptr;
-    switch (piece->getType())
-    {
-    case PieceType::PAWN:
-        copy = std::make_shared<Pawn>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    case PieceType::ROOK:
-        copy = std::make_shared<Rook>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    case PieceType::KNIGHT:
-        copy = std::make_shared<Knight>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    case PieceType::BISHOP:
-        copy = std::make_shared<Bishop>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    case PieceType::QUEEN:
-        copy = std::make_shared<Queen>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    case PieceType::KING:
-        copy = std::make_shared<King>(piece->getX(), piece->getY(), piece->getColor());
-        break;
-    default:
-        break;
-    }
-    return copy;
-}

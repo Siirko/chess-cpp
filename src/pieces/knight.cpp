@@ -24,3 +24,10 @@ Piece::PieceMove Knight::isValidMove(array2d<Tile, 8, 8> board, int x, int y, bo
         result.valid_move = this->beforeCheckMove(board, result, x, y);
     return result;
 }
+
+std::shared_ptr<Piece> Knight::copy()
+{
+    std::shared_ptr<Piece> result = std::make_shared<Knight>(this->getX(), this->getY(), this->getColor());
+    result->setFirstMove(this->getFirstMove());
+    return result;
+}

@@ -12,4 +12,5 @@ class Pawn : public Piece, public PawnChecker
     Pawn(int x, int y, int color);
     ~Pawn();
     virtual PieceMove isValidMove(array2d<Tile, 8, 8> board, int x, int y, bool beforeCheck) override;
+    virtual std::shared_ptr<Piece> copy() override;
 };

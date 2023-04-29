@@ -26,7 +26,7 @@ bool GameRuler::isKingInCheckAfterMove(array2d<Tile, 8, 8> board, std::shared_pt
     if (canMove && piece->getType() != PieceType::KING)
     {
         auto fake_board = board;
-        std::shared_ptr<Piece> tmp = game->getPieceHandler().makeCopy(piece);
+        std::shared_ptr<Piece> tmp = piece->copy();
         fake_board[x][y].setPiece(tmp);
         fake_board[tmp->getX()][tmp->getY()].setPiece(nullptr);
         tmp->setX(x);
