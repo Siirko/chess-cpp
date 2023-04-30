@@ -1,5 +1,5 @@
 # Projet d'échecs 
-*Projet réalisé par [Alexander Yanovskyy](https://yanovskyy.com).* 
+*Projet d'école réalisé par [Alexander Yanovskyy](https://yanovskyy.com).* 
 
 ## Sommaire
 - [Projet d'échecs](#projet-déchecs)
